@@ -32,15 +32,15 @@ public abstract class Server {
     public static final int PROTOCOL_VERSION = 47;
 
     // Threads
-    public static final String THREAD_NAME_BENCHMARK = "Ms-Benchmark";
+    public static final String THREAD_NAME_BENCHMARK = "MC-Benchmark";
 
-    public static final String THREAD_NAME_TICK = "Ms-Tick";
+    public static final String THREAD_NAME_TICK = "MC-Tick";
 
-    public static final String THREAD_NAME_BLOCK_BATCH = "Ms-BlockBatchPool";
+    public static final String THREAD_NAME_BLOCK_BATCH = "MC-BlockBatchPool";
 
-    public static final String THREAD_NAME_SCHEDULER = "Ms-SchedulerPool";
+    public static final String THREAD_NAME_SCHEDULER = "MC-SchedulerPool";
 
-    public static final String THREAD_NAME_PARALLEL_CHUNK_SAVING = "Ms-ParallelChunkSaving";
+    public static final String THREAD_NAME_PARALLEL_CHUNK_SAVING = "MC-ParallelChunkSaving";
 
     private final KeyPair secretKeypair;
     private final ExceptionManager exceptionManager;
