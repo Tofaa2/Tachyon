@@ -10,7 +10,7 @@ import net.tachyon.entity.TachyonLivingEntity;
 import net.tachyon.instance.TachyonChunk;
 import net.tachyon.instance.Instance;
 import net.tachyon.instance.InstanceWorldBorder;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import net.tachyon.utils.position.PositionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -8,7 +8,6 @@ import net.tachyon.MinecraftServer;
 import net.tachyon.Tachyon;
 import net.tachyon.UpdateManager;
 import net.tachyon.block.BlockManager;
-import net.tachyon.block.BlockModifier;
 import net.tachyon.coordinate.Point;
 import net.tachyon.coordinate.Position;
 import net.tachyon.coordinate.Vec;
@@ -31,7 +30,7 @@ import net.tachyon.storage.StorageLocation;
 import net.tachyon.thread.ThreadProvider;
 import net.tachyon.utils.PacketUtils;
 import net.tachyon.world.chunk.ChunkCallback;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import net.tachyon.utils.entity.EntityUtils;
 import net.tachyon.utils.time.CooldownUtils;
 import net.tachyon.utils.time.TimeUnit;
@@ -516,7 +515,7 @@ public abstract class Instance implements EventHandler, DataContainer, World {
      * if {@code chunk} is unloaded, return an empty {@link HashSet}
      */
     @NotNull
-    public Set<TachyonEntity> getChunkEntities(TachyonChunk chunk) {
+    public Set<TachyonEntity> getChunkEntities(Chunk chunk) {
         if (!ChunkUtils.isLoaded(chunk))
             return new HashSet<>();
 

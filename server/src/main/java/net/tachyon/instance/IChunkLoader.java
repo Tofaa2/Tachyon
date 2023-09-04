@@ -2,9 +2,9 @@ package net.tachyon.instance;
 
 import net.tachyon.MinecraftServer;
 import net.tachyon.Tachyon;
-import net.tachyon.utils.callback.OptionalCallback;
+import net.tachyon.utils.OptionalCallback;
 import net.tachyon.world.chunk.ChunkCallback;
-import net.tachyon.utils.thread.MinestomThread;
+import net.tachyon.utils.thread.ServerThread;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Interface implemented to change the way chunks are loaded/saved.
  * <p>
- * See {@link MinestomBasicChunkLoader} for the default implementation used in {@link InstanceContainer}.
+ * See {@link BasicChunkLoader} for the default implementation used in {@link InstanceContainer}.
  */
 public interface IChunkLoader {
 
@@ -53,7 +53,7 @@ public interface IChunkLoader {
      */
     default void saveChunks(@NotNull Collection<TachyonChunk> chunks, @Nullable Runnable callback) {
         if (supportsParallelSaving()) {
-            ExecutorService parallelSavingThreadPool = new MinestomThread(Tachyon.getServer().getChunkSavingThreadCount(), MinecraftServer.THREAD_NAME_PARALLEL_CHUNK_SAVING, true);
+            ExecutorService parallelSavingThreadPool = new ServerThread(Tachyon.getServer().getChunkSavingThreadCount(), MinecraftServer.THREAD_NAME_PARALLEL_CHUNK_SAVING, true);
             chunks.forEach(c -> parallelSavingThreadPool.execute(() -> saveChunk(c, null)));
             try {
                 parallelSavingThreadPool.shutdown();

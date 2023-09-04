@@ -298,6 +298,7 @@ public class TachyonBinaryWriter extends OutputStream implements BinaryWriter {
      *
      * @return the raw buffer
      */
+    @NotNull
     public ByteBuf getBuffer() {
         return buffer;
     }

@@ -137,6 +137,7 @@ public class TachyonBinaryReader extends InputStream implements BinaryReader {
      * @return the read item
      * @throws NullPointerException if the item could not get read
      */
+    @NotNull
     public ItemStack readSlot() {
         final ItemStack itemStack = NBTUtils.readItemStack(this);
         Check.notNull(itemStack, "#readSlot returned null, probably because the buffer was corrupted");
@@ -148,6 +149,7 @@ public class TachyonBinaryReader extends InputStream implements BinaryReader {
         return Adventure.COMPONENT_SERIALIZER.deserialize(string);
     }
 
+    @NotNull
     public ByteBuf getBuffer() {
         return buffer;
     }

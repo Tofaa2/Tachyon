@@ -4,13 +4,11 @@ import net.tachyon.coordinate.Point;
 import net.tachyon.data.Data;
 import net.tachyon.entity.Entity;
 import net.tachyon.entity.Player;
-import net.tachyon.instance.BlockModifier;
 import net.tachyon.network.packet.server.play.ChunkDataPacket;
 import net.tachyon.utils.time.UpdateOption;
 import net.tachyon.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jglrxavpok.hephaistos.nbt.NBTCompound;
 
 /**
  * Represents the handler of a custom block type which can be registered with {@link BlockManager#registerCustomBlock(CustomBlock)}.
@@ -147,7 +145,7 @@ public abstract class CustomBlock {
 
     /**
      * The custom block identifier, used to retrieve the custom block object with
-     * {@link TachyonBlockManager#getCustomBlock(String)} and to set custom block in the instance.
+     * {@link BlockManager#getCustomBlock(String)} and to set custom block in the instance.
      *
      * @return the custom block identifier
      */
@@ -203,18 +201,6 @@ public abstract class CustomBlock {
      */
     public float getDrag(@NotNull World instance, @NotNull Point blockPosition) {
         return 0.5f;
-    }
-
-    /**
-     * Allows custom block to write block entity data to a given NBT compound.
-     * Used to send block entity data to the client over the network.
-     * Can also be used to save block entity data on disk for compatible chunk savers.
-     *
-     * @param position  position of the block
-     * @param blockData equivalent to <pre>instance.getBlockData(position)</pre>
-     * @param nbt       the nbt to write in the {@link ChunkDataPacket}
-     */
-    public void writeBlockEntity(@NotNull Point position, @Nullable Data blockData, @NotNull NBTCompound nbt) {
     }
 
     /**

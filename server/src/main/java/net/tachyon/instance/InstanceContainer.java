@@ -3,7 +3,6 @@ package net.tachyon.instance;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import net.tachyon.MinecraftServer;
 import net.tachyon.Tachyon;
 import net.tachyon.coordinate.Point;
 import net.tachyon.coordinate.Vec;
@@ -24,10 +23,10 @@ import net.tachyon.network.packet.server.play.EffectPacket;
 import net.tachyon.storage.StorageLocation;
 import net.tachyon.utils.PacketUtils;
 import net.tachyon.utils.block.CustomBlockUtils;
-import net.tachyon.utils.callback.OptionalCallback;
+import net.tachyon.utils.OptionalCallback;
 import net.tachyon.world.chunk.ChunkCallback;
 import net.tachyon.world.chunk.ChunkSupplier;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import net.tachyon.utils.validate.Check;
 import net.tachyon.world.DimensionType;
 import net.tachyon.world.LevelType;
@@ -99,7 +98,7 @@ public class InstanceContainer extends Instance {
         setChunkSupplier(DynamicChunk::new);
 
         // Set the default chunk loader which use the instance's StorageLocation and ChunkSupplier to save and load chunks
-        setChunkLoader(new MinestomBasicChunkLoader(this));
+        setChunkLoader(new BasicChunkLoader(this));
 
         // Get instance data from the saved data if a StorageLocation is defined
         if (storageLocation != null) {
@@ -146,13 +145,13 @@ public class InstanceContainer extends Instance {
                                        @Nullable CustomBlock customBlock, @Nullable Data data) {
         final Chunk chunk = getChunkAt(x, z);
         if (ChunkUtils.isLoaded(chunk)) {
-            UNSAFE_setBlock(chunk, x, y, z, blockStateId, customBlock, data);
+            UNSAFE_setBlock((TachyonChunk)chunk, x, y, z, blockStateId, customBlock, data);
         } else {
             Check.stateCondition(!hasEnabledAutoChunkLoad(),
                     "Tried to set a block to an unloaded chunk with auto chunk load disabled");
             final int chunkX = ChunkUtils.getChunkCoordinate(x);
             final int chunkZ = ChunkUtils.getChunkCoordinate(z);
-            loadChunk(chunkX, chunkZ, c -> UNSAFE_setBlock(c, x, y, z, blockStateId, customBlock, data));
+            loadChunk(chunkX, chunkZ, c -> UNSAFE_setBlock((TachyonChunk)c, x, y, z, blockStateId, customBlock, data));
         }
     }
 
@@ -252,7 +251,7 @@ public class InstanceContainer extends Instance {
 
     @Override
     public void refreshBlockStateId(@NotNull Point point, short blockStateId) {
-        final TachyonChunk chunk = getChunkAt(point.getX(), point.getZ());
+        final TachyonChunk chunk =(TachyonChunk) getChunkAt(point.getX(), point.getZ());
         Check.notNull(chunk, "You cannot refresh a block in a null chunk!");
         synchronized (chunk) {
             chunk.refreshBlockStateId(point.blockX(), point.blockY(), point.blockZ(), blockStateId);
@@ -262,7 +261,7 @@ public class InstanceContainer extends Instance {
     }
 
     /**
-     * Calls {@link CustomBlock#onDestroy(Instance, Point, Data)} for {@code previousBlock}.
+     * Calls {@link CustomBlock#onDestroy(net.tachyon.world.World, Point, Data)} for {@code previousBlock}.
      * <p>
      * WARNING {@code chunk} needs to be synchronized.
      *
@@ -276,7 +275,7 @@ public class InstanceContainer extends Instance {
     }
 
     /**
-     * Calls {@link CustomBlock#onPlace(Instance, Point, Data)} for the current custom block at the position.
+     * Calls {@link CustomBlock#onPlace(net.tachyon.world.World, Point, Data)} for the current custom block at the position.
      * <p>
      * WARNING {@code chunk} needs to be synchronized.
      *
@@ -323,7 +322,7 @@ public class InstanceContainer extends Instance {
                     final int neighborX = point.blockX() + offsetX;
                     final int neighborY = point.blockY() + offsetY;
                     final int neighborZ = point.blockZ() + offsetZ;
-                    final TachyonChunk chunk = getChunkAt(neighborX, neighborZ);
+                    final TachyonChunk chunk = (TachyonChunk)getChunkAt(neighborX, neighborZ);
 
                     // Do not try to get neighbour in an unloaded chunk
                     if (chunk == null)
@@ -501,7 +500,7 @@ public class InstanceContainer extends Instance {
     @Override
     protected void retrieveChunk(int chunkX, int chunkZ, @Nullable ChunkCallback callback) {
         final boolean loaded = chunkLoader.loadChunk(this, chunkX, chunkZ, chunk -> {
-            cacheChunk(chunk);
+            cacheChunk((TachyonChunk)chunk);
             UPDATE_MANAGER.signalChunkLoad(this, chunkX, chunkZ);
             // Execute callback and event in the instance thread
             scheduleNextTick(instance -> {
@@ -525,7 +524,7 @@ public class InstanceContainer extends Instance {
             chunkGenerator.fillBiomes(biomes, chunkX, chunkZ);
         }
 
-        final TachyonChunk chunk = chunkSupplier.createChunk(biomes, chunkX, chunkZ, getDimensionType().getHasSky());
+        final TachyonChunk chunk = (TachyonChunk)chunkSupplier.createChunk(biomes, chunkX, chunkZ, getDimensionType().getHasSky());
         Check.notNull(chunk, "Chunks supplied by a ChunkSupplier cannot be null.");
 
         cacheChunk(chunk);
@@ -788,7 +787,7 @@ public class InstanceContainer extends Instance {
      */
     protected void UNSAFE_unloadChunks() {
         synchronized (scheduledChunksToRemove) {
-            for (TachyonChunk chunk : scheduledChunksToRemove) {
+            for (Chunk chunk : scheduledChunksToRemove) {
                 final int chunkX = chunk.getChunkX();
                 final int chunkZ = chunk.getChunkZ();
 
@@ -802,7 +801,7 @@ public class InstanceContainer extends Instance {
                 chunkDataPacket.skylight = chunk.hasSky();
                 chunk.sendPacketToViewers(chunkDataPacket);
 
-                for (TachyonPlayer viewer : chunk.getViewers()) {
+                for (Player viewer : chunk.getViewers()) {
                     chunk.removeViewer(viewer);
                 }
 

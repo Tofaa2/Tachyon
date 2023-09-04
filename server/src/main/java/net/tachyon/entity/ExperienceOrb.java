@@ -107,13 +107,13 @@ public class ExperienceOrb extends TachyonEntity {
     }
 
     private TachyonPlayer getClosestPlayer(TachyonEntity entity, float maxDistance) {
-        TachyonPlayer closest = entity.getInstance()
+        Player closest = entity.getInstance()
                 .getPlayers()
                 .stream()
                 .min(Comparator.comparingDouble(a -> a.getDistance(entity)))
                 .orElse(null);
         if (closest == null) return null;
         if (closest.getDistance(entity) > maxDistance) return null;
-        return closest;
+        return (TachyonPlayer) closest;
     }
 }

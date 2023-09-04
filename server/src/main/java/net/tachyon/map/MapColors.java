@@ -1,8 +1,7 @@
 package net.tachyon.map;
 
-import net.tachyon.MinecraftServer;
 import net.tachyon.Tachyon;
-import net.tachyon.utils.thread.MinestomThread;
+import net.tachyon.utils.thread.ServerThread;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -189,7 +188,7 @@ public enum MapColors {
 
     private static void fillRGBArray() {
         rgbArray = new PreciseMapColor[0xFFFFFF + 1];
-        MinestomThread threads = new MinestomThread(Runtime.getRuntime().availableProcessors(), "RGBMapping", true);
+        ServerThread threads = new ServerThread(Runtime.getRuntime().availableProcessors(), "RGBMapping", true);
         for (int rgb = 0; rgb <= 0xFFFFFF; rgb++) {
             int finalRgb = rgb;
             threads.execute(() -> rgbArray[finalRgb] = mapColor(finalRgb));

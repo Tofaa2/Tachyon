@@ -26,10 +26,10 @@ import net.tachyon.permission.PermissionHandler;
 import net.tachyon.potion.Potion;
 import net.tachyon.potion.PotionEffect;
 import net.tachyon.potion.TimedPotion;
-import net.tachyon.utils.callback.OptionalCallback;
+import net.tachyon.utils.OptionalCallback;
 import net.tachyon.world.chunk.Chunk;
 import net.tachyon.world.chunk.ChunkCallback;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import net.tachyon.utils.entity.EntityUtils;
 import net.tachyon.utils.player.PlayerUtils;
 import net.tachyon.utils.time.CooldownUtils;
@@ -785,7 +785,7 @@ public class TachyonEntity implements Entity,  EventHandler, DataContainer, Perm
      */
     @Nullable
     public TachyonChunk getChunk() {
-        return instance.getChunkAt(position.getX(), position.getZ());
+        return (TachyonChunk) instance.getChunkAt(position.getX(), position.getZ());
     }
 
     /**
@@ -1177,17 +1177,16 @@ public class TachyonEntity implements Entity,  EventHandler, DataContainer, Perm
 
         final Instance instance = getInstance();
         if (instance != null) {
-            final TachyonChunk lastChunk = instance.getChunkAt(lastX, lastZ);
-            final TachyonChunk newChunk = instance.getChunkAt(x, z);
+            final TachyonChunk lastChunk = (TachyonChunk) instance.getChunkAt(lastX, lastZ);
+            final TachyonChunk newChunk = (TachyonChunk) instance.getChunkAt(x, z);
 
             Check.notNull(lastChunk, "The entity " + getEntityId() + " was in an unloaded chunk at " + lastX + ";" + lastZ);
             Check.notNull(newChunk, "The entity " + getEntityId() + " tried to move in an unloaded chunk at " + x + ";" + z);
 
             if (lastChunk != newChunk) {
                 instance.switchEntityChunk(this, lastChunk, newChunk);
-                if (this instanceof TachyonPlayer) {
+                if (this instanceof TachyonPlayer player) {
                     // Refresh player view
-                    final TachyonPlayer player = (TachyonPlayer) this;
                     player.refreshVisibleChunks(newChunk);
                     player.refreshVisibleEntities(newChunk);
                 }

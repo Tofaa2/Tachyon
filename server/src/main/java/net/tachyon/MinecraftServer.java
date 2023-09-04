@@ -37,7 +37,7 @@ import net.tachyon.sound.SoundEvent;
 import net.tachyon.stat.StatisticType;
 import net.tachyon.storage.StorageLocation;
 import net.tachyon.storage.StorageManager;
-import net.tachyon.utils.thread.MinestomThread;
+import net.tachyon.utils.thread.ServerThread;
 import net.tachyon.utils.validate.Check;
 import net.tachyon.utils.validator.PlayerValidator;
 import net.tachyon.world.DimensionType;
@@ -412,7 +412,7 @@ public final class MinecraftServer extends Server {
         LOGGER.info("Shutting down all thread pools.");
         benchmarkManager.disable();
         commandManager.stopConsoleThread();
-        MinestomThread.shutdownAll();
+        ServerThread.shutdownAll();
         LOGGER.info(getBrandName() + " server stopped successfully.");
     }
 

@@ -5,6 +5,8 @@ import net.tachyon.command.builder.Command;
 import net.tachyon.command.builder.CommandDispatcher;
 import net.tachyon.command.builder.CommandResult;
 import net.tachyon.command.builder.SimpleCommand;
+import net.tachyon.entity.Player;
+import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.event.player.PlayerCommandEvent;
 import net.tachyon.utils.callback.CommandCallback;
 import net.tachyon.utils.validate.Check;
@@ -148,11 +150,10 @@ public final class CommandManager {
     public CommandResult execute(@NotNull CommandSender sender, @NotNull String command) {
 
         // Command event
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
 
             PlayerCommandEvent playerCommandEvent = new PlayerCommandEvent(player, command);
-            player.callEvent(PlayerCommandEvent.class, playerCommandEvent);
+            ((TachyonPlayer) player).callEvent(PlayerCommandEvent.class, playerCommandEvent);
 
             if (playerCommandEvent.isCancelled())
                 return CommandResult.of(CommandResult.Type.CANCELLED, command);

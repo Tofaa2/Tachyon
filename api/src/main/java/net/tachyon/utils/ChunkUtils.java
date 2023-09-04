@@ -1,14 +1,10 @@
-package net.tachyon.utils.chunk;
+package net.tachyon.utils;
 
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import net.tachyon.coordinate.Point;
 import net.tachyon.coordinate.Position;
 import net.tachyon.coordinate.Vec;
-import net.tachyon.instance.TachyonChunk;
-import net.tachyon.instance.Instance;
-import net.tachyon.utils.MathUtils;
-import net.tachyon.utils.callback.OptionalCallback;
 import net.tachyon.world.World;
 import net.tachyon.world.chunk.Chunk;
 import net.tachyon.world.chunk.ChunkCallback;
@@ -24,12 +20,12 @@ public final class ChunkUtils {
     }
 
     /**
-     * Executes {@link Instance#loadOptionalChunk(int, int, ChunkCallback)} for the array of chunks {@code chunks}
+     * Executes {@link World#loadOptionalChunk(int, int, ChunkCallback)} for the array of chunks {@code chunks}
      * with multiple callbacks, {@code eachCallback} which is executed each time a new chunk is loaded and
      * {@code endCallback} when all the chunks in the array have been loaded.
      * <p>
-     * Be aware that {@link Instance#loadOptionalChunk(int, int, ChunkCallback)} can give a null chunk in the callback
-     * if {@link Instance#hasEnabledAutoChunkLoad()} returns false and the chunk is not already loaded.
+     * Be aware that {@link World#loadOptionalChunk(int, int, ChunkCallback)} can give a null chunk in the callback
+     * if {@link World#hasEnabledAutoChunkLoad()} returns false and the chunk is not already loaded.
      *
      * @param instance     the instance to load the chunks from
      * @param chunks       the chunks to loaded, long value from {@link #getChunkIndex(int, int)}
@@ -80,7 +76,7 @@ public final class ChunkUtils {
      * @param z        instance Z coordinate
      * @return true if the chunk is loaded, false otherwise
      */
-    public static boolean isLoaded(@NotNull Instance instance, double x, double z) {
+    public static boolean isLoaded(@NotNull World instance, double x, double z) {
         final int chunkX = getChunkCoordinate(x);
         final int chunkZ = getChunkCoordinate(z);
 
@@ -141,7 +137,7 @@ public final class ChunkUtils {
     }
 
     public static int getSectionAt(int y) {
-        return y / TachyonChunk.CHUNK_SECTION_SIZE;
+        return y / Chunk.CHUNK_SECTION_SIZE;
     }
 
     /**
@@ -160,8 +156,8 @@ public final class ChunkUtils {
         int counter = 0;
         for (int x = startLoop; x < endLoop; x++) {
             for (int z = startLoop; z < endLoop; z++) {
-                final int chunkX = getChunkCoordinate(position.getX() + TachyonChunk.CHUNK_SIZE_X * x);
-                final int chunkZ = getChunkCoordinate(position.getZ() + TachyonChunk.CHUNK_SIZE_Z * z);
+                final int chunkX = getChunkCoordinate(position.getX() + Chunk.CHUNK_SIZE_X * x);
+                final int chunkZ = getChunkCoordinate(position.getZ() + Chunk.CHUNK_SIZE_Z * z);
                 visibleChunks[counter++] = getChunkIndex(chunkX, chunkZ);
             }
         }
@@ -177,7 +173,7 @@ public final class ChunkUtils {
      * @return an array containing all the loaded neighbours chunk index
      */
     @NotNull
-    public static long[] getNeighbours(@NotNull Instance instance, int chunkX, int chunkZ) {
+    public static long[] getNeighbours(@NotNull World instance, int chunkX, int chunkZ) {
         LongList chunks = new LongArrayList();
         // Constants used to loop through the neighbors
         final int[] posX = {1, 0, -1};
@@ -215,8 +211,8 @@ public final class ChunkUtils {
      * @return an index which can be used to store and retrieve later data linked to a block position
      */
     public static int getBlockIndex(int x, int y, int z) {
-        x = x % TachyonChunk.CHUNK_SIZE_X;
-        z = z % TachyonChunk.CHUNK_SIZE_Z;
+        x = x % Chunk.CHUNK_SIZE_X;
+        z = z % Chunk.CHUNK_SIZE_Z;
 
         short index = (short) (x & 0x000F);
         index |= (y << 4) & 0x0FF0;
@@ -246,7 +242,7 @@ public final class ChunkUtils {
      * @return the X coordinate of the block index
      */
     public static int blockIndexToPositionX(int index, int chunkX) {
-        return (int) blockIndexToChunkPositionX(index) + TachyonChunk.CHUNK_SIZE_X * chunkX;
+        return (int) blockIndexToChunkPositionX(index) + Chunk.CHUNK_SIZE_X * chunkX;
     }
 
     /**
@@ -267,7 +263,7 @@ public final class ChunkUtils {
      * @return the Z coordinate of the block index
      */
     public static int blockIndexToPositionZ(int index, int chunkZ) {
-        return (int) blockIndexToChunkPositionZ(index) + TachyonChunk.CHUNK_SIZE_Z * chunkZ;
+        return (int) blockIndexToChunkPositionZ(index) + Chunk.CHUNK_SIZE_Z * chunkZ;
     }
 
     /**

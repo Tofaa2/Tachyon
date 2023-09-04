@@ -3,11 +3,10 @@ package net.tachyon.network.packet.server.play;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.tachyon.binary.BinaryWriter;
-import net.tachyon.instance.palette.PaletteStorage;
-import net.tachyon.instance.palette.Section;
+import net.tachyon.world.palette.PaletteStorage;
+import net.tachyon.world.palette.Section;
 import net.tachyon.network.packet.server.ServerPacket;
 import net.tachyon.network.packet.server.ServerPacketIdentifier;
-import net.tachyon.utils.binary.TachyonBinaryWriter;
 import net.tachyon.utils.cache.CacheablePacket;
 import net.tachyon.utils.cache.TemporaryCache;
 import net.tachyon.utils.cache.TimedBuffer;
@@ -105,7 +104,7 @@ public class ChunkDataPacket implements ServerPacket, CacheablePacket {
 
         // Data
         writer.writeVarInt(data.writerIndex());
-        ((TachyonBinaryWriter)writer).getBuffer().writeBytes(data);
+        writer.getBuffer().writeBytes(data);
         data.release();
     }
 

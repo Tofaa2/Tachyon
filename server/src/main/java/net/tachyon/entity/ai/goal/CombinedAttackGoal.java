@@ -7,6 +7,7 @@ import net.tachyon.entity.EntityType;
 import net.tachyon.entity.projectile.EntityProjectile;
 import net.tachyon.entity.ai.GoalSelector;
 import net.tachyon.entity.pathfinding.Navigator;
+import net.tachyon.instance.TachyonChunk;
 import net.tachyon.utils.time.CooldownUtils;
 import net.tachyon.utils.time.TimeUnit;
 import net.tachyon.utils.validate.Check;
@@ -96,7 +97,7 @@ public class CombinedAttackGoal extends GoalSelector {
 
     @Override
     public boolean shouldStart() {
-        this.cachedTarget = findTarget();
+        this.cachedTarget = (TachyonEntity) findTarget();
         return this.cachedTarget != null;
     }
 
@@ -112,7 +113,7 @@ public class CombinedAttackGoal extends GoalSelector {
             target = this.cachedTarget;
             this.cachedTarget = null;
         } else {
-            target = findTarget();
+            target = (TachyonEntity) findTarget();
         }
         if (target == null) {
             this.stop = true;

@@ -39,7 +39,7 @@ public class MeleeAttackGoal extends GoalSelector {
 
     @Override
     public boolean shouldStart() {
-        this.cachedTarget = findTarget();
+        this.cachedTarget = (TachyonEntity) findTarget();
         return this.cachedTarget != null;
     }
 
@@ -56,7 +56,7 @@ public class MeleeAttackGoal extends GoalSelector {
             target = this.cachedTarget;
             this.cachedTarget = null;
         } else {
-            target = findTarget();
+            target = (TachyonEntity) findTarget();
         }
 
         this.stop = target == null;

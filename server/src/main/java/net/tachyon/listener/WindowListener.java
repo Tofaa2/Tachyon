@@ -5,6 +5,7 @@ import net.tachyon.event.inventory.InventoryCloseEvent;
 import net.tachyon.inventory.Inventory;
 import net.tachyon.inventory.InventoryClickHandler;
 import net.tachyon.inventory.PlayerInventory;
+import net.tachyon.item.ItemStack;
 import net.tachyon.network.packet.client.play.ClientClickWindowPacket;
 import net.tachyon.network.packet.client.play.ClientCloseWindow;
 import net.tachyon.network.packet.client.play.ClientWindowConfirmationPacket;
@@ -110,7 +111,7 @@ public class WindowListener {
     private static void refreshCursorItem(TachyonPlayer player, Inventory inventory) {
         PlayerInventory playerInventory = player.getInventory();
 
-        TachyonItemStack cursorItem;
+        ItemStack cursorItem;
         if (inventory != null) {
             cursorItem = inventory.getCursorItem(player);
         } else {

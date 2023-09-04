@@ -12,14 +12,14 @@ import net.tachyon.data.SerializableData;
 import net.tachyon.data.SerializableDataImpl;
 import net.tachyon.entity.pathfinding.PFBlockDescription;
 import net.tachyon.block.CustomBlock;
-import net.tachyon.instance.palette.PaletteStorage;
+import net.tachyon.world.palette.PaletteStorage;
 import net.tachyon.network.packet.server.play.ChunkDataPacket;
 import net.tachyon.utils.binary.TachyonBinaryReader;
 import net.tachyon.utils.binary.TachyonBinaryWriter;
 import net.tachyon.utils.block.CustomBlockUtils;
-import net.tachyon.utils.callback.OptionalCallback;
+import net.tachyon.utils.OptionalCallback;
 import net.tachyon.world.chunk.ChunkCallback;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import net.tachyon.utils.time.CooldownUtils;
 import net.tachyon.utils.time.UpdateOption;
 import net.tachyon.utils.validate.Check;
@@ -206,7 +206,7 @@ public class DynamicChunk extends TachyonChunk {
     /**
      * Serialize this {@link TachyonChunk} based on {@link #readChunk(TachyonBinaryReader, ChunkCallback)}
      * <p>
-     * It is also used by the default {@link IChunkLoader} which is {@link MinestomBasicChunkLoader}
+     * It is also used by the default {@link IChunkLoader} which is {@link BasicChunkLoader}
      *
      * @return the serialized chunk data
      */

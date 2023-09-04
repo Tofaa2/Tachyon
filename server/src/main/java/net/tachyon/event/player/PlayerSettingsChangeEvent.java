@@ -1,5 +1,6 @@
 package net.tachyon.event.player;
 
+import net.tachyon.entity.Player;
 import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.event.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +23,7 @@ public class PlayerSettingsChangeEvent extends PlayerEvent {
      */
     @NotNull
     @Override
-    public TachyonPlayer getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 

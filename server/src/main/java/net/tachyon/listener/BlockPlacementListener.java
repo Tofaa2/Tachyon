@@ -1,6 +1,5 @@
 package net.tachyon.listener;
 
-import net.tachyon.MinecraftServer;
 import net.tachyon.Tachyon;
 import net.tachyon.block.BlockManager;
 import net.tachyon.coordinate.Point;
@@ -15,7 +14,6 @@ import net.tachyon.instance.TachyonChunk;
 import net.tachyon.instance.Instance;
 import net.tachyon.block.Block;
 import net.tachyon.coordinate.BlockFace;
-import net.tachyon.instance.block.TachyonBlockManager;
 import net.tachyon.block.CustomBlock;
 import net.tachyon.block.rule.BlockPlacementRule;
 import net.tachyon.inventory.PlayerInventory;
@@ -24,7 +22,7 @@ import net.tachyon.item.Material;
 import net.tachyon.network.packet.client.play.ClientPlayerBlockPlacementPacket;
 import net.tachyon.network.packet.server.play.BlockChangePacket;
 import net.tachyon.coordinate.Direction;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import net.tachyon.utils.validate.Check;
 
 import java.util.Set;

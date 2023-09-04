@@ -1,6 +1,7 @@
 package net.tachyon.network.packet.server;
 
 import net.tachyon.binary.Writeable;
+import net.tachyon.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 
 /**

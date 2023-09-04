@@ -17,8 +17,7 @@ public enum EntitySpawnType {
             packet.entityId = entity.getEntityId();
             packet.type = entity.getEntityType().getProtocolId();
             packet.position = entity.getPosition();
-            if (entity.getEntityMeta() instanceof ObjectDataProvider) {
-                ObjectDataProvider objectDataProvider = (ObjectDataProvider) entity.getEntityMeta();
+            if (entity.getEntityMeta() instanceof ObjectDataProvider objectDataProvider) {
                 packet.data = objectDataProvider.getObjectData();
                 if (objectDataProvider.requiresVelocityPacketAtSpawn()) {
                     Point velocity = entity.getVelocityForPacket();

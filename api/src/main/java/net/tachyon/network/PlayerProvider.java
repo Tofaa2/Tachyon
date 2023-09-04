@@ -1,6 +1,6 @@
 package net.tachyon.network;
 
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,5 +25,5 @@ public interface PlayerProvider {
      * @return a newly create {@link Player} object
      */
     @NotNull
-    TachyonPlayer createPlayer(@NotNull UUID uuid, @NotNull String username, @NotNull PlayerConnection connection);
+    Player createPlayer(@NotNull UUID uuid, @NotNull String username, @NotNull PlayerConnection connection);
 }

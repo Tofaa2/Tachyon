@@ -5,7 +5,8 @@ import net.tachyon.Tachyon;
 import net.tachyon.data.Data;
 import net.tachyon.block.BlockModifier;
 import net.tachyon.block.CustomBlock;
-import net.tachyon.utils.thread.MinestomThread;
+import net.tachyon.instance.Instance;
+import net.tachyon.utils.thread.ServerThread;
 import net.tachyon.utils.validate.Check;
 import net.tachyon.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +35,7 @@ import java.util.concurrent.ExecutorService;
  */
 public interface Batch<C> extends BlockModifier {
 
-    ExecutorService BLOCK_BATCH_POOL = new MinestomThread(
+    ExecutorService BLOCK_BATCH_POOL = new ServerThread(
             Tachyon.getServer().getBlockBatchThreadCount(),
             MinecraftServer.THREAD_NAME_BLOCK_BATCH);
 
@@ -91,5 +92,5 @@ public interface Batch<C> extends BlockModifier {
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
     @Nullable
-    Batch<C> apply(@NotNull World instance, @Nullable C callback);
+    Batch<C> apply(@NotNull Instance instance, @Nullable C callback);
 }

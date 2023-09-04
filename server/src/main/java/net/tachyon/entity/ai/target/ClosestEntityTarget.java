@@ -6,7 +6,7 @@ import net.tachyon.entity.TachyonLivingEntity;
 import net.tachyon.entity.ai.TargetSelector;
 import net.tachyon.instance.TachyonChunk;
 import net.tachyon.instance.Instance;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -99,7 +99,7 @@ public class ClosestEntityTarget extends TargetSelector {
 
                 final int targetX = chunkX + x;
                 final int targetZ = chunkZ + z;
-                final TachyonChunk chunk = instance.getChunk(targetX, targetZ);
+                final TachyonChunk chunk =(TachyonChunk) instance.getChunk(targetX, targetZ);
                 if (ChunkUtils.isLoaded(chunk)) {
                     // TachyonChunk is loaded, add it
                     chunks.add(chunk);

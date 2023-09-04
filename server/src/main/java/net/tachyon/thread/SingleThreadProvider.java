@@ -1,8 +1,7 @@
 package net.tachyon.thread;
 
-import net.tachyon.instance.TachyonChunk;
 import net.tachyon.instance.Instance;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import net.tachyon.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 

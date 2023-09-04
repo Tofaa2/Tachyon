@@ -5,7 +5,6 @@ import net.tachyon.binary.BinaryWriter;
 import net.tachyon.chat.Adventure;
 import net.tachyon.network.packet.server.ServerPacket;
 import net.tachyon.network.packet.server.ServerPacketIdentifier;
-import net.tachyon.utils.binary.TachyonBinaryWriter;
 import org.jetbrains.annotations.NotNull;
 
 public class LoginDisconnectPacket implements ServerPacket {

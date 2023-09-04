@@ -3,6 +3,7 @@ package net.tachyon.listener;
 import net.tachyon.entity.GameMode;
 import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.inventory.PlayerInventory;
+import net.tachyon.item.ItemStack;
 import net.tachyon.network.packet.client.play.ClientCreativeInventoryActionPacket;
 import net.tachyon.utils.inventory.PlayerInventoryUtils;
 
@@ -13,7 +14,7 @@ public class CreativeInventoryActionListener {
             return;
 
         short slot = packet.slot;
-        final TachyonItemStack item = packet.item;
+        final ItemStack item = packet.item;
 
         if (slot != -1) {
             // Set item

@@ -1,6 +1,8 @@
 package net.tachyon.event.player;
 
 import net.tachyon.MinecraftServer;
+import net.tachyon.Tachyon;
+import net.tachyon.block.BlockManager;
 import net.tachyon.coordinate.Point;
 import net.tachyon.entity.Player;
 import net.tachyon.event.PlayerEvent;
@@ -13,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class PlayerBlockBreakEvent extends PlayerEvent implements CancellableEvent {
 
-    private static final TachyonBlockManager BLOCK_MANAGER = MinecraftServer.getBlockManager();
+    private static final BlockManager BLOCK_MANAGER = Tachyon.getServer().getBlockmanager();
 
     private final Point blockPosition;
 

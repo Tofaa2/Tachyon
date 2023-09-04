@@ -26,7 +26,7 @@ public class PFInstanceSpace implements IInstanceSpace {
 
     @Override
     public IColumnarSpace columnarSpaceAt(int cx, int cz) {
-        final TachyonChunk chunk = instance.getChunk(cx, cz);
+        final TachyonChunk chunk = (TachyonChunk) instance.getChunk(cx, cz);
         if (chunk == null) {
             return null;
         }

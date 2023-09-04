@@ -1,6 +1,7 @@
 package net.tachyon.binary;
 
 
+import io.netty.buffer.ByteBuf;
 import net.kyori.adventure.text.Component;
 import net.tachyon.coordinate.Point;
 import net.tachyon.item.ItemStack;
@@ -67,5 +68,7 @@ public interface BinaryReader {
     NBT readTag() throws NBTException, IOException;
 
     Component readComponent(int maxLength);
+
+    @NotNull ByteBuf getBuffer();
 
 }

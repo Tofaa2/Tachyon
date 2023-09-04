@@ -1,13 +1,13 @@
-package net.tachyon.instance.palette;
+package net.tachyon.world.palette;
 
 import net.tachyon.Tachyon;
-import net.tachyon.instance.TachyonChunk;
 import net.tachyon.block.Block;
 import net.tachyon.network.packet.server.play.ChunkDataPacket;
 import net.tachyon.utils.MathUtils;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import net.tachyon.utils.clone.CloneUtils;
 import net.tachyon.utils.clone.PublicCloneable;
+import net.tachyon.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PaletteStorage implements PublicCloneable<PaletteStorage> {
 
-    private Section[] sections = new Section[TachyonChunk.CHUNK_SECTION_COUNT];
+    private Section[] sections = new Section[Chunk.CHUNK_SECTION_COUNT];
 
     /**
      * Creates a new palette storage.
@@ -27,7 +27,7 @@ public class PaletteStorage implements PublicCloneable<PaletteStorage> {
     }
 
     public void setBlockAt(int x, int y, int z, short blockId) {
-        if (!MathUtils.isBetween(y, 0, TachyonChunk.CHUNK_SIZE_Y - 1)) {
+        if (!MathUtils.isBetween(y, 0, Chunk.CHUNK_SIZE_Y - 1)) {
             return;
         }
         final int sectionIndex = ChunkUtils.getSectionAt(y);
@@ -43,7 +43,7 @@ public class PaletteStorage implements PublicCloneable<PaletteStorage> {
     }
 
     public short getBlockAt(int x, int y, int z) {
-        if (y < 0 || y >= TachyonChunk.CHUNK_SIZE_Y) {
+        if (y < 0 || y >= Chunk.CHUNK_SIZE_Y) {
             return 0;
         }
 
@@ -104,7 +104,7 @@ public class PaletteStorage implements PublicCloneable<PaletteStorage> {
     private static int toChunkCoordinate(int xz) {
         xz %= 16;
         if (xz < 0) {
-            xz += TachyonChunk.CHUNK_SECTION_SIZE;
+            xz += Chunk.CHUNK_SECTION_SIZE;
         }
 
         return xz;

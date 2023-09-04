@@ -9,7 +9,6 @@ import net.tachyon.instance.TachyonChunk;
 import net.tachyon.instance.Instance;
 import net.tachyon.instance.InstanceWorldBorder;
 import net.tachyon.block.Block;
-import net.tachyon.utils.chunk.ChunkUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class CollisionUtils {

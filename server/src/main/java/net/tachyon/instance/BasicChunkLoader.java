@@ -2,7 +2,7 @@ package net.tachyon.instance;
 
 import net.tachyon.storage.StorageLocation;
 import net.tachyon.utils.binary.TachyonBinaryReader;
-import net.tachyon.utils.callback.OptionalCallback;
+import net.tachyon.utils.OptionalCallback;
 import net.tachyon.world.chunk.ChunkCallback;
 import net.tachyon.world.chunk.ChunkSupplier;
 import org.jetbrains.annotations.NotNull;
@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * The key used in the {@link StorageLocation} is defined by {@link #getChunkKey(int, int)} and should NOT be changed.
  */
-public class MinestomBasicChunkLoader implements IChunkLoader {
+public class BasicChunkLoader implements IChunkLoader {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(MinestomBasicChunkLoader.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(BasicChunkLoader.class);
     private final InstanceContainer instanceContainer;
 
     /**
@@ -33,7 +33,7 @@ public class MinestomBasicChunkLoader implements IChunkLoader {
      *
      * @param instanceContainer the {@link InstanceContainer} linked to this loader
      */
-    public MinestomBasicChunkLoader(InstanceContainer instanceContainer) {
+    public BasicChunkLoader(InstanceContainer instanceContainer) {
         this.instanceContainer = instanceContainer;
     }
 
@@ -77,7 +77,7 @@ public class MinestomBasicChunkLoader implements IChunkLoader {
             // Found, load from result bytes
             TachyonBinaryReader reader = new TachyonBinaryReader(bytes);
             // Create the chunk object using the instance's ChunkSupplier to support multiple implementations
-            TachyonChunk chunk = instanceContainer.getChunkSupplier().createChunk(null, chunkX, chunkZ, instanceContainer.getDimensionType().getHasSky());
+            TachyonChunk chunk = (TachyonChunk) instanceContainer.getChunkSupplier().createChunk(null, chunkX, chunkZ, instanceContainer.getDimensionType().getHasSky());
             // Execute the callback once all blocks are placed (allow for multithreaded implementations)
             chunk.readChunk(reader, callback);
             return true;

@@ -8,7 +8,7 @@ import net.tachyon.network.packet.client.play.ClientPlayerLookPacket;
 import net.tachyon.network.packet.client.play.ClientPlayerPacket;
 import net.tachyon.network.packet.client.play.ClientPlayerPositionAndLookPacket;
 import net.tachyon.network.packet.client.play.ClientPlayerPositionPacket;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerPositionListener {

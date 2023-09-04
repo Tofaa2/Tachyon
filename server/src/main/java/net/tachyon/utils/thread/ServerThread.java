@@ -6,9 +6,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class MinestomThread extends ThreadPoolExecutor {
+public class ServerThread extends ThreadPoolExecutor {
 
-    private static final Set<MinestomThread> executors = new CopyOnWriteArraySet<>();
+    private static final Set<ServerThread> executors = new CopyOnWriteArraySet<>();
 
     /**
      * Creates a non-local thread pool executor
@@ -16,7 +16,7 @@ public class MinestomThread extends ThreadPoolExecutor {
      * @param nThreads the number of threads
      * @param name     the name of the thread pool
      */
-    public MinestomThread(int nThreads, String name) {
+    public ServerThread(int nThreads, String name) {
         this(nThreads, name, false);
     }
 
@@ -25,7 +25,7 @@ public class MinestomThread extends ThreadPoolExecutor {
      * @param name     the name of the thread pool
      * @param local    set to true if this executor is only used inside a method and should *not* be kept in the internal list of executors
      */
-    public MinestomThread(int nThreads, String name, boolean local) {
+    public ServerThread(int nThreads, String name, boolean local) {
         super(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), r -> {
             Thread thread = new Thread(r);
             thread.setDaemon(true);
@@ -33,7 +33,7 @@ public class MinestomThread extends ThreadPoolExecutor {
             return thread;
         });
         if (!local) {
-            MinestomThread.executors.add(this);
+            ServerThread.executors.add(this);
         }
     }
 
@@ -41,6 +41,6 @@ public class MinestomThread extends ThreadPoolExecutor {
      * Shutdown all the thread pools
      */
     public static void shutdownAll() {
-        executors.forEach(MinestomThread::shutdownNow);
+        executors.forEach(ServerThread::shutdownNow);
     }
 }

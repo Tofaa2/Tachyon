@@ -3,7 +3,6 @@ package net.tachyon.block.rule.vanilla;
 import net.tachyon.coordinate.Point;
 import net.tachyon.coordinate.BlockFace;
 import net.tachyon.entity.Player;
-import net.tachyon.instance.Instance;
 import net.tachyon.block.Block;
 import net.tachyon.block.rule.BlockPlacementRule;
 import net.tachyon.utils.block.BlockUtils;

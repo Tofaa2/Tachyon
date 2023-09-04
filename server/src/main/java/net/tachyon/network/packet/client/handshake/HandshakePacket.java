@@ -81,10 +81,8 @@ public class HandshakePacket implements ClientPreplayPacket {
         }
 
         switch (nextState) {
-            case 1:
-                connection.setConnectionState(ConnectionState.STATUS);
-                break;
-            case 2:
+            case 1 -> (connection).setConnectionState(ConnectionState.STATUS);
+            case 2 -> {
                 if (protocolVersion == MinecraftServer.PROTOCOL_VERSION) {
                     connection.setConnectionState(ConnectionState.LOGIN);
 
@@ -97,10 +95,10 @@ public class HandshakePacket implements ClientPreplayPacket {
                     connection.sendPacket(new LoginDisconnectPacket(INVALID_VERSION_TEXT));
                     connection.disconnect();
                 }
-                break;
-            default:
-                // Unexpected error
-                break;
+            }
+            default -> {
+            }
+            // Unexpected error
         }
     }
 }

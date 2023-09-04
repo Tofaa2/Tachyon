@@ -15,7 +15,6 @@ public final class GlobalEventHandler implements EventHandler {
 
     // Events
     private final Map<Class<? extends Event>, Collection<EventCallback>> eventCallbacks = new ConcurrentHashMap<>();
-    private final Map<String, Collection<EventCallback<?>>> extensionCallbacks = new ConcurrentHashMap<>();
 
     @NotNull
     @Override
@@ -23,9 +22,4 @@ public final class GlobalEventHandler implements EventHandler {
         return eventCallbacks;
     }
 
-    @NotNull
-    @Override
-    public Collection<EventCallback<?>> getExtensionCallbacks(String extension) {
-        return extensionCallbacks.computeIfAbsent(extension, e -> new CopyOnWriteArrayList<>());
-    }
 }

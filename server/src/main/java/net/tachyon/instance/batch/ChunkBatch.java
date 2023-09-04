@@ -8,16 +8,16 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import net.tachyon.coordinate.Point;
 import net.tachyon.data.Data;
+import net.tachyon.instance.Instance;
 import net.tachyon.instance.InstanceContainer;
 import net.tachyon.instance.TachyonChunk;
 import net.tachyon.network.packet.server.play.ChunkDataPacket;
 import net.tachyon.network.packet.server.play.MultiBlockChangePacket;
 import net.tachyon.utils.PacketUtils;
 import net.tachyon.utils.block.CustomBlockUtils;
-import net.tachyon.utils.callback.OptionalCallback;
+import net.tachyon.utils.OptionalCallback;
 import net.tachyon.world.chunk.ChunkCallback;
-import net.tachyon.utils.chunk.ChunkUtils;
-import net.tachyon.world.World;
+import net.tachyon.utils.ChunkUtils;
 import net.tachyon.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -122,7 +122,7 @@ public class ChunkBatch implements Batch<ChunkCallback> {
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
     @Override
-    public ChunkBatch apply(@NotNull World instance, @Nullable ChunkCallback callback) {
+    public ChunkBatch apply(@NotNull Instance instance, @Nullable ChunkCallback callback) {
         return apply(instance, 0, 0, callback);
     }
 
@@ -135,7 +135,7 @@ public class ChunkBatch implements Batch<ChunkCallback> {
      * @param callback The callback to be executed when the batch is applied.
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    public ChunkBatch apply(@NotNull World instance, int chunkX, int chunkZ, @Nullable ChunkCallback callback) {
+    public ChunkBatch apply(@NotNull Instance instance, int chunkX, int chunkZ, @Nullable ChunkCallback callback) {
         final Chunk chunk = instance.getChunk(chunkX, chunkZ);
         if (chunk == null) {
             LOGGER.warn("Unable to apply ChunkBatch to unloaded chunk ({}, {}) in {}.",
@@ -153,7 +153,7 @@ public class ChunkBatch implements Batch<ChunkCallback> {
      * @param callback The callback to be executed when the batch is applied
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    public ChunkBatch apply(@NotNull World instance, @NotNull Chunk chunk, @Nullable ChunkCallback callback) {
+    public ChunkBatch apply(@NotNull Instance instance, @NotNull Chunk chunk, @Nullable ChunkCallback callback) {
         return apply(instance, chunk, callback, true);
     }
 
@@ -166,7 +166,7 @@ public class ChunkBatch implements Batch<ChunkCallback> {
      * @param callback The callback to be executed when the batch is applied
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    public ChunkBatch unsafeApply(@NotNull World instance, @NotNull Chunk chunk, @Nullable ChunkCallback callback) {
+    public ChunkBatch unsafeApply(@NotNull Instance instance, @NotNull Chunk chunk, @Nullable ChunkCallback callback) {
         return apply(instance, chunk, callback, false);
     }
 
@@ -180,7 +180,7 @@ public class ChunkBatch implements Batch<ChunkCallback> {
      *                     Otherwise it will be executed immediately upon completion
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    protected ChunkBatch apply(@NotNull World instance,
+    protected ChunkBatch apply(@NotNull Instance instance,
                                @NotNull Chunk chunk, @Nullable ChunkCallback callback,
                                boolean safeCallback) {
         if (!this.options.isUnsafeApply()) this.awaitReady();
@@ -193,7 +193,7 @@ public class ChunkBatch implements Batch<ChunkCallback> {
     /**
      * Applies this batch in the current thread, executing the callback upon completion.
      */
-    private void singleThreadFlush(World instance, Chunk chunk, @Nullable ChunkBatch inverse,
+    private void singleThreadFlush(Instance instance, Chunk chunk, @Nullable ChunkBatch inverse,
                                    @Nullable ChunkCallback callback, boolean safeCallback) {
         try {
             if (!chunk.isLoaded()) {
@@ -258,7 +258,7 @@ public class ChunkBatch implements Batch<ChunkCallback> {
     /**
      * Updates the given chunk for all of its viewers, and executes the callback.
      */
-    private void updateChunk(@NotNull World instance, Chunk chunk, IntSet updatedSections, @Nullable ChunkCallback callback, boolean safeCallback) {
+    private void updateChunk(@NotNull Instance instance, Chunk chunk, IntSet updatedSections, @Nullable ChunkCallback callback, boolean safeCallback) {
         int changedBlocksSize = Integer.MAX_VALUE;
         if (blocks != null) {
             synchronized (blocks) {

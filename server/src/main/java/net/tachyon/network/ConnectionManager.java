@@ -361,7 +361,7 @@ public final class ConnectionManager implements Audience, ForwardingPlayerAudien
                     connection.sendPacket(loginSuccessPacket);
                 }
 
-                connection.setConnectionState(ConnectionState.PLAY);
+                ((NettyPlayerConnection) connection).setConnectionState(ConnectionState.PLAY);
             }
 
             // Add the player to the waiting list
@@ -384,7 +384,7 @@ public final class ConnectionManager implements Audience, ForwardingPlayerAudien
     public TachyonPlayer startPlayState(@NotNull PlayerConnection connection,
                                         @NotNull UUID uuid, @NotNull String username,
                                         boolean register) {
-        final TachyonPlayer player = getPlayerProvider().createPlayer(uuid, username, connection);
+        final TachyonPlayer player = (TachyonPlayer) getPlayerProvider().createPlayer(uuid, username, connection);
         startPlayState(player, register);
 
         return player;

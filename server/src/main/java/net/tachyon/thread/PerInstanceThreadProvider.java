@@ -3,7 +3,7 @@ package net.tachyon.thread;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.tachyon.instance.Instance;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

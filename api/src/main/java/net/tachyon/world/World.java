@@ -51,10 +51,6 @@ public interface World extends ForwardingPlayerAudience, BlockModifier {
 
     void refreshBlockStateId(int x, int y, int z, short blockStateId);
 
-    void setBlock(Point position, Block block);
-
-    void setBlock(int x, int y, int z, Block block);
-
     @NotNull Collection<Chunk> getChunks();
 
     @NotNull Collection<Player> getPlayers();

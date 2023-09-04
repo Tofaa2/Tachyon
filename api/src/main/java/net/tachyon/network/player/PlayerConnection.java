@@ -3,6 +3,7 @@ package net.tachyon.network.player;
 import net.tachyon.entity.Player;
 import net.tachyon.network.ConnectionState;
 import net.tachyon.network.packet.server.ServerPacket;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,5 +35,8 @@ public interface  PlayerConnection {
     boolean isOnline();
 
     @NotNull ConnectionState getConnectionState();
+
+    @ApiStatus.Internal
+    void setConnectionState(@NotNull ConnectionState connectionState);
 
 }

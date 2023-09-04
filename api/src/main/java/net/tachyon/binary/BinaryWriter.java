@@ -1,5 +1,6 @@
 package net.tachyon.binary;
 
+import io.netty.buffer.ByteBuf;
 import net.tachyon.coordinate.Point;
 import net.tachyon.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -55,5 +56,7 @@ public interface BinaryWriter {
     void writeAtEnd(BinaryWriter writer);
 
     void write(Consumer<BinaryWriter> consumer);
+
+    @NotNull ByteBuf getBuffer();
 
 }

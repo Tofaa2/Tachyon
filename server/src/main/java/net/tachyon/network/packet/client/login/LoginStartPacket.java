@@ -7,7 +7,7 @@ import net.tachyon.binary.BinaryReader;
 import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.extras.MojangAuth;
 import net.tachyon.extras.proxy.BungeeCordProxy;
-import net.tachyon.network.packet.server.login.EncryptionRequestPacket;
+import net.tachyon.network.packet.server.login.EncryptionRequestPacketImpl;
 import net.tachyon.network.packet.server.login.LoginDisconnectPacket;
 import net.tachyon.network.player.NettyPlayerConnection;
 import net.tachyon.network.player.PlayerConnection;
@@ -51,7 +51,7 @@ public class LoginStartPacket implements ClientPreplayPacket {
             final NettyPlayerConnection nettyPlayerConnection = (NettyPlayerConnection) connection;
 
             nettyPlayerConnection.setConnectionState(ConnectionState.LOGIN);
-            EncryptionRequestPacket encryptionRequestPacket = new EncryptionRequestPacket(nettyPlayerConnection);
+            EncryptionRequestPacketImpl encryptionRequestPacket = new EncryptionRequestPacketImpl(nettyPlayerConnection);
             nettyPlayerConnection.sendPacket(encryptionRequestPacket);
         } else {
             final boolean bungee = BungeeCordProxy.isEnabled();

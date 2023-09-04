@@ -6,7 +6,7 @@ import net.tachyon.data.Data;
 import net.tachyon.instance.TachyonChunk;
 import net.tachyon.instance.Instance;
 import net.tachyon.instance.InstanceContainer;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

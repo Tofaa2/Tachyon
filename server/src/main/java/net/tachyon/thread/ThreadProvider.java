@@ -8,8 +8,8 @@ import net.tachyon.instance.Instance;
 import net.tachyon.instance.InstanceContainer;
 import net.tachyon.instance.SharedInstance;
 import net.tachyon.utils.validator.EntityValidator;
-import net.tachyon.utils.chunk.ChunkUtils;
-import net.tachyon.utils.thread.MinestomThread;
+import net.tachyon.utils.ChunkUtils;
+import net.tachyon.utils.thread.ServerThread;
 import net.tachyon.UpdateManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -108,7 +108,7 @@ public abstract class ThreadProvider {
         if (pool != null) {
             this.pool.shutdown();
         }
-        this.pool = new MinestomThread(threadCount, MinecraftServer.THREAD_NAME_TICK);
+        this.pool = new ServerThread(threadCount, MinecraftServer.THREAD_NAME_TICK);
     }
 
     // INSTANCE UPDATE
@@ -124,7 +124,7 @@ public abstract class ThreadProvider {
         final int chunkX = ChunkUtils.getChunkCoordX(chunkIndex);
         final int chunkZ = ChunkUtils.getChunkCoordZ(chunkIndex);
 
-        final TachyonChunk chunk = instance.getChunk(chunkX, chunkZ);
+        final TachyonChunk chunk = (TachyonChunk) instance.getChunk(chunkX, chunkZ);
         if (!ChunkUtils.isLoaded(chunk))
             return;
 

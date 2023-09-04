@@ -7,7 +7,7 @@ import net.tachyon.entity.TachyonEntity;
 import net.tachyon.instance.TachyonChunk;
 import net.tachyon.instance.Instance;
 import net.tachyon.block.Block;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -26,7 +26,7 @@ public final class EntityUtils {
         for (long chunkIndex : chunksInRange) {
             final int chunkX = ChunkUtils.getChunkCoordX(chunkIndex);
             final int chunkZ = ChunkUtils.getChunkCoordZ(chunkIndex);
-            final TachyonChunk chunk = instance.getChunk(chunkX, chunkZ);
+            final TachyonChunk chunk = (TachyonChunk) instance.getChunk(chunkX, chunkZ);
             if (chunk == null)
                 continue;
             instance.getChunkEntities(chunk).forEach(consumer);

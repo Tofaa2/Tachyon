@@ -14,8 +14,6 @@ import net.tachyon.extras.mojangAuth.Decrypter;
 import net.tachyon.extras.mojangAuth.Encrypter;
 import net.tachyon.extras.mojangAuth.MojangCrypt;
 import net.tachyon.listener.manager.PacketListenerManager;
-import net.tachyon.listener.manager.ServerPacketConsumer;
-import net.tachyon.network.ConnectionManager;
 import net.tachyon.network.packet.client.handshake.HandshakePacket;
 import net.tachyon.network.packet.server.login.SetCompressionPacket;
 import net.tachyon.network.ConnectionState;

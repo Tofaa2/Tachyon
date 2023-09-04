@@ -1,4 +1,4 @@
-package net.tachyon.utils.binary;
+package net.tachyon.utils;
 
 public final class BitmaskUtil {
 

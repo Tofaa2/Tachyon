@@ -44,9 +44,9 @@ import net.tachyon.sound.SoundEvent;
 import net.tachyon.stat.PlayerStatistic;
 import net.tachyon.utils.*;
 import net.tachyon.utils.binary.TachyonBinaryWriter;
-import net.tachyon.utils.callback.OptionalCallback;
+import net.tachyon.utils.OptionalCallback;
 import net.tachyon.world.chunk.ChunkCallback;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import net.tachyon.utils.entity.EntityUtils;
 import net.tachyon.utils.instance.InstanceUtils;
 import net.tachyon.utils.time.CooldownUtils;
@@ -1066,7 +1066,7 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
 
         {
             // Send new chunks
-            final TachyonChunk chunk = instance.getChunk(position.blockX() >> 4, position.blockZ() >> 4);
+            final TachyonChunk chunk =(TachyonChunk)  instance.getChunk(position.blockX() >> 4, position.blockZ() >> 4);
             Check.notNull(chunk, "Tried to interact with an unloaded chunk.");
             refreshVisibleChunks(chunk);
         }
@@ -1184,7 +1184,7 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
             chunkDataPacket.skylight = newChunk.getHasSky();
             playerConnection.sendPacket(chunkDataPacket);*/
 
-            final TachyonChunk chunk = instance.getChunk(chunkX, chunkZ);
+            final TachyonChunk chunk = (TachyonChunk) instance.getChunk(chunkX, chunkZ);
             if (chunk != null)
                 chunk.removeViewer(this);
         }
@@ -1951,7 +1951,7 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
             addPlayer.properties.add(prop);
         }
 
-        playerListItemPacket.playerInfos.add(addPlayer);
+        playerListItemPacket.playerInfos().add(addPlayer);
         return playerListItemPacket;
     }
 
@@ -1967,7 +1967,7 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
         PlayerListItemPacket.RemovePlayer removePlayer =
                 new PlayerListItemPacket.RemovePlayer(getUuid());
 
-        playerListItemPacket.playerInfos.add(removePlayer);
+        playerListItemPacket.playerInfos().add(removePlayer);
         return playerListItemPacket;
     }
 

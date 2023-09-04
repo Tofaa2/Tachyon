@@ -1,6 +1,5 @@
 package net.tachyon.instance;
 
-import net.tachyon.MinecraftServer;
 import net.tachyon.Tachyon;
 import net.tachyon.block.BlockManager;
 import net.tachyon.coordinate.Position;
@@ -22,11 +21,10 @@ import net.tachyon.utils.binary.TachyonBinaryReader;
 import net.tachyon.world.biome.BiomeManager;
 import net.tachyon.world.chunk.ChunkCallback;
 import net.tachyon.world.chunk.ChunkSupplier;
-import net.tachyon.utils.chunk.ChunkUtils;
+import net.tachyon.utils.ChunkUtils;
 import net.tachyon.utils.player.PlayerUtils;
 import net.tachyon.utils.validate.Check;
 import net.tachyon.world.biome.Biome;
-import net.tachyon.biome.TachyonBiomeManager;
 import net.tachyon.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

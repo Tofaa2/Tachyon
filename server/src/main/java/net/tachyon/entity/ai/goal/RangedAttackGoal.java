@@ -58,7 +58,7 @@ public class RangedAttackGoal extends GoalSelector {
 
     @Override
     public boolean shouldStart() {
-        this.cachedTarget = findTarget();
+        this.cachedTarget =(TachyonEntity) findTarget();
         return this.cachedTarget != null;
     }
 
@@ -74,7 +74,7 @@ public class RangedAttackGoal extends GoalSelector {
             target = this.cachedTarget;
             this.cachedTarget = null;
         } else {
-            target = findTarget();
+            target = (TachyonEntity)findTarget();
         }
         if (target == null) {
             this.stop = true;

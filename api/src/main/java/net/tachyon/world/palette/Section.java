@@ -1,9 +1,9 @@
-package net.tachyon.instance.palette;
+package net.tachyon.world.palette;
 
 import net.tachyon.Tachyon;
-import net.tachyon.instance.TachyonChunk;
 import net.tachyon.block.Block;
 import net.tachyon.utils.clone.PublicCloneable;
+import net.tachyon.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 
 public class Section implements PublicCloneable<Section> {
@@ -11,7 +11,7 @@ public class Section implements PublicCloneable<Section> {
     /**
      * The number of blocks that should be in one chunk section.
      */
-    public final static int BLOCK_COUNT = TachyonChunk.CHUNK_SECTION_SIZE * TachyonChunk.CHUNK_SECTION_SIZE * TachyonChunk.CHUNK_SECTION_SIZE;
+    public final static int BLOCK_COUNT = Chunk.CHUNK_SECTION_SIZE * Chunk.CHUNK_SECTION_SIZE * Chunk.CHUNK_SECTION_SIZE;
 
     private short[] blocks;
 
@@ -84,7 +84,7 @@ public class Section implements PublicCloneable<Section> {
      * @return the section index of the position
      */
     public static int getSectionIndex(int x, int y, int z) {
-        y %= TachyonChunk.CHUNK_SECTION_SIZE;
+        y %= Chunk.CHUNK_SECTION_SIZE;
         return y << 8 | z << 4 | x;
     }
 

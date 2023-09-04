@@ -53,8 +53,4 @@ public class ChunkGenerationBatch extends ChunkBatch {
         throw new IllegalStateException("#clear is not supported for chunk generation batch.");
     }
 
-    @Override
-    protected ChunkBatch apply(@NotNull Instance instance, @NotNull TachyonChunk chunk, @Nullable ChunkCallback callback, boolean safeCallback) {
-        throw new IllegalStateException("#apply is not supported for chunk generation batch.");
-    }
 }

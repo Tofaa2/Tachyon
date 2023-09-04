@@ -1,6 +1,5 @@
-package net.tachyon.utils.callback;
+package net.tachyon.utils;
 
-import net.tachyon.instance.TachyonChunk;
 import net.tachyon.world.chunk.Chunk;
 import net.tachyon.world.chunk.ChunkCallback;
 import org.jetbrains.annotations.Nullable;
