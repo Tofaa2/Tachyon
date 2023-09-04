@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    id 'java-library'
+}
+
+dependencies {
+    compileOnlyApi 'org.slf4j:slf4j-api:2.0.7'
+    compileOnly 'io.netty:netty-handler:4.1.59.Final'
+
+    api 'org.jetbrains:annotations:24.0.0'
+    api 'it.unimi.dsi:fastutil:8.5.2'
+    api 'org.jctools:jctools-core:4.0.1'
+    api 'com.google.guava:guava:21.0'
+
+    api("net.kyori:adventure-api:${project.adventureVersion}")
+    api("net.kyori:adventure-text-serializer-gson:${project.adventureVersion}")
+    api("net.kyori:adventure-text-serializer-legacy:${project.adventureVersion}")
+    api("net.kyori:adventure-text-serializer-plain:${project.adventureVersion}")
+
+    // NBT parsing/manipulation/saving
+    api("com.github.jglrxavpok:Hephaistos:${project.hephaistosVersion}")
+    api("com.github.jglrxavpok:Hephaistos:${project.hephaistosVersion}:gson")
+    api("com.github.jglrxavpok:Hephaistos:${project.hephaistosVersion}") {
+        capabilities {
+            requireCapability("org.jglrxavpok.nbt:Hephaistos-gson")
+        }
+    }
+
+}

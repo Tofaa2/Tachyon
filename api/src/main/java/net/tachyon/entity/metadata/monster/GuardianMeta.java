@@ -1,0 +1,15 @@
+package net.tachyon.entity.metadata.monster;
+
+import net.tachyon.entity.metadata.MobMeta;
+
+public interface GuardianMeta extends MobMeta {
+
+    boolean isElderly();
+
+    void setElderly(boolean value);
+
+    boolean isRetractingSpikes();
+
+    void setRetractingSpikes(boolean value);
+
+}
