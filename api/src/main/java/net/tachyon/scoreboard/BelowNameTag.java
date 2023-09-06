@@ -1,8 +1,6 @@
 package net.tachyon.scoreboard;
 
-import net.tachyon.Tachyon;
 import net.tachyon.entity.Player;
-import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.network.packet.server.play.ScoreboardObjectivePacket;
 import net.tachyon.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
@@ -40,21 +38,20 @@ public class BelowNameTag implements Scoreboard {
     }
 
     @Override
-    public String getObjectiveName() {
+    public @NotNull String getObjectiveName() {
         return this.objectiveName;
     }
 
     @Override
     public boolean addViewer(@NotNull Player p) {
-        TachyonPlayer player = (TachyonPlayer) p;
-        boolean result = this.viewers.add(player);
-        PlayerConnection connection = player.getPlayerConnection();
+        boolean result = this.viewers.add(p);
+        PlayerConnection connection = p.getPlayerConnection();
 
         if (result) {
             connection.sendPacket(this.scoreboardObjectivePacket);
             connection.sendPacket(this.getDisplayScoreboardPacket((byte) 2));
 
-            player.setBelowNameTag(this);
+            p.setBelowNameTag(this);
         }
 
         return result;
@@ -62,13 +59,12 @@ public class BelowNameTag implements Scoreboard {
 
     @Override
     public boolean removeViewer(@NotNull Player p) {
-        TachyonPlayer player = (TachyonPlayer) p;
-        boolean result = this.viewers.remove(player);
-        PlayerConnection connection = player.getPlayerConnection();
+        boolean result = this.viewers.remove(p);
+        PlayerConnection connection = p.getPlayerConnection();
 
         if (result) {
             connection.sendPacket(this.getDestructionObjectivePacket());
-            player.setBelowNameTag(null);
+            p.setBelowNameTag(null);
         }
 
         return result;

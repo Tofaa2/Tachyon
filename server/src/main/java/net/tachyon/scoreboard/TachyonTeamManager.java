@@ -3,6 +3,7 @@ package net.tachyon.scoreboard;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.tachyon.MinecraftServer;
+import net.tachyon.entity.Player;
 import net.tachyon.entity.TachyonLivingEntity;
 import net.tachyon.network.ConnectionManager;
 import net.tachyon.utils.PacketUtils;
@@ -14,10 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-/**
- * An object which manages all the {@link Team}'s
- */
-public final class TeamManager {
+public final class TachyonTeamManager implements TeamManager {
 
     private final ConnectionManager connectionManager;
 
@@ -29,7 +27,7 @@ public final class TeamManager {
     /**
      * Default constructor
      */
-    public TeamManager(@NotNull ConnectionManager connectionManager) {
+    public TachyonTeamManager(@NotNull ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
         this.teams = new CopyOnWriteArraySet<>();
     }
@@ -39,9 +37,8 @@ public final class TeamManager {
      *
      * @param team The team to be registered
      */
-    protected void registerNewTeam(@NotNull Team team) {
+    public void registerNewTeam(@NotNull Team team) {
         this.teams.add(team);
-
         PacketUtils.sendGroupedPacket(MinecraftServer.getConnectionManager().getOnlinePlayers(), team.createTeamsCreationPacket());
     }
 
@@ -75,8 +72,9 @@ public final class TeamManager {
      * @param name The registry name of the team
      * @return the team builder
      */
+    @NotNull
     public TeamBuilder createBuilder(@NotNull String name) {
-        return new TeamBuilder(name, this);
+        return new TeamBuilder(name);
     }
 
     /**
@@ -85,6 +83,7 @@ public final class TeamManager {
      * @param name The registry name
      * @return the created {@link Team}
      */
+    @NotNull
     public Team createTeam(@NotNull String name) {
         return this.createBuilder(name).build();
     }
@@ -98,7 +97,8 @@ public final class TeamManager {
      * @param suffix    The team suffix
      * @return the created {@link Team} with a prefix, teamColor and suffix
      */
-    public Team createTeam(String name, Component prefix, NamedTextColor teamColor, Component suffix) {
+    @NotNull
+    public Team createTeam(@NotNull String name, @NotNull Component prefix, @NotNull NamedTextColor teamColor, @NotNull Component suffix) {
         return this.createBuilder(name).prefix(prefix).teamColor(teamColor).suffix(suffix).updateTeamPacket().build();
     }
 
@@ -122,7 +122,7 @@ public final class TeamManager {
      * @param teamName The registry name of the team
      * @return a registered {@link Team} or {@code null}
      */
-    public Team getTeam(String teamName) {
+    public Team getTeam(@NotNull String teamName) {
         for (Team team : this.teams) {
             if (team.getTeamName().equals(teamName)) return team;
         }

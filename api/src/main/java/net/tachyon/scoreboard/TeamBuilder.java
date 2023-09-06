@@ -2,6 +2,7 @@ package net.tachyon.scoreboard;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.tachyon.Tachyon;
 import net.tachyon.network.packet.server.play.TeamsPacket.NameTagVisibility;
 
 /**
@@ -26,21 +27,19 @@ public class TeamBuilder {
      * Creates an team builder.
      *
      * @param name        The name of the new team
-     * @param teamManager The manager for the team
      */
-    public TeamBuilder(String name, TeamManager teamManager) {
-        this(teamManager.exists(name) ? teamManager.getTeam(name) : new Team(name), teamManager);
+    public TeamBuilder(String name) {
+        this(Tachyon.getServer().getTeamManager().exists(name) ? Tachyon.getServer().getTeamManager().getTeam(name) : new Team(name));
     }
 
     /**
      * Creates an team builder.
      *
      * @param team        The new team
-     * @param teamManager The manager for the team
      */
-    private TeamBuilder(Team team, TeamManager teamManager) {
+    private TeamBuilder(Team team) {
         this.team = team;
-        this.teamManager = teamManager;
+        this.teamManager = Tachyon.getServer().getTeamManager();
         this.updateTeam = false;
     }
 

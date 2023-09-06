@@ -3,11 +3,11 @@ package net.tachyon.scoreboard;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.tachyon.MinecraftServer;
-import net.tachyon.entity.TachyonLivingEntity;
+import net.tachyon.Tachyon;
+import net.tachyon.entity.Player;
 import net.tachyon.network.ConnectionManager;
 import net.tachyon.network.packet.server.play.TeamsPacket;
 import net.tachyon.network.packet.server.play.TeamsPacket.NameTagVisibility;
-import net.tachyon.utils.PacketUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -80,7 +80,7 @@ public class Team {
     /**
      * Adds a member to the {@link Team}.
      * <br>
-     * This member can be a {@link Player} or an {@link TachyonLivingEntity}.
+     * This member can be a {@link Player} or an {@link net.tachyon.entity.LivingEntity}.
      *
      * @param member The member to be added
      */
@@ -95,7 +95,7 @@ public class Team {
         addPlayerPacket.entities = members.toArray(new String[0]);
 
         // Sends to all online players the add player packet
-        PacketUtils.sendGroupedPacket(CONNECTION_MANAGER.getOnlinePlayers(), addPlayerPacket);
+        Tachyon.getServer().sendGroupedPacket(CONNECTION_MANAGER.getOnlinePlayers(), addPlayerPacket);
     }
 
     /**
@@ -111,7 +111,7 @@ public class Team {
         removePlayerPacket.entities = new String[]{member};
 
         // Sends to all online player teh remove player packet
-        PacketUtils.sendGroupedPacket(CONNECTION_MANAGER.getOnlinePlayers(), removePlayerPacket);
+        Tachyon.getServer().sendGroupedPacket(CONNECTION_MANAGER.getOnlinePlayers(), removePlayerPacket);
 
         // Removes the member from the team
         this.members.remove(member);
@@ -368,6 +368,6 @@ public class Team {
         updatePacket.teamPrefix = this.prefix;
         updatePacket.teamSuffix = this.suffix;
 
-        PacketUtils.sendGroupedPacket(MinecraftServer.getConnectionManager().getOnlinePlayers(), updatePacket);
+        Tachyon.getServer().sendGroupedPacket(MinecraftServer.getConnectionManager().getOnlinePlayers(), updatePacket);
     }
 }

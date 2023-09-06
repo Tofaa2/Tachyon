@@ -8,6 +8,7 @@ import net.tachyon.entity.Player;
 import net.tachyon.exception.ExceptionManager;
 import net.tachyon.network.packet.server.ServerPacket;
 import net.tachyon.scheduler.SchedulerManager;
+import net.tachyon.scoreboard.TeamManager;
 import net.tachyon.utils.MathUtils;
 import net.tachyon.utils.validate.Check;
 import net.tachyon.utils.validator.PlayerValidator;
@@ -66,6 +67,10 @@ public abstract class Server {
     }
 
 
+
+    public abstract @NotNull TeamManager getTeamManager();
+
+
     /**
      * Sends a {@link ServerPacket} to multiple players.
      * <p>
@@ -85,11 +90,6 @@ public abstract class Server {
      * @see #sendGroupedPacket(Collection, ServerPacket, PlayerValidator)
      */
     public abstract void sendGroupedPacket(@NotNull Collection<Player> players, @NotNull ServerPacket packet);
-
-
-
-
-
 
 
 

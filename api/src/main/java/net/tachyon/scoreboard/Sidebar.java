@@ -5,7 +5,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.tachyon.chat.ChatParser;
 import net.tachyon.entity.Player;
-import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.network.packet.server.play.DisplayScoreboardPacket;
 import net.tachyon.network.packet.server.play.ScoreboardObjectivePacket;
 import net.tachyon.network.packet.server.play.TeamsPacket;
@@ -118,6 +117,10 @@ public class Sidebar implements Scoreboard {
         }
     }
 
+    public void createLine(@NotNull String id, @NotNull Component content, int line) {
+        createLine(new ScoreboardLine(id, content, line));
+    }
+
     /**
      * Updates a {@link ScoreboardLine} content through the given identifier.
      *
@@ -191,8 +194,7 @@ public class Sidebar implements Scoreboard {
     }
 
     @Override
-    public boolean addViewer(@NotNull Player p) {
-        TachyonPlayer player = (TachyonPlayer) p;
+    public boolean addViewer(@NotNull Player player) {
         final boolean result = this.viewers.add(player);
         PlayerConnection playerConnection = player.getPlayerConnection();
 
@@ -210,8 +212,7 @@ public class Sidebar implements Scoreboard {
     }
 
     @Override
-    public boolean removeViewer(@NotNull Player p) {
-        TachyonPlayer player = (TachyonPlayer) p;
+    public boolean removeViewer(@NotNull Player player) {
         final boolean result = this.viewers.remove(player);
         PlayerConnection playerConnection = player.getPlayerConnection();
         ScoreboardObjectivePacket scoreboardObjectivePacket = this.getDestructionObjectivePacket();

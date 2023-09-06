@@ -7,6 +7,7 @@ import net.tachyon.coordinate.Point;
 import net.tachyon.entity.metadata.PlayerMeta;
 import net.tachyon.network.packet.server.ServerPacket;
 import net.tachyon.network.player.PlayerConnection;
+import net.tachyon.scoreboard.BelowNameTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,4 +44,6 @@ public interface Player extends LivingEntity, CommandSender {
     boolean isOnline();
 
     void sendPacket(@NotNull ServerPacket packet);
+
+    void setBelowNameTag(@Nullable BelowNameTag belowNameTag);
 }

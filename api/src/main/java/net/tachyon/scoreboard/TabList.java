@@ -1,7 +1,6 @@
 package net.tachyon.scoreboard;
 
 import net.tachyon.entity.Player;
-import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.network.packet.server.play.ScoreboardObjectivePacket;
 import net.tachyon.network.player.PlayerConnection;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +10,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
- * Represents the {@link TachyonPlayer} tab list as a {@link Scoreboard}.
+ * Represents the {@link Player} tab list as a {@link Scoreboard}.
  */
 public class TabList implements Scoreboard {
 
@@ -51,8 +50,7 @@ public class TabList implements Scoreboard {
     }
 
     @Override
-    public boolean addViewer(@NotNull Player p) {
-        TachyonPlayer player = (TachyonPlayer) p;
+    public boolean addViewer(@NotNull Player player) {
         boolean result = this.viewers.add(player);
         PlayerConnection connection = player.getPlayerConnection();
 
@@ -65,8 +63,7 @@ public class TabList implements Scoreboard {
     }
 
     @Override
-    public boolean removeViewer(@NotNull Player p) {
-        TachyonPlayer player = (TachyonPlayer) p;
+    public boolean removeViewer(@NotNull Player player) {
         boolean result = this.viewers.remove(player);
         PlayerConnection connection = player.getPlayerConnection();
 

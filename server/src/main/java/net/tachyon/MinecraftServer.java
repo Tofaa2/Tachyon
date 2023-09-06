@@ -5,6 +5,7 @@ import net.tachyon.data.DataManager;
 import net.tachyon.data.TachyonDataManager;
 import net.tachyon.entity.Player;
 import net.tachyon.network.packet.server.ServerPacket;
+import net.tachyon.scoreboard.TeamManager;
 import net.tachyon.utils.PacketUtils;
 import net.tachyon.utils.benchmark.BenchmarkManager;
 import net.tachyon.command.CommandManager;
@@ -32,7 +33,7 @@ import net.tachyon.potion.PotionType;
 import net.tachyon.registry.Registries;
 import net.tachyon.scheduler.SchedulerManager;
 import net.tachyon.scheduler.SchedulerManagerImpl;
-import net.tachyon.scoreboard.TeamManager;
+import net.tachyon.scoreboard.TachyonTeamManager;
 import net.tachyon.sound.SoundEvent;
 import net.tachyon.stat.StatisticType;
 import net.tachyon.storage.StorageLocation;
@@ -73,7 +74,7 @@ public final class MinecraftServer extends Server {
     private CommandManager commandManager;
     private StorageManager storageManager;
     private TachyonDataManager dataManager;
-    private TeamManager teamManager;
+    private TachyonTeamManager teamManager;
     private SchedulerManager schedulerManager;
     private BenchmarkManager benchmarkManager;
     private TachyonBiomeManager biomeManager;
@@ -153,7 +154,7 @@ public final class MinecraftServer extends Server {
         commandManager = new CommandManager();
         storageManager = new StorageManager();
         dataManager = new TachyonDataManager();
-        teamManager = new TeamManager(connectionManager);
+        teamManager = new TachyonTeamManager(connectionManager);
         schedulerManager = new SchedulerManagerImpl();
         benchmarkManager = new BenchmarkManager();
         biomeManager = new TachyonBiomeManager();
@@ -264,9 +265,8 @@ public final class MinecraftServer extends Server {
      *
      * @return the team manager
      */
-    public static TeamManager getTeamManager() {
-        checkInitStatus(instance.teamManager);
-        return instance.teamManager;
+    public TeamManager getTeamManager() {
+        return teamManager;
     }
 
     /**
