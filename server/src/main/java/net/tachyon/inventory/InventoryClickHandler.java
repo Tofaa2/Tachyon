@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * Represents an inventory which can receive click input.
  * All methods returning boolean returns true if the action is successful, false otherwise.
  * <p>
- * See https://wiki.vg/Protocol#Click_Window for more information.
+ * See <a href="https://wiki.vg/Protocol#Click_Window">...</a> for more information.
  */
 public interface InventoryClickHandler {
 
@@ -57,7 +57,7 @@ public interface InventoryClickHandler {
      * Called when a {@link TachyonPlayer} press the drop button
      *
      * @param player the player who clicked
-     * @param mode
+     * @param mode Left click or drop
      * @param slot   the slot number
      * @param button -999 if clicking outside, normal if he is not
      * @return true if the drop hasn't been cancelled, false otherwise

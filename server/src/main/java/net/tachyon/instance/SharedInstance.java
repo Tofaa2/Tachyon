@@ -3,7 +3,6 @@ package net.tachyon.instance;
 import net.tachyon.coordinate.Point;
 import net.tachyon.data.Data;
 import net.tachyon.entity.Player;
-import net.tachyon.storage.StorageLocation;
 import net.tachyon.world.chunk.ChunkCallback;
 import net.tachyon.world.SharedWorld;
 import net.tachyon.world.World;
@@ -82,16 +81,6 @@ public class SharedInstance extends Instance implements SharedWorld {
     @Override
     public Collection<Chunk> getChunks() {
         return instanceContainer.getChunks();
-    }
-
-    @Override
-    public StorageLocation getStorageLocation() {
-        return instanceContainer.getStorageLocation();
-    }
-
-    @Override
-    public void setStorageLocation(StorageLocation storageLocation) {
-        this.instanceContainer.setStorageLocation(storageLocation);
     }
 
     @Override

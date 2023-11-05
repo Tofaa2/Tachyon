@@ -19,7 +19,7 @@ public class ClientChannel extends SimpleChannelInboundHandler<InboundPacket> {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ClientChannel.class);
 
-    private final static ConnectionManager CONNECTION_MANAGER = MinecraftServer.getConnectionManager();
+    private final static ConnectionManager CONNECTION_MANAGER = (ConnectionManager) Tachyon.getServer().getConnectionManager();
     private final PacketProcessor packetProcessor;
 
     public ClientChannel(@NotNull PacketProcessor packetProcessor) {

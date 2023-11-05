@@ -375,7 +375,7 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
 
             // #buildDeathMessage can return null, check here
             if (chatMessage != null) {
-                MinecraftServer.getConnectionManager().sendMessage(chatMessage, MessageType.SYSTEM);
+                Tachyon.getServer().getConnectionManager().sendMessage(chatMessage, MessageType.SYSTEM);
             }
 
         }
@@ -1449,7 +1449,7 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
     public void setTeam(Team team) {
         super.setTeam(team);
         if (team != null)
-            PacketUtils.sendGroupedPacket(MinecraftServer.getConnectionManager().getOnlinePlayers(), team.createTeamsCreationPacket());
+            PacketUtils.sendGroupedPacket(Tachyon.getServer().getConnectionManager().getOnlinePlayers(), team.createTeamsCreationPacket());
     }
 
     /**

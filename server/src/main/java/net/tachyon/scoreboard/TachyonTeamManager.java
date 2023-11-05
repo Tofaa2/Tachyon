@@ -3,6 +3,7 @@ package net.tachyon.scoreboard;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.tachyon.MinecraftServer;
+import net.tachyon.Tachyon;
 import net.tachyon.entity.Player;
 import net.tachyon.entity.TachyonLivingEntity;
 import net.tachyon.network.ConnectionManager;
@@ -39,7 +40,7 @@ public final class TachyonTeamManager implements TeamManager {
      */
     public void registerNewTeam(@NotNull Team team) {
         this.teams.add(team);
-        PacketUtils.sendGroupedPacket(MinecraftServer.getConnectionManager().getOnlinePlayers(), team.createTeamsCreationPacket());
+        PacketUtils.sendGroupedPacket(Tachyon.getServer().getConnectionManager().getOnlinePlayers(), team.createTeamsCreationPacket());
     }
 
     /**

@@ -42,7 +42,7 @@ public class LoginStartPacket implements ClientPreplayPacket {
 
         if (MojangAuth.isEnabled() && isNettyClient) {
             // Mojang auth
-            if (CONNECTION_MANAGER.getPlayer(username) != null) {
+            if (Tachyon.getServer().getConnectionManager().getPlayer(username) != null) {
                 connection.sendPacket(new LoginDisconnectPacket(ALREADY_CONNECTED_JSON));
                 connection.disconnect();
                 return;

@@ -6,6 +6,7 @@ import net.tachyon.data.DataType;
 import net.tachyon.data.SerializableData;
 import net.tachyon.entity.Player;
 import net.tachyon.exception.ExceptionManager;
+import net.tachyon.network.IConnectionManager;
 import net.tachyon.network.packet.server.ServerPacket;
 import net.tachyon.scheduler.SchedulerManager;
 import net.tachyon.scoreboard.TeamManager;
@@ -70,6 +71,7 @@ public abstract class Server {
 
     public abstract @NotNull TeamManager getTeamManager();
 
+    public abstract @NotNull IConnectionManager getConnectionManager();
 
     /**
      * Sends a {@link ServerPacket} to multiple players.

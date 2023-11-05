@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.tachyon.MinecraftServer;
+import net.tachyon.Tachyon;
 import net.tachyon.command.CommandManager;
 import net.tachyon.entity.Player;
 import net.tachyon.entity.TachyonPlayer;
@@ -20,7 +21,7 @@ import java.util.function.Function;
 public class ChatMessageListener {
 
     private static final CommandManager COMMAND_MANAGER = MinecraftServer.getCommandManager();
-    private static final ConnectionManager CONNECTION_MANAGER = MinecraftServer.getConnectionManager();
+    private static final ConnectionManager CONNECTION_MANAGER = (ConnectionManager) Tachyon.getServer().getConnectionManager();
 
     public static void listener(ClientChatMessagePacket packet, TachyonPlayer player) {
         String message = packet.message;

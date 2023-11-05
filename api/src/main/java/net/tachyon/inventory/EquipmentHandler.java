@@ -1,13 +1,13 @@
 package net.tachyon.inventory;
 
-import net.tachyon.entity.TachyonEntity;
+import net.tachyon.entity.Entity;
+
 import net.tachyon.item.ItemStack;
 import net.tachyon.network.packet.server.play.EntityEquipmentPacket;
-import net.tachyon.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents an {@link TachyonEntity} which can have {@link ItemStack} in hands and armor slots.
+ * Represents an {@link Entity} which can have {@link ItemStack} in hands and armor slots.
  */
 public interface EquipmentHandler {
 
@@ -109,8 +109,9 @@ public interface EquipmentHandler {
      * @param slot the slot of the equipment
      */
     default void syncEquipment(@NotNull EntityEquipmentPacket.Slot slot) {
-        Check.stateCondition(!(this instanceof TachyonEntity), "Only accessible for TachyonEntity");
-        TachyonEntity entity = (TachyonEntity) this;
+        if (!(this instanceof Entity entity)) {
+            throw new IllegalStateException("Only accessible for TachyonEntity");
+        }
         final ItemStack itemStack = getEquipment(slot);
         EntityEquipmentPacket entityEquipmentPacket = new EntityEquipmentPacket(entity.getEntityId(), slot, itemStack);
         entity.sendPacketToViewers(entityEquipmentPacket);
@@ -120,13 +121,13 @@ public interface EquipmentHandler {
      * Gets the packet with all the equipments.
      *
      * @return the packet with the equipments
-     * @throws IllegalStateException if 'this' is not an {@link TachyonEntity}
+     * @throws IllegalStateException if 'this' is not an {@link Entity}
      */
     @NotNull
     default EntityEquipmentPacket[] getEquipmentsPacket() {
-        Check.stateCondition(!(this instanceof TachyonEntity), "Only accessible for TachyonEntity");
-
-        final TachyonEntity entity = (TachyonEntity) this;
+        if (!(this instanceof Entity entity)) {
+            throw new IllegalStateException("Only accessible for TachyonEntity");
+        }
 
         final EntityEquipmentPacket.Slot[] slots = EntityEquipmentPacket.Slot.values();
 

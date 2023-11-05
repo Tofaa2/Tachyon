@@ -26,7 +26,6 @@ import net.tachyon.event.instance.RemoveEntityFromInstanceEvent;
 import net.tachyon.event.player.PlayerBlockBreakEvent;
 import net.tachyon.network.packet.server.play.BlockActionPacket;
 import net.tachyon.network.packet.server.play.TimeUpdatePacket;
-import net.tachyon.storage.StorageLocation;
 import net.tachyon.thread.ThreadProvider;
 import net.tachyon.utils.PacketUtils;
 import net.tachyon.world.chunk.ChunkCallback;
@@ -240,20 +239,6 @@ public abstract class Instance implements EventHandler, DataContainer, World {
     @NotNull
     public abstract Collection<Chunk> getChunks();
 
-    /**
-     * Gets the instance {@link StorageLocation}.
-     *
-     * @return the {@link StorageLocation} of the instance
-     */
-    @Nullable
-    public abstract StorageLocation getStorageLocation();
-
-    /**
-     * Changes the instance {@link StorageLocation}.
-     *
-     * @param storageLocation the new {@link StorageLocation} of the instance
-     */
-    public abstract void setStorageLocation(@Nullable StorageLocation storageLocation);
 
     /**
      * Used when a {@link TachyonChunk} is not currently loaded in memory and need to be retrieved from somewhere else.

@@ -4,6 +4,7 @@ import net.tachyon.block.BlockManager;
 import net.tachyon.data.DataManager;
 import net.tachyon.data.TachyonDataManager;
 import net.tachyon.entity.Player;
+import net.tachyon.network.IConnectionManager;
 import net.tachyon.network.packet.server.ServerPacket;
 import net.tachyon.scoreboard.TeamManager;
 import net.tachyon.utils.PacketUtils;
@@ -36,8 +37,6 @@ import net.tachyon.scheduler.SchedulerManagerImpl;
 import net.tachyon.scoreboard.TachyonTeamManager;
 import net.tachyon.sound.SoundEvent;
 import net.tachyon.stat.StatisticType;
-import net.tachyon.storage.StorageLocation;
-import net.tachyon.storage.StorageManager;
 import net.tachyon.utils.thread.ServerThread;
 import net.tachyon.utils.validate.Check;
 import net.tachyon.utils.validator.PlayerValidator;
@@ -72,7 +71,6 @@ public final class MinecraftServer extends Server {
     private InstanceManager instanceManager;
     private TachyonBlockManager blockManager;
     private CommandManager commandManager;
-    private StorageManager storageManager;
     private TachyonDataManager dataManager;
     private TachyonTeamManager teamManager;
     private SchedulerManager schedulerManager;
@@ -89,6 +87,7 @@ public final class MinecraftServer extends Server {
     public MinecraftServer(@NotNull ServerSettings settings) {
         super(settings);
         Check.stateCondition(instance != null, "The server is already initialized");
+        instance = this;
     }
 
     public void init() {
@@ -152,7 +151,6 @@ public final class MinecraftServer extends Server {
         instanceManager = new InstanceManager();
         blockManager = new TachyonBlockManager();
         commandManager = new CommandManager();
-        storageManager = new StorageManager();
         dataManager = new TachyonDataManager();
         teamManager = new TachyonTeamManager(connectionManager);
         schedulerManager = new SchedulerManagerImpl();
@@ -183,7 +181,7 @@ public final class MinecraftServer extends Server {
 
     @Override
     public @NotNull World createWorld(@NotNull UUID uuid, @NotNull LevelType levelType, DimensionType dimesionType, boolean shared) {
-        InstanceContainer instance = instanceManager.createInstanceContainer(dimesionType, levelType, null);
+        InstanceContainer instance = instanceManager.createInstanceContainer(dimesionType, levelType);
         if (shared) {
             SharedInstance i = instanceManager.createSharedInstance(instance);
             return i;
@@ -214,7 +212,6 @@ public final class MinecraftServer extends Server {
      * @return the packet listener manager
      */
     public static PacketListenerManager getPacketListenerManager() {
-        checkInitStatus(instance.packetListenerManager);
         return instance.packetListenerManager;
     }
 
@@ -224,7 +221,6 @@ public final class MinecraftServer extends Server {
      * @return the netty server
      */
     public static NettyServer getNettyServer() {
-        checkInitStatus(instance.nettyServer);
         return instance.nettyServer;
     }
 
@@ -234,7 +230,6 @@ public final class MinecraftServer extends Server {
      * @return the instance manager
      */
     public static InstanceManager getInstanceManager() {
-        checkInitStatus(instance.instanceManager);
         return instance.instanceManager;
     }
 
@@ -245,26 +240,16 @@ public final class MinecraftServer extends Server {
      * @return the command manager
      */
     public static CommandManager getCommandManager() {
-        checkInitStatus(instance.commandManager);
         return instance.commandManager;
     }
 
-
-    /**
-     * Gets the manager handling storage.
-     *
-     * @return the storage manager
-     */
-    public static StorageManager getStorageManager() {
-        checkInitStatus(instance.storageManager);
-        return instance.storageManager;
-    }
 
     /**
      * Gets the manager handling teams.
      *
      * @return the team manager
      */
+    @NotNull
     public TeamManager getTeamManager() {
         return teamManager;
     }
@@ -288,24 +273,14 @@ public final class MinecraftServer extends Server {
         return blockManager;
     }
 
-    /**
-     * Gets the manager handling server monitoring.
-     *
-     * @return the benchmark manager
-     */
-    public static BenchmarkManager getBenchmarkManager() {
-        checkInitStatus(instance.benchmarkManager);
-        return instance.benchmarkManager;
+
+    @Override
+    public @NotNull IConnectionManager getConnectionManager() {
+        return connectionManager;
     }
 
-    /**
-     * Gets the manager handling server connections.
-     *
-     * @return the connection manager
-     */
-    public static ConnectionManager getConnectionManager() {
-        checkInitStatus(instance.connectionManager);
-        return instance.connectionManager;
+    public static BenchmarkManager getBenchmarkManager() {
+        return instance.benchmarkManager;
     }
 
     /**
@@ -316,7 +291,6 @@ public final class MinecraftServer extends Server {
      * @return the packet processor
      */
     public static PacketProcessor getPacketProcessor() {
-        checkInitStatus(instance.packetProcessor);
         return instance.packetProcessor;
     }
 
@@ -344,7 +318,6 @@ public final class MinecraftServer extends Server {
      * @return the response data consumer
      */
     public static ResponseDataConsumer getResponseDataConsumer() {
-        checkInitStatus(responseDataConsumer);
         return responseDataConsumer;
     }
 
@@ -354,7 +327,6 @@ public final class MinecraftServer extends Server {
      * @return the update manager
      */
     public static UpdateManager getUpdateManager() {
-        checkInitStatus(instance.updateManager);
         return instance.updateManager;
     }
 
@@ -407,19 +379,12 @@ public final class MinecraftServer extends Server {
         schedulerManager.shutdown();
         connectionManager.shutdown();
         nettyServer.stop();
-        storageManager.getLoadedLocations().forEach(StorageLocation::close);
         LOGGER.info("Unloading all extensions.");
         LOGGER.info("Shutting down all thread pools.");
         benchmarkManager.disable();
         commandManager.stopConsoleThread();
         ServerThread.shutdownAll();
         LOGGER.info(getBrandName() + " server stopped successfully.");
-    }
-
-    private static void checkInitStatus(@Nullable Object object) {
-        /*Check.stateCondition(Objects.isNull(object),
-                "You cannot access the manager before MinecraftServer#init, " +
-                        "if you are developing an extension be sure to retrieve them at least after Extension#preInitialize");*/
     }
 
 }

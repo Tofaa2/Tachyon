@@ -20,7 +20,6 @@ import net.tachyon.block.rule.BlockPlacementRule;
 import net.tachyon.network.packet.server.play.BlockChangePacket;
 import net.tachyon.network.packet.server.play.ChunkDataPacket;
 import net.tachyon.network.packet.server.play.EffectPacket;
-import net.tachyon.storage.StorageLocation;
 import net.tachyon.utils.PacketUtils;
 import net.tachyon.utils.block.CustomBlockUtils;
 import net.tachyon.utils.OptionalCallback;
@@ -51,8 +50,6 @@ public class InstanceContainer extends Instance {
     private static final String UUID_KEY = "uuid";
     private static final String DATA_KEY = "data";
 
-    // the storage location of this instance, can be null
-    private StorageLocation storageLocation;
 
     // the shared instances assigned to this instance
     private final List<SharedInstance> sharedInstances = new CopyOnWriteArrayList<>();
@@ -86,28 +83,16 @@ public class InstanceContainer extends Instance {
      * @param uniqueId        the unique id of the instance
      * @param dimensionType   the dimension type of the instance
      * @param levelType       the level type of the instance
-     * @param storageLocation the {@link StorageLocation} of the instance,
      *                        can be null if you do not wish to save the instance later on
      */
-    public InstanceContainer(@NotNull UUID uniqueId, @NotNull DimensionType dimensionType, @NotNull LevelType levelType, @Nullable StorageLocation storageLocation) {
+    public InstanceContainer(@NotNull UUID uniqueId, @NotNull DimensionType dimensionType, @NotNull LevelType levelType) {
         super(uniqueId, dimensionType, levelType);
-
-        this.storageLocation = storageLocation;
 
         // Set the default chunk supplier using DynamicChunk
         setChunkSupplier(DynamicChunk::new);
 
         // Set the default chunk loader which use the instance's StorageLocation and ChunkSupplier to save and load chunks
         setChunkLoader(new BasicChunkLoader(this));
-
-        // Get instance data from the saved data if a StorageLocation is defined
-        if (storageLocation != null) {
-            // Retrieve instance data
-            this.uniqueId = storageLocation.getOrDefault(UUID_KEY, UUID.class, uniqueId);
-
-            final Data data = storageLocation.getOrDefault(DATA_KEY, SerializableData.class, null);
-            setData(data);
-        }
     }
 
     @Override
@@ -463,18 +448,18 @@ public class InstanceContainer extends Instance {
      * @param callback the optional callback once the saving is done
      */
     public void saveInstance(@Nullable Runnable callback) {
-        Check.notNull(getStorageLocation(), "You cannot save the instance if no StorageLocation has been defined");
-
-        this.storageLocation.set(UUID_KEY, getUuid(), UUID.class);
-        final Data data = getData();
-        if (data != null) {
-            // Save the instance data
-            Check.stateCondition(!(data instanceof SerializableData),
-                    "Instance#getData needs to be a SerializableData in order to be saved");
-            this.storageLocation.set(DATA_KEY, (SerializableData) getData(), SerializableData.class);
-        }
-
-        saveChunksToStorage(callback);
+//        Check.notNull(getStorageLocation(), "You cannot save the instance if no StorageLocation has been defined");
+//
+//        this.storageLocation.set(UUID_KEY, getUuid(), UUID.class);
+//        final Data data = getData();
+//        if (data != null) {
+//            // Save the instance data
+//            Check.stateCondition(!(data instanceof SerializableData),
+//                    "Instance#getData needs to be a SerializableData in order to be saved");
+//            this.storageLocation.set(DATA_KEY, (SerializableData) getData(), SerializableData.class);
+//        }
+//
+//        saveChunksToStorage(callback);
     }
 
     /**
@@ -620,13 +605,13 @@ public class InstanceContainer extends Instance {
      * Copies all the chunks of this instance and create a new instance container with all of them.
      * <p>
      * Chunks are copied with {@link TachyonChunk#copy(int, int)},
-     * {@link UUID} is randomized, {@link DimensionType} is passed over and the {@link StorageLocation} is null.
+     * {@link UUID} is randomized, {@link DimensionType} is passed over.
      *
      * @return an {@link InstanceContainer} with the exact same chunks as 'this'
      * @see #getSrcInstance() to retrieve the "creation source" of the copied instance
      */
     public synchronized InstanceContainer copy() {
-        InstanceContainer copiedInstance = new InstanceContainer(UUID.randomUUID(), getDimensionType(), getLevelType(), null);
+        InstanceContainer copiedInstance = new InstanceContainer(UUID.randomUUID(), getDimensionType(), getLevelType());
         copiedInstance.srcInstance = this;
         copiedInstance.lastBlockChangeTime = lastBlockChangeTime;
 
@@ -705,16 +690,6 @@ public class InstanceContainer extends Instance {
     @NotNull
     public Collection<Chunk> getChunks() {
         return Collections.unmodifiableCollection(chunks.values());
-    }
-
-    @Override
-    public StorageLocation getStorageLocation() {
-        return storageLocation;
-    }
-
-    @Override
-    public void setStorageLocation(StorageLocation storageLocation) {
-        this.storageLocation = storageLocation;
     }
 
     /**

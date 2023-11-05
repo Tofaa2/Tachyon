@@ -36,7 +36,7 @@ import java.util.function.Consumer;
 /**
  * Manages the connected clients.
  */
-public final class ConnectionManager implements Audience, ForwardingPlayerAudience {
+public final class ConnectionManager implements IConnectionManager {
 
     private static final long KEEP_ALIVE_DELAY = 10_000;
     private static final long KEEP_ALIVE_KICK = 30_000;
@@ -79,13 +79,6 @@ public final class ConnectionManager implements Audience, ForwardingPlayerAudien
         return Collections.unmodifiableCollection(players);
     }
 
-    /**
-     * Finds the closest player matching a given username.
-     * <p>
-     *
-     * @param username the player username (can be partial)
-     * @return the closest match, null if no players are online
-     */
     @Nullable
     public Player findPlayer(@NotNull String username) {
         Player exact = getPlayer(username);

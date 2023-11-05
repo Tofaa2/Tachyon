@@ -134,7 +134,7 @@ public class LegacyPingHandler extends ChannelInboundHandlerAdapter {
     private String formatResponse(int playerProtocol) {
         final String motd = Tachyon.getServer().getBrandName();
         final String version = MinecraftServer.VERSION_NAME;
-        final int online = MinecraftServer.getConnectionManager().getOnlinePlayers().size();
+        final int online = Tachyon.getServer().getConnectionManager().getOnlinePlayers().size();
         final int max = 0;
         final int protocol = MinecraftServer.PROTOCOL_VERSION;
 

@@ -1,7 +1,6 @@
 package net.tachyon.instance;
 
 import net.tachyon.MinecraftServer;
-import net.tachyon.storage.StorageLocation;
 import net.tachyon.utils.validate.Check;
 import net.tachyon.world.DimensionType;
 import net.tachyon.world.LevelType;
@@ -37,31 +36,18 @@ public final class InstanceManager {
     }
 
     /**
-     * Creates and register an {@link InstanceContainer}
-     * with the specified {@link DimensionType} and {@link StorageLocation}.
-     *
+     * Creates and register an {@link InstanceContainer} with a specified {@link DimensionType}
      * @param dimensionType   the {@link DimensionType} of the instance
      * @param levelType       the {@link LevelType} of the instance
-     * @param storageLocation the {@link StorageLocation} of the instance, can be null
      * @return the created {@link InstanceContainer}
      */
     @NotNull
-    public InstanceContainer createInstanceContainer(@NotNull DimensionType dimensionType, @NotNull LevelType levelType, @Nullable StorageLocation storageLocation) {
-        final InstanceContainer instanceContainer = new InstanceContainer(UUID.randomUUID(), dimensionType, levelType, storageLocation);
+    public InstanceContainer createInstanceContainer(@NotNull DimensionType dimensionType, @NotNull LevelType levelType) {
+        final InstanceContainer instanceContainer = new InstanceContainer(UUID.randomUUID(), dimensionType, levelType);
         registerInstance(instanceContainer);
         return instanceContainer;
     }
 
-    /**
-     * Creates and register an {@link InstanceContainer} with the specified {@link StorageLocation}.
-     *
-     * @param storageLocation the {@link StorageLocation} of the instance, can be null
-     * @return the created {@link InstanceContainer}
-     */
-    @NotNull
-    public InstanceContainer createInstanceContainer(@Nullable StorageLocation storageLocation) {
-        return createInstanceContainer(DimensionType.OVERWORLD, LevelType.FLAT, storageLocation);
-    }
 
     /**
      * Creates and register an {@link InstanceContainer} with the specified {@link DimensionType}.
@@ -71,7 +57,7 @@ public final class InstanceManager {
      */
     @NotNull
     public InstanceContainer createInstanceContainer(@NotNull DimensionType dimensionType) {
-        return createInstanceContainer(dimensionType, LevelType.FLAT, null);
+        return createInstanceContainer(dimensionType, LevelType.FLAT);
     }
 
     /**

@@ -2,10 +2,8 @@ package net.tachyon.scoreboard;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.tachyon.MinecraftServer;
 import net.tachyon.Tachyon;
 import net.tachyon.entity.Player;
-import net.tachyon.network.ConnectionManager;
 import net.tachyon.network.packet.server.play.TeamsPacket;
 import net.tachyon.network.packet.server.play.TeamsPacket.NameTagVisibility;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class Team {
 
-    private static final ConnectionManager CONNECTION_MANAGER = MinecraftServer.getConnectionManager();
+    //private static final ConnectionManager CONNECTION_MANAGER = MinecraftServer.getConnectionManager();
 
     /**
      * A collection of all registered entities who are on the team.
@@ -95,7 +93,7 @@ public class Team {
         addPlayerPacket.entities = members.toArray(new String[0]);
 
         // Sends to all online players the add player packet
-        Tachyon.getServer().sendGroupedPacket(CONNECTION_MANAGER.getOnlinePlayers(), addPlayerPacket);
+        Tachyon.getServer().sendGroupedPacket(Tachyon.getServer().getConnectionManager().getOnlinePlayers(), addPlayerPacket);
     }
 
     /**
@@ -111,7 +109,7 @@ public class Team {
         removePlayerPacket.entities = new String[]{member};
 
         // Sends to all online player teh remove player packet
-        Tachyon.getServer().sendGroupedPacket(CONNECTION_MANAGER.getOnlinePlayers(), removePlayerPacket);
+        Tachyon.getServer().sendGroupedPacket(Tachyon.getServer().getConnectionManager().getOnlinePlayers(), removePlayerPacket);
 
         // Removes the member from the team
         this.members.remove(member);
@@ -368,6 +366,6 @@ public class Team {
         updatePacket.teamPrefix = this.prefix;
         updatePacket.teamSuffix = this.suffix;
 
-        Tachyon.getServer().sendGroupedPacket(MinecraftServer.getConnectionManager().getOnlinePlayers(), updatePacket);
+        Tachyon.getServer().sendGroupedPacket(Tachyon.getServer().getConnectionManager().getOnlinePlayers(), updatePacket);
     }
 }

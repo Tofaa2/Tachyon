@@ -3,10 +3,12 @@ package net.tachyon.utils.entity;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.tachyon.MinecraftServer;
+import net.tachyon.Tachyon;
 import net.tachyon.command.CommandSender;
 import net.tachyon.coordinate.Position;
 import net.tachyon.entity.*;
 import net.tachyon.instance.Instance;
+import net.tachyon.network.ConnectionManager;
 import net.tachyon.utils.MathUtils;
 import net.tachyon.utils.math.IntRange;
 import net.tachyon.utils.validate.Check;
@@ -127,7 +129,7 @@ public class EntityFinder {
     public List<Entity> find(@Nullable World instance, @Nullable Entity self) {
         if (targetSelector == TargetSelector.MINESTOM_USERNAME) {
             Check.notNull(constantName, "The player name should not be null when searching for it");
-            final Player player = MinecraftServer.getConnectionManager().getPlayer(constantName);
+            final Player player = Tachyon.getServer().getConnectionManager().getPlayer(constantName);
             return player != null ? Collections.singletonList(player) : Collections.emptyList();
         } else if (targetSelector == TargetSelector.MINESTOM_UUID) {
             Check.notNull(constantUuid, "The UUID should not be null when searching for it");
@@ -334,7 +336,7 @@ public class EntityFinder {
             double closestDistance = Double.MAX_VALUE;
 
             Collection<Player> instancePlayers = instance != null ?
-                    instance.getPlayers() : MinecraftServer.getConnectionManager().getOnlinePlayers();
+                    instance.getPlayers() : Tachyon.getServer().getConnectionManager().getOnlinePlayers();
             for (Player player : instancePlayers) {
                 final double distance = player.getPosition().distance(startPosition);
                 if (distance < closestDistance) {
@@ -345,13 +347,13 @@ public class EntityFinder {
             return Collections.singletonList(entity);
         } else if (targetSelector == TargetSelector.RANDOM_PLAYER) {
             Collection<Player> instancePlayers = instance != null ?
-                    instance.getPlayers() : MinecraftServer.getConnectionManager().getOnlinePlayers();
+                    instance.getPlayers() : Tachyon.getServer().getConnectionManager().getOnlinePlayers();
             final int index = ThreadLocalRandom.current().nextInt(instancePlayers.size());
             final Player player = instancePlayers.stream().skip(index).findFirst().orElseThrow();
             return Collections.singletonList(player);
         } else if (targetSelector == TargetSelector.ALL_PLAYERS) {
             return new ArrayList<>(instance != null ?
-                    instance.getPlayers() : MinecraftServer.getConnectionManager().getOnlinePlayers());
+                    instance.getPlayers() : Tachyon.getServer().getConnectionManager().getOnlinePlayers());
         } else if (targetSelector == TargetSelector.ALL_ENTITIES) {
             return new ArrayList<>(instance.getEntities());
         } else if (targetSelector == TargetSelector.SELF) {
