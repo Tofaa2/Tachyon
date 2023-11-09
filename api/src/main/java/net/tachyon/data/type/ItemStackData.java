@@ -4,8 +4,6 @@ import net.tachyon.binary.BinaryReader;
 import net.tachyon.binary.BinaryWriter;
 import net.tachyon.data.DataType;
 import net.tachyon.item.ItemStack;
-import net.tachyon.utils.binary.TachyonBinaryReader;
-import net.tachyon.utils.binary.TachyonBinaryWriter;
 import org.jetbrains.annotations.NotNull;
 
 public class ItemStackData extends DataType<ItemStack> {

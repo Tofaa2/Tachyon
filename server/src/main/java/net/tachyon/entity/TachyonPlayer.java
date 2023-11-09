@@ -1759,7 +1759,7 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
      *
      * @return the modifiable statistic map
      */
-    @NotNull
+    @NotNull @Override
     public Map<PlayerStatistic, Integer> getStatisticValueMap() {
         return statisticValueMap;
     }

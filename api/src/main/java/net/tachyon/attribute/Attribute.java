@@ -1,5 +1,6 @@
 package net.tachyon.attribute;
 
+import net.tachyon.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

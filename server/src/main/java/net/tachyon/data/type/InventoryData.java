@@ -24,7 +24,7 @@ public class InventoryData extends DataType<Inventory> {
 
         // Write all item stacks
         for (int i = 0; i < size; i++) {
-            ((TachyonBinaryWriter) writer).writeItemStack(value.getItemStack(i));
+            writer.writeItemStack(value.getItemStack(i));
         }
     }
 
@@ -39,7 +39,7 @@ public class InventoryData extends DataType<Inventory> {
 
         // Read all item stacks
         for (int i = 0; i < size; i++) {
-            inventory.setItemStack(i, ((TachyonBinaryReader) reader).readSlot());
+            inventory.setItemStack(i, reader.readSlot());
         }
 
         return inventory;

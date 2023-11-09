@@ -19,11 +19,12 @@ public class StatusListener {
                 StatisticsPacket statisticsPacket = new StatisticsPacket();
                 final Map<PlayerStatistic, Integer> playerStatisticValueMap = player.getStatisticValueMap();
                 for (Map.Entry<PlayerStatistic, Integer> entry : playerStatisticValueMap.entrySet()) {
+
                     PlayerStatistic playerStatistic = entry.getKey();
                     int value = entry.getValue();
 
                     StatisticsPacket.Statistic statistic = new StatisticsPacket.Statistic();
-                    statistic.name = playerStatistic.getStatisticName();
+                    statistic.name = playerStatistic.statisticName();
                     statistic.value = value;
 
                     statisticList.add(statistic);

@@ -37,6 +37,8 @@ public class Arguments {
         return get(argument.getId());
     }
 
+    @SuppressWarnings("unchecked")
+
     public <T> T get(@NotNull String identifier) {
         return (T) args.computeIfAbsent(identifier, s -> {
             throw new NullPointerException(

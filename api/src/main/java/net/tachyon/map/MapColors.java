@@ -7,7 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-public enum MapColors {
+public enum
+MapColors {
     // TODO(koesie10): Update for 1.8
     NONE(0, 0, 0),
     GRASS(127, 178, 56),

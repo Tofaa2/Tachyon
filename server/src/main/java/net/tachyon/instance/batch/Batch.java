@@ -8,7 +8,6 @@ import net.tachyon.block.CustomBlock;
 import net.tachyon.instance.Instance;
 import net.tachyon.utils.thread.ServerThread;
 import net.tachyon.utils.validate.Check;
-import net.tachyon.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

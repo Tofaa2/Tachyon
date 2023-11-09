@@ -8,8 +8,12 @@ import net.tachyon.entity.metadata.PlayerMeta;
 import net.tachyon.network.packet.server.ServerPacket;
 import net.tachyon.network.player.PlayerConnection;
 import net.tachyon.scoreboard.BelowNameTag;
+import net.tachyon.stat.PlayerStatistic;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.MalformedParameterizedTypeException;
+import java.util.Map;
 
 public interface Player extends LivingEntity, CommandSender {
 
@@ -18,6 +22,8 @@ public interface Player extends LivingEntity, CommandSender {
     @Nullable PlayerSkin getSkin();
 
     @NotNull PlayerConnection getPlayerConnection();
+
+    @NotNull Map<PlayerStatistic, Integer> getStatisticValueMap();
 
     void sendPluginMessage(@NotNull String channel, @NotNull String message);
 

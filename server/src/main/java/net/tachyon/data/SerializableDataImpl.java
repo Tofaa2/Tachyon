@@ -33,7 +33,7 @@ public class SerializableDataImpl extends SerializableData {
 
     /**
      * Data key = Class
-     * Used to know the type of an element of this data object (for serialization purpose)
+     * Used to know the type of element of this data object (for serialization purpose)
      */
     protected final ConcurrentHashMap<String, Class> dataType = new ConcurrentHashMap<>();
 

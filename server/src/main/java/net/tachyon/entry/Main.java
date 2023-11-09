@@ -3,12 +3,22 @@ package net.tachyon.entry;
 import net.tachyon.MinecraftServer;
 import net.tachyon.ServerSettings;
 import net.tachyon.Tachyon;
+import net.tachyon.block.Block;
 import net.tachyon.config.Config;
 import net.tachyon.extras.MojangAuth;
 import net.tachyon.extras.optifine.OptifineSupport;
 import net.tachyon.extras.proxy.BungeeCordProxy;
+import net.tachyon.instance.ChunkGenerator;
+import net.tachyon.instance.ChunkPopulator;
+import net.tachyon.instance.InstanceContainer;
+import net.tachyon.instance.batch.ChunkBatch;
+import net.tachyon.world.biome.Biome;
+import net.tachyon.world.chunk.Chunk;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
+import java.util.List;
 
 public final class Main {
 
@@ -32,11 +42,12 @@ public final class Main {
             BungeeCordProxy.enable();
         }
         else if (proxy.velocity()) {
-            // TODO;
-            if (onlineMode) {
-                Tachyon.LOGGER.warn("Velocity mode is enabled, but online mode is also enabled, disabling online mode...");
-                onlineMode = false;
-            }
+            throw new UnsupportedOperationException("Velocity is not supported yet.");
+//            // TODO;
+//            if (onlineMode) {
+//                Tachyon.LOGGER.warn("Velocity mode is enabled, but online mode is also enabled, disabling online mode...");
+//                onlineMode = false;
+//            }
         }
         if (onlineMode) {
             Tachyon.LOGGER.info("Online mode is enabled, players will be authenticated with Mojang's servers.");
@@ -45,6 +56,34 @@ public final class Main {
         else {
             Tachyon.LOGGER.info("Online mode is disabled, players will not be authenticated with Mojang's servers. (This is not secure!)");
         }
+
+
+        InstanceContainer instance = MinecraftServer.getInstanceManager().createInstanceContainer();
+        instance.setChunkGenerator(new ChunkGenerator() {
+            @Override
+            public void generateChunkData(@NotNull ChunkBatch batch, int chunkX, int chunkZ) {
+                for (int y = 0; y < 64; y++) {
+                    for (int x = 0; x < 16; x++) {
+                        for (int z = 0; z < 16; z++) {
+                            batch.setBlock(x, y, z, Block.STONE);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void fillBiomes(@NotNull Biome[] biomes, int chunkX, int chunkZ) {
+
+            }
+
+            @Nullable
+            @Override
+            public List<ChunkPopulator> getPopulators() {
+                return null;
+            }
+        });
+
+
 
         String[] split = config.get().host().split(":");
         String host = split[0];

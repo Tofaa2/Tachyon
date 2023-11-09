@@ -36,21 +36,13 @@ public enum Direction {
 
     @NotNull
     public Direction opposite() {
-        switch (this) {
-            case UP:
-                return DOWN;
-            case DOWN:
-                return UP;
-            case EAST:
-                return WEST;
-            case WEST:
-                return EAST;
-            case NORTH:
-                return SOUTH;
-            case SOUTH:
-                return NORTH;
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (this) {
+            case UP -> DOWN;
+            case DOWN -> UP;
+            case EAST -> WEST;
+            case WEST -> EAST;
+            case NORTH -> SOUTH;
+            case SOUTH -> NORTH;
+        };
     }
 }

@@ -1,5 +1,6 @@
 package net.tachyon.data;
 
+import net.tachyon.binary.BinaryReader;
 import net.tachyon.data.type.*;
 import net.tachyon.data.type.array.*;
 import net.tachyon.inventory.Inventory;
@@ -91,6 +92,13 @@ public final class TachyonDataManager implements DataManager {
     public <T> DataType<T> getDataType(@NotNull Class<T> clazz) {
         clazz = PrimitiveConversion.getObjectClass(clazz);
         return dataTypeMap.get(clazz);
+    }
+
+    @Override
+    public @NotNull SerializableData createSerializableData(@NotNull BinaryReader reader) {
+        var data = new SerializableDataImpl();
+        data.readIndexedSerializedData(reader);
+        return data;
     }
 
 }
