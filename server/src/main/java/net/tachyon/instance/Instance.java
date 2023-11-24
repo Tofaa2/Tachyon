@@ -216,6 +216,13 @@ public abstract class Instance implements EventHandler, DataContainer, World {
      */
     public abstract void saveChunksToStorage(@Nullable Runnable callback);
 
+    @Override
+    public @NotNull Entity spawnEntity(@NotNull UUID uuid, @NotNull Position position, @NotNull EntityType entityType) {
+        TachyonEntity e = new TachyonEntity(entityType, uuid);
+        e.setInstance(this, position);
+        return e;
+    }
+
     /**
      * Gets the instance {@link ChunkGenerator}.
      *

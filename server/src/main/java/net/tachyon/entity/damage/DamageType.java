@@ -113,8 +113,8 @@ public class DamageType implements DataContainer {
      */
     @Nullable
     public SoundEvent getSound(@NotNull LivingEntity entity) {
-        if (entity instanceof Player) {
-            return getPlayerSound((Player) entity);
+        if (entity instanceof Player p) {
+            return getPlayerSound(p);
         }
         return getGenericSound(entity);
     }

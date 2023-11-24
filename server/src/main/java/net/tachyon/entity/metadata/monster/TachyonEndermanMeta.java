@@ -1,12 +1,13 @@
 package net.tachyon.entity.metadata.monster;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import org.jetbrains.annotations.NotNull;
 
 public class TachyonEndermanMeta extends MonsterMeta implements EndermanMeta {
 
-    public TachyonEndermanMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonEndermanMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

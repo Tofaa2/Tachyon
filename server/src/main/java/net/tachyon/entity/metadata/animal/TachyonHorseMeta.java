@@ -1,5 +1,6 @@
 package net.tachyon.entity.metadata.animal;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ public class TachyonHorseMeta extends AnimalMeta implements HorseMeta {
     private final static byte REARING_BIT = 0x40;
     private final static byte MOUTH_OPEN_BIT = (byte)0x80;
 
-    public TachyonHorseMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonHorseMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

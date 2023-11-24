@@ -14,7 +14,7 @@ public class TachyonArrowMeta extends TachyonEntityMeta implements ArrowMeta {
 
     private Entity shooter;
 
-    public TachyonArrowMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonArrowMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

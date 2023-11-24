@@ -1,5 +1,6 @@
 package net.tachyon.entity.metadata;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ public class TachyonPlayerMeta extends TachyonLivingEntityMeta implements Player
     private final static byte RIGHT_LEG_BIT = 0x20;
     private final static byte HAT_BIT = 0x40;
 
-    public TachyonPlayerMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonPlayerMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

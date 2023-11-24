@@ -1,5 +1,6 @@
 package net.tachyon.entity.metadata.other;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import net.tachyon.entity.metadata.TachyonMobMeta;
@@ -7,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class TachyonSlimeMeta extends TachyonMobMeta implements SlimeMeta {
 
-    public TachyonSlimeMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonSlimeMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

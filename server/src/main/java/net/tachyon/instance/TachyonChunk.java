@@ -48,7 +48,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * You generally want to avoid storing references of this object as this could lead to a huge memory leak,
  * you should store the chunk coordinates instead.
  */
-public abstract class TachyonChunk implements Chunk, DataContainer {
+public abstract class TachyonChunk implements Chunk {
 
     protected static final BlockManager BLOCK_MANAGER = Tachyon.getServer().getBlockmanager();
     protected static final BiomeManager BIOME_MANAGER = Tachyon.getServer().getBiomeManager();

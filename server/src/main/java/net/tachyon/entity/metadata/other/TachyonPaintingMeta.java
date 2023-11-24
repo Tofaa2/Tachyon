@@ -1,5 +1,6 @@
 package net.tachyon.entity.metadata.other;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import net.tachyon.entity.metadata.TachyonEntityMeta;
@@ -14,7 +15,7 @@ public class TachyonPaintingMeta extends TachyonEntityMeta implements PaintingMe
     private Motive motive = Motive.KEBAB;
     private Direction direction = Direction.SOUTH;
 
-    public TachyonPaintingMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonPaintingMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

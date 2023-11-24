@@ -45,7 +45,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class NettyPlayerConnection implements PlayerConnection {
 
-    protected static final PacketListenerManager PACKET_LISTENER_MANAGER = MinecraftServer.getPacketListenerManager();
+    protected static final PacketListenerManager PACKET_LISTENER_MANAGER = (PacketListenerManager) Tachyon.getServer().getPacketListenerManager();
 
     private final SocketChannel channel;
 

@@ -9,11 +9,11 @@ import net.tachyon.entity.metadata.ObjectDataProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TachyonWitherSkullMeta extends TachyonEntityMeta implements ObjectDataProvider, ProjectileMeta {
+public class TachyonWitherSkullMeta extends TachyonEntityMeta implements WitherSkullMeta {
 
     private Entity shooter;
 
-    public TachyonWitherSkullMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonWitherSkullMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

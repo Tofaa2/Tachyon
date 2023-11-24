@@ -1,12 +1,13 @@
 package net.tachyon.entity.metadata.other;
 
 import net.tachyon.coordinate.Vec;
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import net.tachyon.entity.metadata.TachyonLivingEntityMeta;
 import org.jetbrains.annotations.NotNull;
 
-public class TachyonArmorStandMeta extends TachyonLivingEntityMeta {
+public class TachyonArmorStandMeta extends TachyonLivingEntityMeta implements ArmorStandMeta {
 
     private final static byte MASK_INDEX = 10;
 
@@ -16,7 +17,7 @@ public class TachyonArmorStandMeta extends TachyonLivingEntityMeta {
     private final static byte HAS_NO_BASE_PLATE_BIT = 0x08;
     private final static byte IS_MARKER_BIT = 0x10;
 
-    public TachyonArmorStandMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonArmorStandMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

@@ -12,7 +12,7 @@ public class TachyonWitherMeta extends MonsterMeta implements WitherMeta {
     private Entity leftHead;
     private Entity rightHead;
 
-    public TachyonWitherMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonWitherMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

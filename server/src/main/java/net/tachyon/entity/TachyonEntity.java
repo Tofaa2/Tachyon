@@ -130,7 +130,7 @@ public class TachyonEntity implements Entity,  EventHandler, DataContainer, Perm
 
         setBoundingBox(entityType.getWidth(), entityType.getHeight(), entityType.getWidth());
 
-        this.entityMeta = entityType.getMetaConstructor().apply(this, this.metadata);
+        this.entityMeta = (TachyonEntityMeta) entityType.getMetaConstructor().apply(this, this.metadata);
 
         setAutoViewable(true);
 
@@ -381,7 +381,7 @@ public class TachyonEntity implements Entity,  EventHandler, DataContainer, Perm
         synchronized (entityTypeLock) {
             this.entityType = entityType;
             this.metadata = new Metadata(this);
-            this.entityMeta = entityType.getMetaConstructor().apply(this, this.metadata);
+            this.entityMeta = (TachyonEntityMeta) entityType.getMetaConstructor().apply(this, this.metadata);
 
             Set<Player> viewers = new HashSet<>(getViewers());
             getViewers().forEach(this::removeViewer0);
@@ -1356,7 +1356,7 @@ public class TachyonEntity implements Entity,  EventHandler, DataContainer, Perm
     }
 
     @NotNull
-    protected Vec getVelocityForPacket() {
+    public Vec getVelocityForPacket() {
         return this.velocity.multiply(8000f / Tachyon.getServer().getTickMs());
     }
 
@@ -1366,6 +1366,7 @@ public class TachyonEntity implements Entity,  EventHandler, DataContainer, Perm
         return new EntityVelocityPacket(getEntityId(), (short) velocity.x(), (short) velocity.y(), (short) velocity.z());
     }
 
+    @NotNull
     public Metadata getMetadata() {
         return metadata;
     }

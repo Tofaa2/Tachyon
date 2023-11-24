@@ -1,5 +1,6 @@
 package net.tachyon.entity.metadata.animal.tameable;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.metadata.animal.AnimalMeta;
 import net.tachyon.entity.Metadata;
@@ -12,7 +13,7 @@ public class TachyonTameableAnimalMeta extends AnimalMeta implements TameableMet
     private final static byte SITTING_BIT = 0x01;
     private final static byte TAMED_BIT = 0x04;
 
-    protected TachyonTameableAnimalMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    protected TachyonTameableAnimalMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

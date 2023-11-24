@@ -3,6 +3,7 @@ package net.tachyon.world.chunk;
 import net.tachyon.Viewable;
 import net.tachyon.block.CustomBlock;
 import net.tachyon.data.Data;
+import net.tachyon.data.DataContainer;
 import net.tachyon.entity.Player;
 import net.tachyon.world.biome.Biome;
 import org.jetbrains.annotations.ApiStatus;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public interface Chunk extends Viewable {
+public interface Chunk extends Viewable, DataContainer {
 
     int CHUNK_SIZE_X = 16;
     int CHUNK_SIZE_Y = 256;

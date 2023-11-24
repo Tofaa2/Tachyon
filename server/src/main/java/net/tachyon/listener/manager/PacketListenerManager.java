@@ -3,6 +3,7 @@ package net.tachyon.listener.manager;
 import net.tachyon.entity.Player;
 import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.listener.*;
+import net.tachyon.network.listener.IPacketListenerManager;
 import net.tachyon.network.packet.client.play.*;
 import net.tachyon.network.ConnectionManager;
 import net.tachyon.network.packet.client.ClientPlayPacket;
@@ -16,11 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class PacketListenerManager {
+public final class PacketListenerManager implements IPacketListenerManager {
 
     public final static Logger LOGGER = LoggerFactory.getLogger(PacketListenerManager.class);
     private final ConnectionManager connectionManager;
-
     private final Map<Class<? extends ClientPlayPacket>, PacketListenerConsumer> listeners = new ConcurrentHashMap<>();
 
     public PacketListenerManager(@NotNull ConnectionManager connectionManager) {
@@ -55,13 +55,12 @@ public final class PacketListenerManager {
      * Processes a packet by getting its {@link PacketListenerConsumer} and calling all the packet listeners.
      *
      * @param packet the received packet
-     * @param player the player who sent the packet
+     * @param p the player who sent the packet
      * @param <T>    the packet type
      */
-    public <T extends ClientPlayPacket> void processClientPacket(@NotNull T packet, @NotNull TachyonPlayer player) {
-
+    public <T extends ClientPlayPacket> void processClientPacket(@NotNull T packet, @NotNull Player p) {
+        final TachyonPlayer player = (TachyonPlayer) p;
         final Class clazz = packet.getClass();
-
         PacketListenerConsumer<T> packetListenerConsumer = listeners.get(clazz);
 
         // Listener can be null if none has been set before, call PacketConsumer anyway
@@ -74,8 +73,7 @@ public final class PacketListenerManager {
             clientPacketConsumer.accept(player, packetController, packet);
         }
 
-        if (packetController.isCancel())
-            return;
+        if (packetController.isCancel()) return;
 
         // Finally execute the listener
         if (packetListenerConsumer != null) {

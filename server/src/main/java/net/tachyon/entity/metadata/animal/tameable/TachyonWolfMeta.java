@@ -1,5 +1,6 @@
 package net.tachyon.entity.metadata.animal.tameable;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +11,7 @@ public class TachyonWolfMeta extends TachyonTameableAnimalMeta implements WolfMe
 
     private final static byte ANGRY_BIT = 0x02;
 
-    public TachyonWolfMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonWolfMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

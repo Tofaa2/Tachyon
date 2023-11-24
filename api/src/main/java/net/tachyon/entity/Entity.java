@@ -6,7 +6,6 @@ import net.tachyon.collision.BoundingBox;
 import net.tachyon.coordinate.Position;
 import net.tachyon.coordinate.Vec;
 import net.tachyon.entity.metadata.EntityMeta;
-import net.tachyon.network.packet.server.ServerPacket;
 import net.tachyon.potion.Potion;
 import net.tachyon.potion.PotionEffect;
 import net.tachyon.world.World;
@@ -20,6 +19,12 @@ public interface Entity extends Viewable {
     @NotNull UUID getUuid();
 
     @NotNull World getWorld();
+
+    @NotNull Metadata getMetadata();
+
+    @NotNull EntityType getEntityType();
+
+    void setBoundingBox(double x, double y, double z);
 
     @Nullable Entity getVehicle();
 
@@ -36,7 +41,7 @@ public interface Entity extends Viewable {
     @NotNull Position getPosition();
 
     @NotNull Position getLastLocation();
-
+    @NotNull Vec getVelocityForPacket();
 
     @NotNull Vec getVelocity();
 

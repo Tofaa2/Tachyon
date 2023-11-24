@@ -1,5 +1,6 @@
 package net.tachyon.entity.metadata.other;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import net.tachyon.entity.metadata.TachyonEntityMeta;
@@ -9,7 +10,7 @@ public class TachyonExperienceOrbMeta extends TachyonEntityMeta implements Exper
 
     private int count = 1;
 
-    public TachyonExperienceOrbMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonExperienceOrbMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

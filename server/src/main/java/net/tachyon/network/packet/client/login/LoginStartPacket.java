@@ -7,6 +7,7 @@ import net.tachyon.binary.BinaryReader;
 import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.extras.MojangAuth;
 import net.tachyon.extras.proxy.BungeeCordProxy;
+import net.tachyon.network.ConnectionManager;
 import net.tachyon.network.packet.server.login.EncryptionRequestPacketImpl;
 import net.tachyon.network.packet.server.login.LoginDisconnectPacket;
 import net.tachyon.network.player.NettyPlayerConnection;
@@ -58,9 +59,9 @@ public class LoginStartPacket implements ClientPreplayPacket {
             // Offline
             final UUID playerUuid = bungee && isNettyClient ?
                     ((NettyPlayerConnection) connection).getBungeeUuid() :
-                    CONNECTION_MANAGER.getPlayerConnectionUuid(connection, username);
+                    Tachyon.getServer().getConnectionManager().getPlayerConnectionUuid(connection, username);
 
-            TachyonPlayer player = CONNECTION_MANAGER.startPlayState(connection, playerUuid, username, true);
+            TachyonPlayer player = ((ConnectionManager)Tachyon.getServer().getConnectionManager()).startPlayState(connection, playerUuid, username, true);
             if (bungee && isNettyClient) {
                 player.setSkin(((NettyPlayerConnection) connection).getBungeeSkin());
             }

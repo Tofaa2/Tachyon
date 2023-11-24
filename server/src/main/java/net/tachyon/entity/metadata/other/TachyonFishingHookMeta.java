@@ -12,7 +12,7 @@ public class TachyonFishingHookMeta extends TachyonEntityMeta implements Fishing
 
     private Entity thrower;
 
-    public TachyonFishingHookMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonFishingHookMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

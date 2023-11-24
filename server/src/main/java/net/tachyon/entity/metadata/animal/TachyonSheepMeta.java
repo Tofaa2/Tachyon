@@ -1,5 +1,6 @@
 package net.tachyon.entity.metadata.animal;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +12,7 @@ public class TachyonSheepMeta extends AnimalMeta implements SheepMeta {
     private final static byte COLOR_BITS = 0x0F;
     private final static byte SHEARED_BIT = 0x10;
 
-    public TachyonSheepMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonSheepMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

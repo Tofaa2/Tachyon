@@ -1,6 +1,7 @@
 package net.tachyon.entity.metadata;
 
 import net.kyori.adventure.text.Component;
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import org.jetbrains.annotations.NotNull;
@@ -15,10 +16,10 @@ public class TachyonEntityMeta implements EntityMeta {
     private final static byte EATING_BIT = 0x10;
     private final static byte INVISIBLE_BIT = 0x20;
 
-    protected final TachyonEntity entity;
+    protected final Entity entity;
     protected final Metadata metadata;
 
-    protected TachyonEntityMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    protected TachyonEntityMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         this.entity = entity;
         this.metadata = metadata;
     }

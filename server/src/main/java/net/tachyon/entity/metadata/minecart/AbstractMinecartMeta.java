@@ -1,5 +1,6 @@
 package net.tachyon.entity.metadata.minecart;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import net.tachyon.entity.metadata.MinecartMeta;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractMinecartMeta extends TachyonEntityMeta implements MinecartMeta {
 
-    protected AbstractMinecartMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    protected AbstractMinecartMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

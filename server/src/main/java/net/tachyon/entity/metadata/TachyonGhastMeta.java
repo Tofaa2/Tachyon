@@ -1,5 +1,6 @@
 package net.tachyon.entity.metadata;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import net.tachyon.entity.metadata.GhastMeta;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class TachyonGhastMeta extends TachyonMobMeta implements GhastMeta {
 
-    public TachyonGhastMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonGhastMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

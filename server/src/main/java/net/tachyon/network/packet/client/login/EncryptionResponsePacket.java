@@ -8,6 +8,7 @@ import net.tachyon.binary.BinaryReader;
 import net.tachyon.data.type.array.ByteArrayData;
 import net.tachyon.extras.MojangAuth;
 import net.tachyon.extras.mojangAuth.MojangCrypt;
+import net.tachyon.network.ConnectionManager;
 import net.tachyon.network.player.NettyPlayerConnection;
 import net.tachyon.network.player.PlayerConnection;
 import net.tachyon.network.packet.client.ClientPreplayPacket;
@@ -27,11 +28,9 @@ public class EncryptionResponsePacket implements ClientPreplayPacket {
     public void process(@NotNull PlayerConnection connection) {
 
         // Encryption is only support for netty connection
-        if (!(connection instanceof NettyPlayerConnection)) {
+        if (!(connection instanceof NettyPlayerConnection nettyConnection)) {
             return;
         }
-        final NettyPlayerConnection nettyConnection = (NettyPlayerConnection) connection;
-
         AsyncUtils.runAsync(() -> {
             try {
                 final String loginUsername = nettyConnection.getLoginUsername();
@@ -55,7 +54,7 @@ public class EncryptionResponsePacket implements ClientPreplayPacket {
                     nettyConnection.setEncryptionKey(getSecretKey());
 
                     MinecraftServer.LOGGER.info("UUID of player {} is {}", loginUsername, gameProfile.getId());
-                    CONNECTION_MANAGER.startPlayState(connection, gameProfile.getId(), gameProfile.getName(), true);
+                    ((ConnectionManager)Tachyon.getServer().getConnectionManager()).startPlayState(connection, gameProfile.getId(), gameProfile.getName(), true);
                 }
             } catch (AuthenticationUnavailableException e) {
                 Tachyon.getServer().getExceptionManager().handleException(e);

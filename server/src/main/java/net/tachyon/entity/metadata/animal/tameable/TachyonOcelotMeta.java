@@ -1,12 +1,13 @@
 package net.tachyon.entity.metadata.animal.tameable;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import org.jetbrains.annotations.NotNull;
 
 public class TachyonOcelotMeta extends TachyonTameableAnimalMeta implements OcelotMeta {
 
-    public TachyonOcelotMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonOcelotMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

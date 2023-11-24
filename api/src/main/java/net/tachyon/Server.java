@@ -4,9 +4,13 @@ import net.tachyon.block.BlockManager;
 import net.tachyon.data.DataManager;
 import net.tachyon.data.DataType;
 import net.tachyon.data.SerializableData;
+import net.tachyon.entity.Entity;
+import net.tachyon.entity.Metadata;
 import net.tachyon.entity.Player;
+import net.tachyon.entity.metadata.EntityMeta;
 import net.tachyon.exception.ExceptionManager;
 import net.tachyon.network.IConnectionManager;
+import net.tachyon.network.listener.IPacketListenerManager;
 import net.tachyon.network.packet.server.ServerPacket;
 import net.tachyon.scheduler.SchedulerManager;
 import net.tachyon.scoreboard.TeamManager;
@@ -25,6 +29,7 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.function.BiFunction;
 
 public abstract class Server {
 
@@ -73,6 +78,8 @@ public abstract class Server {
 
     public abstract @NotNull IConnectionManager getConnectionManager();
 
+    public abstract <E extends EntityMeta> BiFunction<Entity, Metadata, EntityMeta> createMeta(@NotNull Class<E> clazz);
+
     /**
      * Sends a {@link ServerPacket} to multiple players.
      * <p>
@@ -104,6 +111,7 @@ public abstract class Server {
     public abstract BlockManager getBlockmanager();
 
     public abstract BiomeManager getBiomeManager();
+    public abstract IPacketListenerManager getPacketListenerManager();
 
     /**
      * Gets the manager handling {@link DataType} used by {@link SerializableData}.

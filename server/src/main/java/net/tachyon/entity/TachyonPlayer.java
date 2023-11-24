@@ -56,6 +56,7 @@ import net.tachyon.utils.validate.Check;
 import net.tachyon.world.DimensionType;
 import net.tachyon.world.LevelType;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -124,6 +125,7 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
     private int permissionLevel;
 
     private boolean reducedDebugScreenInformation;
+    private String clientBrand = "vanilla";
 
     // Abilities
     private boolean flying;
@@ -150,7 +152,7 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
 
         setRespawnPoint(new Position(0, 0, 0));
 
-        this.settings = new PlayerSettings();
+        this.settings = new PlayerSettings(this);
         this.inventory = new PlayerInventory(this);
 
         setCanPickupItems(true); // By default
@@ -437,6 +439,17 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
                 chunk.removeViewer(this);
         });
         playerConnection.disconnect();
+    }
+
+    @NotNull
+    @Override
+    public String getClientBrand() {
+        return clientBrand;
+    }
+
+    @ApiStatus.Internal
+    public void setClientBrand(String clientBrand) {
+        this.clientBrand = clientBrand;
     }
 
     @Override
@@ -810,6 +823,11 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
      */
     public void setAdditionalHearts(float additionalHearts) {
         this.metadata.setIndex((byte) 17, Metadata.Float(additionalHearts));
+    }
+
+    @Override
+    public void setMetadataIndex(byte index, @NotNull Metadata.Value<?> data) {
+        this.metadata.setIndex(index, data);
     }
 
     /**
@@ -1897,7 +1915,7 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
      * based on which one is the lowest
      */
     public int getChunkRange() {
-        final int playerRange = getSettings().viewDistance;
+        final int playerRange = getSettings().getViewDistance();
         if (playerRange < 1) {
             // Didn't receive settings packet yet (is the case on login)
             // In this case we send the smallest amount of chunks possible
@@ -2052,101 +2070,5 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
         inventory.setBoots(itemStack);
     }
 
-    public enum FacePoint {
-        FEET,
-        EYE
-    }
-
-    // Settings enum
-
-    public enum ChatMode {
-        ENABLED,
-        COMMANDS_ONLY,
-        HIDDEN
-    }
-
-    public class PlayerSettings {
-
-        private String locale;
-        private byte viewDistance;
-        private ChatMode chatMode;
-        private boolean chatColors;
-        private byte displayedSkinParts;
-
-        private boolean firstRefresh = true;
-
-        /**
-         * The player game language.
-         *
-         * @return the player locale
-         */
-        public String getLocale() {
-            return locale;
-        }
-
-        /**
-         * Gets the player view distance.
-         *
-         * @return the player view distance
-         */
-        public byte getViewDistance() {
-            return viewDistance;
-        }
-
-        /**
-         * Gets the player chat mode.
-         *
-         * @return the player chat mode
-         */
-        public ChatMode getChatMode() {
-            return chatMode;
-        }
-
-        /**
-         * Gets if the player has chat colors enabled.
-         *
-         * @return true if chat colors are enabled, false otherwise
-         */
-        public boolean hasChatColors() {
-            return chatColors;
-        }
-
-        public byte getDisplayedSkinParts() {
-            return displayedSkinParts;
-        }
-
-        /**
-         * Changes the player settings internally.
-         * <p>
-         * WARNING: the player will not be noticed by this change, probably unsafe.
-         *
-         * @param locale             the player locale
-         * @param viewDistance       the player view distance
-         * @param chatMode           the player chat mode
-         * @param chatColors         the player chat colors
-         * @param displayedSkinParts the player displayed skin parts
-         */
-        public void refresh(String locale, byte viewDistance, ChatMode chatMode, boolean chatColors,
-                            byte displayedSkinParts) {
-
-            final boolean viewDistanceChanged = this.viewDistance != viewDistance;
-
-            this.locale = locale;
-            this.viewDistance = viewDistance;
-            this.chatMode = chatMode;
-            this.chatColors = chatColors;
-            this.displayedSkinParts = displayedSkinParts;
-
-            metadata.setIndex((byte) 10, Metadata.Byte(displayedSkinParts));
-
-            this.firstRefresh = false;
-
-            // Client changed his view distance in the settings
-            if (viewDistanceChanged) {
-                refreshVisibleChunks();
-            }
-        }
-
-    }
 
 }

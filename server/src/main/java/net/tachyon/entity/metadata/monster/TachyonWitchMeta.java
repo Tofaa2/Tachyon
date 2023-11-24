@@ -1,12 +1,13 @@
 package net.tachyon.entity.metadata.monster;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import org.jetbrains.annotations.NotNull;
 
 public class TachyonWitchMeta extends MonsterMeta implements WitchMeta {
 
-    public TachyonWitchMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonWitchMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

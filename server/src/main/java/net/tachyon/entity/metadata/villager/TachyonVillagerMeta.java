@@ -1,5 +1,6 @@
 package net.tachyon.entity.metadata.villager;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import net.tachyon.entity.metadata.TachyonAgeableMobMeta;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class TachyonVillagerMeta extends TachyonAgeableMobMeta implements VillagerMeta {
 
-    public TachyonVillagerMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonVillagerMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

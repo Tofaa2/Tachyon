@@ -1,5 +1,6 @@
 package net.tachyon.entity.metadata.monster;
 
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.Metadata;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +11,7 @@ public class TachyonBlazeMeta extends MonsterMeta implements BlazeMeta {
 
     private final static byte ON_FIRE_BIT = 0x01;
 
-    public TachyonBlazeMeta(@NotNull TachyonEntity entity, @NotNull Metadata metadata) {
+    public TachyonBlazeMeta(@NotNull Entity entity, @NotNull Metadata metadata) {
         super(entity, metadata);
     }
 

@@ -3,7 +3,10 @@ package net.tachyon;
 import net.tachyon.block.BlockManager;
 import net.tachyon.data.DataManager;
 import net.tachyon.data.TachyonDataManager;
+import net.tachyon.entity.Entity;
+import net.tachyon.entity.Metadata;
 import net.tachyon.entity.Player;
+import net.tachyon.entity.metadata.EntityMeta;
 import net.tachyon.network.IConnectionManager;
 import net.tachyon.network.packet.server.ServerPacket;
 import net.tachyon.scoreboard.TeamManager;
@@ -50,6 +53,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.UUID;
+import java.util.function.BiFunction;
 
 /**
  * The main server class used to start the server and retrieve all the managers.
@@ -60,12 +64,10 @@ import java.util.UUID;
 public final class MinecraftServer extends Server {
 
     private static MinecraftServer instance;
-
     // Network
     private PacketListenerManager packetListenerManager;
     private PacketProcessor packetProcessor;
     private NettyServer nettyServer;
-
     // In-Game Manager
     private ConnectionManager connectionManager;
     private InstanceManager instanceManager;
@@ -142,7 +144,6 @@ public final class MinecraftServer extends Server {
             Registries.fluids.put(NamespaceID.from(fluid.getNamespaceID()), fluid);
         }
 
-
         connectionManager = new ConnectionManager();
         // Networking
         packetProcessor = new PacketProcessor();
@@ -189,6 +190,12 @@ public final class MinecraftServer extends Server {
         return instance;
     }
 
+
+    @Override
+    public <E extends EntityMeta> BiFunction<Entity, Metadata, EntityMeta> createMeta(@NotNull Class<E> clazz) {
+        return Registries.getEntityMetaSupplier(clazz);
+    }
+
     @Override
     public DataManager getDataManager() {
         return this.dataManager;
@@ -211,7 +218,8 @@ public final class MinecraftServer extends Server {
      *
      * @return the packet listener manager
      */
-    public static PacketListenerManager getPacketListenerManager() {
+    @Override
+    public PacketListenerManager getPacketListenerManager() {
         return instance.packetListenerManager;
     }
 

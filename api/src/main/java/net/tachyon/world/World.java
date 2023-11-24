@@ -8,6 +8,7 @@ import net.tachyon.coordinate.Point;
 import net.tachyon.coordinate.Position;
 import net.tachyon.data.Data;
 import net.tachyon.entity.Entity;
+import net.tachyon.entity.EntityType;
 import net.tachyon.entity.Player;
 import net.tachyon.world.chunk.Chunk;
 import net.tachyon.world.chunk.ChunkCallback;
@@ -70,13 +71,14 @@ public interface World extends ForwardingPlayerAudience, BlockModifier {
     void loadOptionalChunk(int chunkX, int chunkY, @Nullable ChunkCallback callback);
 
     @Nullable CustomBlock getCustomBlock(int x, int y, int z);
-//    /**
-//     * Spawns an entity to this world.
-//     * @param uuid the uuid of the entity to spawn
-//     * @param position the position to spawn the entity at
-//     * @param entityType the type of the entity to spawn
-//     * @return the entity spawned. Depending on the type, you can use its respective metadata class to modify it.
-//     */
-//    void spawnEntity(@NotNull UUID uuid, @NotNull Position position, @NotNull EntityType entityType);
+
+    /**
+     * Spawns an entity to this world.
+     * @param uuid the uuid of the entity to spawn
+     * @param position the position to spawn the entity at
+     * @param entityType the type of the entity to spawn
+     * @return the entity spawned. Depending on the type, you can use its respective metadata class to modify it.
+     */
+    @NotNull Entity spawnEntity(@NotNull UUID uuid, @NotNull Position position, @NotNull EntityType entityType);
 
 }

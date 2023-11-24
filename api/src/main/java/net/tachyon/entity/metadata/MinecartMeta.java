@@ -1,6 +1,6 @@
 package net.tachyon.entity.metadata;
 
-public interface MinecartMeta extends ObjectDataProvider {
+public interface MinecartMeta extends ObjectDataProvider, EntityMeta {
 
     int getShakingPower();
 
