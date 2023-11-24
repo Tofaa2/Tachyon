@@ -1,13 +1,11 @@
 package net.tachyon.event.player;
 
-import net.tachyon.MinecraftServer;
 import net.tachyon.Tachyon;
 import net.tachyon.block.BlockManager;
 import net.tachyon.coordinate.Point;
 import net.tachyon.entity.Player;
-import net.tachyon.event.PlayerEvent;
-import net.tachyon.event.CancellableEvent;
-import net.tachyon.instance.block.TachyonBlockManager;
+import net.tachyon.event.types.PlayerEvent;
+import net.tachyon.event.types.CancellableEvent;
 import net.tachyon.block.CustomBlock;
 import net.tachyon.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;

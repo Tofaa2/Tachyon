@@ -4,7 +4,8 @@ import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.Tachyon;
+import net.tachyon.entity.Player;
 import net.tachyon.event.inventory.InventoryClickEvent;
 import net.tachyon.event.inventory.InventoryPreClickEvent;
 import net.tachyon.inventory.Inventory;
@@ -24,11 +25,11 @@ import java.util.function.BiConsumer;
 public class InventoryClickProcessor {
 
     // Dragging maps
-    private final Map<TachyonPlayer, IntSet> leftDraggingMap = new HashMap<>();
-    private final Map<TachyonPlayer, IntSet> rightDraggingMap = new HashMap<>();
+    private final Map<Player, IntSet> leftDraggingMap = new HashMap<>();
+    private final Map<Player, IntSet> rightDraggingMap = new HashMap<>();
 
     @NotNull
-    public InventoryClickResult leftClick(@Nullable Inventory inventory, @NotNull TachyonPlayer player, int slot,
+    public InventoryClickResult leftClick(@Nullable Inventory inventory, @NotNull Player player, int slot,
                                           @NotNull ItemStack clicked, @NotNull ItemStack cursor) {
         final InventoryClickResult clickResult = startCondition(inventory, player, slot, ClickType.LEFT_CLICK, clicked, cursor);
         clicked = clickResult.getClicked();
@@ -71,7 +72,7 @@ public class InventoryClickProcessor {
     }
 
     @NotNull
-    public InventoryClickResult rightClick(@Nullable Inventory inventory, @NotNull TachyonPlayer player, int slot,
+    public InventoryClickResult rightClick(@Nullable Inventory inventory, @NotNull Player player, int slot,
                                            @NotNull ItemStack clicked, @NotNull ItemStack cursor) {
         final InventoryClickResult clickResult = startCondition(inventory, player, slot, ClickType.RIGHT_CLICK, clicked, cursor);
 
@@ -128,7 +129,7 @@ public class InventoryClickProcessor {
     }
 
     @NotNull
-    public InventoryClickResult changeHeld(@Nullable Inventory inventory, @NotNull TachyonPlayer player, int slot, int key,
+    public InventoryClickResult changeHeld(@Nullable Inventory inventory, @NotNull Player player, int slot, int key,
                                            @NotNull ItemStack clicked, @NotNull ItemStack cursor) {
         InventoryClickResult clickResult = startCondition(inventory, player, slot, ClickType.CHANGE_HELD, clicked, cursor);
 
@@ -175,7 +176,7 @@ public class InventoryClickProcessor {
     }
 
     @Nullable
-    public InventoryClickResult shiftClick(@Nullable Inventory inventory, @NotNull TachyonPlayer player, int slot,
+    public InventoryClickResult shiftClick(@Nullable Inventory inventory, @NotNull Player player, int slot,
                                            @NotNull ItemStack clicked, @NotNull ItemStack cursor, @NotNull InventoryClickLoopHandler... loopHandlers) {
         InventoryClickResult clickResult = startCondition(inventory, player, slot, ClickType.START_SHIFT_CLICK, clicked, cursor);
 
@@ -256,7 +257,7 @@ public class InventoryClickProcessor {
     }
 
     @Nullable
-    public InventoryClickResult dragging(@Nullable Inventory inventory, @NotNull TachyonPlayer player,
+    public InventoryClickResult dragging(@Nullable Inventory inventory, @NotNull Player player,
                                          int slot, int button,
                                          @NotNull ItemStack clicked, @NotNull ItemStack cursor,
                                          @NotNull Int2ObjectFunction<ItemStack> itemGetter,
@@ -374,7 +375,7 @@ public class InventoryClickProcessor {
     }
 
     @Nullable
-    public InventoryClickResult doubleClick(@Nullable Inventory inventory, @NotNull TachyonPlayer player, int slot,
+    public InventoryClickResult doubleClick(@Nullable Inventory inventory, @NotNull Player player, int slot,
                                             @NotNull ItemStack cursor, @NotNull InventoryClickLoopHandler... loopHandlers) {
         InventoryClickResult clickResult = startCondition(inventory, player, slot, ClickType.START_DOUBLE_CLICK, ItemStack.AIR, cursor);
 
@@ -433,7 +434,7 @@ public class InventoryClickProcessor {
     }
 
     @NotNull
-    public InventoryClickResult drop(@Nullable Inventory inventory, @NotNull TachyonPlayer player,
+    public InventoryClickResult drop(@Nullable Inventory inventory, @NotNull Player player,
                                      int mode, int slot, int button,
                                      @NotNull ItemStack clicked, @NotNull ItemStack cursor) {
         final InventoryClickResult clickResult = startCondition(inventory, player, slot, ClickType.DROP, clicked, cursor);
@@ -503,7 +504,7 @@ public class InventoryClickProcessor {
 
     @NotNull
     private InventoryClickResult startCondition(@NotNull InventoryClickResult clickResult, @Nullable Inventory inventory,
-                                                @NotNull TachyonPlayer player, int slot, @NotNull ClickType clickType) {
+                                                @NotNull Player player, int slot, @NotNull ClickType clickType) {
         boolean isPlayerInventory = inventory == null;
         final int inventorySlot = isPlayerInventory ? 0 : inventory.getSize();
         isPlayerInventory = isPlayerInventory ? isPlayerInventory : slot >= inventorySlot;
@@ -521,7 +522,7 @@ public class InventoryClickProcessor {
 
         // Reset the didCloseInventory field
         // Wait for inventory conditions + events to possibly close the inventory
-        player.UNSAFE_changeDidCloseInventory(false);
+        Tachyon.getUnsafe().changeDidCloseInventory(player, false);
 
         // PreClickEvent
         {
@@ -558,28 +559,27 @@ public class InventoryClickProcessor {
             // Cancel the click if the inventory has been closed by Player#closeInventory within an inventory listener
             if (player.didCloseInventory()) {
                 clickResult.setCancel(true);
-                player.UNSAFE_changeDidCloseInventory(false);
+                Tachyon.getUnsafe().changeDidCloseInventory(player, false);
             }
-
 
         }
         return clickResult;
     }
 
     @NotNull
-    private InventoryClickResult startCondition(@Nullable Inventory inventory, @NotNull TachyonPlayer player, int slot,
+    private InventoryClickResult startCondition(@Nullable Inventory inventory, @NotNull Player player, int slot,
                                                 @NotNull ClickType clickType, @NotNull ItemStack clicked, @NotNull ItemStack cursor) {
         final InventoryClickResult clickResult = new InventoryClickResult(clicked, cursor);
         return startCondition(clickResult, inventory, player, slot, clickType);
     }
 
-    private void callClickEvent(@NotNull TachyonPlayer player, @Nullable Inventory inventory, int slot,
+    private void callClickEvent(@NotNull Player player, @Nullable Inventory inventory, int slot,
                                 @NotNull ClickType clickType, @NotNull ItemStack clicked, @NotNull ItemStack cursor) {
         InventoryClickEvent inventoryClickEvent = new InventoryClickEvent(inventory, player, slot, clickType, clicked, cursor);
         player.callEvent(InventoryClickEvent.class, inventoryClickEvent);
     }
 
-    public void clearCache(@NotNull TachyonPlayer player) {
+    public void clearCache(@NotNull Player player) {
         this.leftDraggingMap.remove(player);
         this.rightDraggingMap.remove(player);
     }

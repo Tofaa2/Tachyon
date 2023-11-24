@@ -5,6 +5,10 @@ import net.kyori.adventure.text.Component;
 import net.tachyon.command.CommandSender;
 import net.tachyon.coordinate.Point;
 import net.tachyon.entity.metadata.PlayerMeta;
+import net.tachyon.inventory.EquipmentHandler;
+import net.tachyon.inventory.Inventory;
+import net.tachyon.inventory.PlayerInventory;
+import net.tachyon.item.ItemStack;
 import net.tachyon.network.packet.server.ServerPacket;
 import net.tachyon.network.player.PlayerConnection;
 import net.tachyon.scoreboard.BelowNameTag;
@@ -41,6 +45,16 @@ public interface Player extends LivingEntity, CommandSender {
 
     void setGameMode(@NotNull GameMode gameMode);
 
+    /**
+     * Opens the specified Inventory, close the previous inventory if existing.
+     *
+     * @param inventory the inventory to open
+     * @return true if the inventory has been opened/sent to the player, false otherwise (cancelled by event)
+     */
+    boolean openInventory(@NotNull Inventory inventory);
+
+    void closeInventory();
+
     int getFood();
 
     void setFood(int food);
@@ -50,6 +64,12 @@ public interface Player extends LivingEntity, CommandSender {
     void setFoodSaturation(float saturation);
 
     void kick(@NotNull Component reason);
+
+    boolean didCloseInventory();
+
+    @NotNull PlayerInventory getInventory();
+
+    boolean dropItem(@NotNull ItemStack itemStack);
 
     boolean isOnline();
 

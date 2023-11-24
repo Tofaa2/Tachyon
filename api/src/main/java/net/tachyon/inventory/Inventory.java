@@ -5,7 +5,6 @@ import net.tachyon.Viewable;
 import net.tachyon.data.Data;
 import net.tachyon.data.DataContainer;
 import net.tachyon.entity.Player;
-import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.inventory.click.InventoryClickProcessor;
 import net.tachyon.inventory.click.InventoryClickResult;
 import net.tachyon.inventory.condition.InventoryCondition;
@@ -34,10 +33,10 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Represents an inventory which can be viewed by a collection of {@link TachyonPlayer}.
+ * Represents an inventory which can be viewed by a collection of {@link Player}.
  * <p>
  * You can create one with {@link Inventory#Inventory(InventoryType, Component)} or by making your own subclass.
- * It can then be opened using {@link TachyonPlayer#openInventory(Inventory)}.
+ * It can then be opened using {@link Player#openInventory(Inventory)}.
  */
 public class Inventory implements InventoryModifier, InventoryClickHandler, Viewable, DataContainer {
 
@@ -228,10 +227,9 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
      * <p>
      * The player needs to be a viewer, otherwise nothing is sent.
      *
-     * @param p the player to update the inventory
+     * @param player the player to update the inventory
      */
-    public void update(@NotNull Player p) {
-        TachyonPlayer player = (TachyonPlayer) p;
+    public void update(@NotNull Player player) {
         if (!getViewers().contains(player))
             return;
 
@@ -255,7 +253,7 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
     }
 
     /**
-     * This will not open the inventory for {@code player}, use {@link TachyonPlayer#openInventory(Inventory)}.
+     * This will not open the inventory for {@code player}, use {@link Player#openInventory(Inventory)}.
      *
      * @param player the viewer to add
      * @return true if the player has successfully been added
@@ -268,7 +266,7 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
     }
 
     /**
-     * This will not close the inventory for {@code player}, use {@link TachyonPlayer#closeInventory()}.
+     * This will not close the inventory for {@code player}, use {@link Player#closeInventory()}.
      *
      * @param player the viewer to remove
      * @return true if the player has successfully been removed
@@ -277,7 +275,7 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
     public boolean removeViewer(@NotNull Player player) {
         final boolean result = this.viewers.remove(player);
         this.cursorPlayersItem.remove(player);
-        this.clickProcessor.clearCache((TachyonPlayer) player);
+        this.clickProcessor.clearCache(player);
         return result;
     }
 
@@ -288,7 +286,7 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
      * @return the player cursor item, air item if the player is not a viewer
      */
     @NotNull
-    public ItemStack getCursorItem(@NotNull TachyonPlayer player) {
+    public ItemStack getCursorItem(@NotNull Player player) {
         return cursorPlayersItem.getOrDefault(player, ItemStack.AIR);
     }
 
@@ -299,7 +297,7 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
      * @param player     the player to change the cursor item
      * @param cursorItem the new player cursor item
      */
-    public void setCursorItem(@NotNull TachyonPlayer player, @NotNull ItemStack cursorItem) {
+    public void setCursorItem(@NotNull Player player, @NotNull ItemStack cursorItem) {
         if (!isViewer(player))
             return;
 
@@ -381,7 +379,7 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
      * @param player    the player to change the cursor item
      * @param itemStack the cursor item
      */
-    private void setCursorPlayerItem(@NotNull TachyonPlayer player, @NotNull ItemStack itemStack) {
+    private void setCursorPlayerItem(@NotNull Player player, @NotNull ItemStack itemStack) {
         this.cursorPlayersItem.put(player, itemStack);
     }
 
@@ -390,7 +388,7 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
     }
 
     @Override
-    public boolean leftClick(@NotNull TachyonPlayer player, int slot) {
+    public boolean leftClick(@NotNull Player player, int slot) {
         final PlayerInventory playerInventory = player.getInventory();
         final ItemStack cursor = getCursorItem(player);
         final boolean isInWindow = isClickInWindow(slot);
@@ -417,7 +415,7 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
     }
 
     @Override
-    public boolean rightClick(@NotNull TachyonPlayer player, int slot) {
+    public boolean rightClick(@NotNull Player player, int slot) {
         final PlayerInventory playerInventory = player.getInventory();
         final ItemStack cursor = getCursorItem(player);
         final boolean isInWindow = isClickInWindow(slot);
@@ -444,7 +442,7 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
     }
 
     @Override
-    public boolean shiftClick(@NotNull TachyonPlayer player, int slot) {
+    public boolean shiftClick(@NotNull Player player, int slot) {
         final PlayerInventory playerInventory = player.getInventory();
         final boolean isInWindow = isClickInWindow(slot);
         final int clickSlot = isInWindow ? slot : PlayerInventoryUtils.convertSlot(slot, offset);
@@ -501,7 +499,7 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
     }
 
     @Override
-    public boolean changeHeld(@NotNull TachyonPlayer player, int slot, int key) {
+    public boolean changeHeld(@NotNull Player player, int slot, int key) {
         final PlayerInventory playerInventory = player.getInventory();
         final boolean isInWindow = isClickInWindow(slot);
         final int clickSlot = isInWindow ? slot : PlayerInventoryUtils.convertSlot(slot, offset);
@@ -531,13 +529,13 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
     }
 
     @Override
-    public boolean middleClick(@NotNull TachyonPlayer player, int slot) {
+    public boolean middleClick(@NotNull Player player, int slot) {
         // TODO
         return false;
     }
 
     @Override
-    public boolean drop(@NotNull TachyonPlayer player, int mode, int slot, int button) {
+    public boolean drop(@NotNull Player player, int mode, int slot, int button) {
         final PlayerInventory playerInventory = player.getInventory();
         final boolean isInWindow = isClickInWindow(slot);
         final boolean outsideDrop = slot == -999;
@@ -568,7 +566,7 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
     }
 
     @Override
-    public boolean dragging(@NotNull TachyonPlayer player, int slot, int button) {
+    public boolean dragging(@NotNull Player player, int slot, int button) {
         final PlayerInventory playerInventory = player.getInventory();
         final boolean isInWindow = isClickInWindow(slot);
         final int clickSlot = isInWindow ? slot : PlayerInventoryUtils.convertSlot(slot, offset);
@@ -606,7 +604,7 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
     }
 
     @Override
-    public boolean doubleClick(@NotNull TachyonPlayer player, int slot) {
+    public boolean doubleClick(@NotNull Player player, int slot) {
         final PlayerInventory playerInventory = player.getInventory();
         final ItemStack cursor = getCursorItem(player);
 
@@ -655,7 +653,7 @@ public class Inventory implements InventoryModifier, InventoryClickHandler, View
      * @param clickResult the action result
      * @param player      the player who did the action
      */
-    private void updateFromClick(InventoryClickResult clickResult, TachyonPlayer player) {
+    private void updateFromClick(InventoryClickResult clickResult, Player player) {
         if (clickResult.isPlayerInventory()) {
             player.getInventory().update();
         } else {

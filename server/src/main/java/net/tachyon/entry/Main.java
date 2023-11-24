@@ -3,6 +3,7 @@ package net.tachyon.entry;
 import net.tachyon.MinecraftServer;
 import net.tachyon.ServerSettings;
 import net.tachyon.Tachyon;
+import net.tachyon.UnsafeServer;
 import net.tachyon.block.Block;
 import net.tachyon.config.Config;
 import net.tachyon.extras.MojangAuth;
@@ -28,7 +29,7 @@ public final class Main {
         Config<ServerSettings> config = Config.create(ServerSettings.class, Path.of("config.json"));
         config.load(ServerSettings.DEFAULT_SETTINGS);
         MinecraftServer server = new MinecraftServer(config.get());
-        Tachyon.setServer(server);
+        Tachyon.init(server, new UnsafeServer());
         server.init();
         OptifineSupport.enable(); // Not sure if this is needed in 1.8, but better safe than sorry.
 

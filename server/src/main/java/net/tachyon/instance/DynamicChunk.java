@@ -12,6 +12,7 @@ import net.tachyon.data.SerializableData;
 import net.tachyon.data.SerializableDataImpl;
 import net.tachyon.entity.pathfinding.PFBlockDescription;
 import net.tachyon.block.CustomBlock;
+import net.tachyon.entity.pathfinding.PFColumnarSpace;
 import net.tachyon.world.palette.PaletteStorage;
 import net.tachyon.network.packet.server.play.ChunkDataPacket;
 import net.tachyon.utils.binary.TachyonBinaryReader;
@@ -164,6 +165,11 @@ public class DynamicChunk extends TachyonChunk {
     @Override
     public short getCustomBlockId(int x, int y, int z) {
         return getBlockAt(customBlockPalette, x, y, z);
+    }
+
+    @Override
+    public PFColumnarSpace getColumnarSpace() {
+        return columnarSpace;
     }
 
     @Override

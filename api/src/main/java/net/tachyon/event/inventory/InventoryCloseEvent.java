@@ -1,7 +1,7 @@
 package net.tachyon.event.inventory;
 
-import net.tachyon.entity.TachyonPlayer;
-import net.tachyon.event.InventoryEvent;
+import net.tachyon.entity.Player;
+import net.tachyon.event.types.InventoryEvent;
 import net.tachyon.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,10 +11,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class InventoryCloseEvent extends InventoryEvent {
 
-    private final TachyonPlayer player;
+    private final Player player;
     private Inventory newInventory;
 
-    public InventoryCloseEvent(@Nullable Inventory inventory, @NotNull TachyonPlayer player) {
+    public InventoryCloseEvent(@Nullable Inventory inventory, @NotNull Player player) {
         super(inventory);
         this.player = player;
     }
@@ -25,7 +25,7 @@ public class InventoryCloseEvent extends InventoryEvent {
      * @return the player who closed the inventory
      */
     @NotNull
-    public TachyonPlayer getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 

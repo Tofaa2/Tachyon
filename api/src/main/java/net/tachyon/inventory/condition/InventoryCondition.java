@@ -1,10 +1,6 @@
 package net.tachyon.inventory.condition;
 
 import net.tachyon.entity.Player;
-import net.tachyon.entity.TachyonPlayer;
-import net.tachyon.inventory.PlayerInventory;
-import net.tachyon.inventory.Inventory;
-import net.tachyon.inventory.InventoryModifier;
 import net.tachyon.inventory.click.ClickType;
 
 /**

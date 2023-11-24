@@ -240,8 +240,8 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
             this.lastExperiencePickupCheckTime = time;
 
             final TachyonChunk chunk = getChunk(); // TODO check surrounding chunks
-            final Set<TachyonEntity> entities = instance.getChunkEntities(chunk);
-            for (TachyonEntity entity : entities) {
+            final Set<Entity> entities = instance.getChunkEntities(chunk);
+            for (Entity entity : entities) {
                 if (entity instanceof TachyonExperienceOrb) {
                     final TachyonExperienceOrb experienceOrb = (TachyonExperienceOrb) entity;
                     final BoundingBox itemBoundingBox = experienceOrb.getBoundingBox();
@@ -1502,6 +1502,7 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
      * @param inventory the inventory to open
      * @return true if the inventory has been opened/sent to the player, false otherwise (cancelled by event)
      */
+    @Override
     public boolean openInventory(@NotNull Inventory inventory) {
 
         InventoryOpenEvent inventoryOpenEvent = new InventoryOpenEvent(inventory, this);

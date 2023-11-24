@@ -1,14 +1,14 @@
 package net.tachyon.event.player;
 
-import net.tachyon.entity.TachyonPlayer;
-import net.tachyon.event.PlayerEvent;
-import net.tachyon.event.CancellableEvent;
+import net.tachyon.entity.Player;
+import net.tachyon.event.types.PlayerEvent;
+import net.tachyon.event.types.CancellableEvent;
 import net.tachyon.inventory.PlayerInventory;
 import net.tachyon.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Called as a result of {@link PlayerInventory#setItemStack(int, TachyonItemStack)}
+ * Called as a result of {@link PlayerInventory#setItemStack(int, ItemStack)}
  * and player click in his inventory.
  */
 public class PlayerSetItemStackEvent extends PlayerEvent implements CancellableEvent {
@@ -18,7 +18,7 @@ public class PlayerSetItemStackEvent extends PlayerEvent implements CancellableE
 
     private boolean cancelled;
 
-    public PlayerSetItemStackEvent(@NotNull TachyonPlayer player, int slot, @NotNull ItemStack itemStack) {
+    public PlayerSetItemStackEvent(@NotNull Player player, int slot, @NotNull ItemStack itemStack) {
         super(player);
         this.slot = slot;
         this.itemStack = itemStack;

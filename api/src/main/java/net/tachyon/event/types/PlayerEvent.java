@@ -1,4 +1,4 @@
-package net.tachyon.event;
+package net.tachyon.event.types;
 
 import net.tachyon.entity.Player;
 import org.jetbrains.annotations.NotNull;

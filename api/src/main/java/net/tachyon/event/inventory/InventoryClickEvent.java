@@ -1,7 +1,7 @@
 package net.tachyon.event.inventory;
 
-import net.tachyon.entity.TachyonPlayer;
-import net.tachyon.event.InventoryEvent;
+import net.tachyon.entity.Player;
+import net.tachyon.event.types.InventoryEvent;
 import net.tachyon.inventory.Inventory;
 import net.tachyon.inventory.click.ClickType;
 import net.tachyon.item.ItemStack;
@@ -14,13 +14,13 @@ import org.jetbrains.annotations.Nullable;
  */
 public class InventoryClickEvent extends InventoryEvent {
 
-    private final TachyonPlayer player;
+    private final Player player;
     private final int slot;
     private final ClickType clickType;
     private final ItemStack clickedItem;
     private final ItemStack cursorItem;
 
-    public InventoryClickEvent(@Nullable Inventory inventory, @NotNull TachyonPlayer player,
+    public InventoryClickEvent(@Nullable Inventory inventory, @NotNull Player player,
                                int slot, @NotNull ClickType clickType,
                                @NotNull ItemStack clicked, @NotNull ItemStack cursor) {
         super(inventory);
@@ -37,7 +37,7 @@ public class InventoryClickEvent extends InventoryEvent {
      * @return the player who clicked in the inventory
      */
     @NotNull
-    public TachyonPlayer getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 

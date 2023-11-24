@@ -2,7 +2,7 @@ package net.tachyon.event.player;
 
 import net.tachyon.entity.Player;
 import net.tachyon.entity.TachyonPlayer;
-import net.tachyon.event.PlayerEvent;
+import net.tachyon.event.types.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**

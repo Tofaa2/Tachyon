@@ -4,11 +4,12 @@ import net.tachyon.attribute.Attribute;
 import net.tachyon.attribute.AttributeInstance;
 import net.tachyon.coordinate.Point;
 import net.tachyon.entity.damage.DamageType;
+import net.tachyon.inventory.EquipmentHandler;
 import net.tachyon.utils.time.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface LivingEntity extends Entity {
+public interface LivingEntity extends Entity, EquipmentHandler {
 
 
     void swingHand();

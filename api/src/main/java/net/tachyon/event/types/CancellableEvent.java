@@ -1,4 +1,4 @@
-package net.tachyon.event;
+package net.tachyon.event.types;
 
 /**
  * Represents an {@link Event} which can be cancelled.

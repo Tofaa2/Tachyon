@@ -1,8 +1,8 @@
 package net.tachyon.event.player;
 
-import net.tachyon.entity.TachyonPlayer;
-import net.tachyon.event.PlayerEvent;
-import net.tachyon.event.CancellableEvent;
+import net.tachyon.entity.Player;
+import net.tachyon.event.types.PlayerEvent;
+import net.tachyon.event.types.CancellableEvent;
 import net.tachyon.inventory.PlayerInventory;
 import net.tachyon.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ public class PlayerAddItemStackEvent extends PlayerEvent implements CancellableE
 
     private boolean cancelled;
 
-    public PlayerAddItemStackEvent(@NotNull TachyonPlayer player, @NotNull ItemStack itemStack) {
+    public PlayerAddItemStackEvent(@NotNull Player player, @NotNull ItemStack itemStack) {
         super(player);
         this.itemStack = itemStack;
     }

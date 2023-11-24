@@ -17,7 +17,7 @@ import net.tachyon.entity.*;
 import net.tachyon.block.Block;
 import net.tachyon.block.CustomBlock;
 import net.tachyon.entity.pathfinding.PFInstanceSpace;
-import net.tachyon.event.Event;
+import net.tachyon.event.types.Event;
 import net.tachyon.event.EventCallback;
 import net.tachyon.event.EventHandler;
 import net.tachyon.event.instance.AddEntityToInstanceEvent;
@@ -28,6 +28,7 @@ import net.tachyon.network.packet.server.play.BlockActionPacket;
 import net.tachyon.network.packet.server.play.TimeUpdatePacket;
 import net.tachyon.thread.ThreadProvider;
 import net.tachyon.utils.PacketUtils;
+import net.tachyon.world.*;
 import net.tachyon.world.chunk.ChunkCallback;
 import net.tachyon.utils.ChunkUtils;
 import net.tachyon.utils.entity.EntityUtils;
@@ -35,9 +36,6 @@ import net.tachyon.utils.time.CooldownUtils;
 import net.tachyon.utils.time.TimeUnit;
 import net.tachyon.utils.time.UpdateOption;
 import net.tachyon.utils.validate.Check;
-import net.tachyon.world.DimensionType;
-import net.tachyon.world.LevelType;
-import net.tachyon.world.World;
 import net.tachyon.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -507,7 +505,7 @@ public abstract class Instance implements EventHandler, DataContainer, World {
      * if {@code chunk} is unloaded, return an empty {@link HashSet}
      */
     @NotNull
-    public Set<TachyonEntity> getChunkEntities(Chunk chunk) {
+    public Set<Entity> getChunkEntities(@NotNull Chunk chunk) {
         if (!ChunkUtils.isLoaded(chunk))
             return new HashSet<>();
 

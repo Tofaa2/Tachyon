@@ -1,9 +1,10 @@
 package net.tachyon.inventory;
 
+import net.tachyon.Tachyon;
 import net.tachyon.data.Data;
 import net.tachyon.data.DataContainer;
 import net.tachyon.entity.ArmorSlot;
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.item.ArmorEquipEvent;
 import net.tachyon.event.player.PlayerAddItemStackEvent;
 import net.tachyon.event.player.PlayerSetItemStackEvent;
@@ -27,16 +28,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static net.tachyon.utils.inventory.PlayerInventoryUtils.*;
-
 /**
- * Represents the inventory of a {@link TachyonPlayer}, retrieved with {@link TachyonPlayer#getInventory()}.
+ * Represents the inventory of a {@link Player}, retrieved with {@link Player#getInventory()}.
  */
 public class PlayerInventory implements InventoryModifier, InventoryClickHandler, EquipmentHandler, DataContainer {
 
     public static final int INVENTORY_SIZE = 45;
 
-    protected final TachyonPlayer player;
+    protected final Player player;
     protected final ItemStack[] items = new ItemStack[INVENTORY_SIZE];
     private ItemStack cursorItem = ItemStack.AIR;
 
@@ -45,7 +44,7 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
 
     private Data data;
 
-    public PlayerInventory(@NotNull TachyonPlayer player) {
+    public PlayerInventory(@NotNull Player player) {
         this.player = player;
 
         ArrayUtils.fill(items, () -> ItemStack.AIR);
@@ -72,7 +71,7 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
     @Override
     public void addInventoryCondition(@NotNull InventoryCondition inventoryCondition) {
         InventoryCondition condition = (p, slot, clickType, inventoryConditionResult) -> {
-            final int convertedSlot = convertPlayerInventorySlot(slot, OFFSET);
+            final int convertedSlot = PlayerInventoryUtils.convertPlayerInventorySlot(slot, PlayerInventoryUtils.OFFSET);
             inventoryCondition.accept(p, convertedSlot, clickType, inventoryConditionResult);
         };
 
@@ -113,11 +112,11 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
                 if (!stackingRule.canApply(itemStack, totalAmount)) {
                     item = itemStackingRule.apply(item, itemStackingRule.getMaxSize());
 
-                    sendSlotRefresh((short) convertToPacketSlot(i), item);
+                    sendSlotRefresh((short) PlayerInventoryUtils.convertToPacketSlot(i), item);
                     itemStack = stackingRule.apply(itemStack, totalAmount - stackingRule.getMaxSize());
                 } else {
                     item = item.withAmount((byte) totalAmount);
-                    sendSlotRefresh((short) convertToPacketSlot(i), item);
+                    sendSlotRefresh((short) PlayerInventoryUtils.convertToPacketSlot(i), item);
                     return true;
                 }
             } else if (item.isAir()) {
@@ -162,45 +161,45 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
     @NotNull
     @Override
     public ItemStack getHelmet() {
-        return getItemStack(HELMET_SLOT);
+        return getItemStack(PlayerInventoryUtils.HELMET_SLOT);
     }
 
     @Override
     public void setHelmet(@NotNull ItemStack itemStack) {
-        safeItemInsert(HELMET_SLOT, itemStack);
+        safeItemInsert(PlayerInventoryUtils.HELMET_SLOT, itemStack);
     }
 
     @NotNull
     @Override
     public ItemStack getChestplate() {
-        return getItemStack(CHESTPLATE_SLOT);
+        return getItemStack(PlayerInventoryUtils.CHESTPLATE_SLOT);
     }
 
     @Override
     public void setChestplate(@NotNull ItemStack itemStack) {
-        safeItemInsert(CHESTPLATE_SLOT, itemStack);
+        safeItemInsert(PlayerInventoryUtils.CHESTPLATE_SLOT, itemStack);
     }
 
     @NotNull
     @Override
     public ItemStack getLeggings() {
-        return getItemStack(LEGGINGS_SLOT);
+        return getItemStack(PlayerInventoryUtils.LEGGINGS_SLOT);
     }
 
     @Override
     public void setLeggings(@NotNull ItemStack itemStack) {
-        safeItemInsert(LEGGINGS_SLOT, itemStack);
+        safeItemInsert(PlayerInventoryUtils.LEGGINGS_SLOT, itemStack);
     }
 
     @NotNull
     @Override
     public ItemStack getBoots() {
-        return getItemStack(BOOTS_SLOT);
+        return getItemStack(PlayerInventoryUtils.BOOTS_SLOT);
     }
 
     @Override
     public void setBoots(@NotNull ItemStack itemStack) {
-        safeItemInsert(BOOTS_SLOT, itemStack);
+        safeItemInsert(PlayerInventoryUtils.BOOTS_SLOT, itemStack);
     }
 
     /**
@@ -217,7 +216,7 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
      * @param slot the slot to refresh
      */
     public void refreshSlot(short slot) {
-        final int packetSlot = convertToPacketSlot(slot);
+        final int packetSlot = PlayerInventoryUtils.convertToPacketSlot(slot);
         sendSlotRefresh((short) packetSlot, getItemStack(slot));
     }
 
@@ -266,13 +265,13 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
         } else {
             ArmorEquipEvent armorEquipEvent = null;
 
-            if (slot == HELMET_SLOT) {
+            if (slot == PlayerInventoryUtils.HELMET_SLOT) {
                 armorEquipEvent = new ArmorEquipEvent(player, itemStack, ArmorSlot.HELMET);
-            } else if (slot == CHESTPLATE_SLOT) {
+            } else if (slot == PlayerInventoryUtils.CHESTPLATE_SLOT) {
                 armorEquipEvent = new ArmorEquipEvent(player, itemStack, ArmorSlot.CHESTPLATE);
-            } else if (slot == LEGGINGS_SLOT) {
+            } else if (slot == PlayerInventoryUtils.LEGGINGS_SLOT) {
                 armorEquipEvent = new ArmorEquipEvent(player, itemStack, ArmorSlot.LEGGINGS);
-            } else if (slot == BOOTS_SLOT) {
+            } else if (slot == PlayerInventoryUtils.BOOTS_SLOT) {
                 armorEquipEvent = new ArmorEquipEvent(player, itemStack, ArmorSlot.BOOTS);
             }
 
@@ -290,7 +289,7 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
 
         // Sync equipment
         if (equipmentSlot != null) {
-            player.syncEquipment(equipmentSlot);
+            Tachyon.getUnsafe().syncEquipment(player, equipmentSlot);
         }
 
         // Refresh slot
@@ -311,7 +310,7 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
      * @param itemStack the item stack to set
      */
     protected void setItemStack(int slot, int offset, ItemStack itemStack) {
-        final int convertedSlot = convertPlayerInventorySlot(slot, offset);
+        final int convertedSlot = PlayerInventoryUtils.convertPlayerInventorySlot(slot, offset);
         setItemStack(convertedSlot, itemStack);
     }
 
@@ -323,7 +322,7 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
      * @return the item in the specified slot
      */
     protected ItemStack getItemStack(int slot, int offset) {
-        final int convertedSlot = convertPlayerInventorySlot(slot, offset);
+        final int convertedSlot = PlayerInventoryUtils.convertPlayerInventorySlot(slot, offset);
         return this.items[convertedSlot];
     }
 
@@ -351,7 +350,7 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
         ItemStack[] convertedSlots = new ItemStack[INVENTORY_SIZE];
 
         for (int i = 0; i < items.length; i++) {
-            final int slot = convertToPacketSlot(i);
+            final int slot = PlayerInventoryUtils.convertToPacketSlot(i);
             convertedSlots[slot] = items[i];
         }
 
@@ -362,16 +361,16 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
     }
 
     @Override
-    public boolean leftClick(@NotNull TachyonPlayer player, int slot) {
+    public boolean leftClick(@NotNull Player player, int slot) {
         final ItemStack cursor = getCursorItem();
-        final ItemStack clicked = getItemStack(convertPlayerInventorySlot(slot, OFFSET));
+        final ItemStack clicked = getItemStack(PlayerInventoryUtils.convertPlayerInventorySlot(slot, PlayerInventoryUtils.OFFSET));
 
         final InventoryClickResult clickResult = clickProcessor.leftClick(null, player, slot, clicked, cursor);
 
         if (clickResult.doRefresh())
             sendSlotRefresh((short) slot, clicked);
 
-        setItemStack(slot, OFFSET, clickResult.getClicked());
+        setItemStack(slot, PlayerInventoryUtils.OFFSET, clickResult.getClicked());
         setCursorItem(clickResult.getCursor());
 
         if (!clickResult.isCancel())
@@ -381,16 +380,16 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
     }
 
     @Override
-    public boolean rightClick(@NotNull TachyonPlayer player, int slot) {
+    public boolean rightClick(@NotNull Player player, int slot) {
         final ItemStack cursor = getCursorItem();
-        final ItemStack clicked = getItemStack(slot, OFFSET);
+        final ItemStack clicked = getItemStack(slot, PlayerInventoryUtils.OFFSET);
 
         final InventoryClickResult clickResult = clickProcessor.rightClick(null, player, slot, clicked, cursor);
 
         if (clickResult.doRefresh())
             sendSlotRefresh((short) slot, clicked);
 
-        setItemStack(slot, OFFSET, clickResult.getClicked());
+        setItemStack(slot, PlayerInventoryUtils.OFFSET, clickResult.getClicked());
         setCursorItem(clickResult.getCursor());
 
         if (!clickResult.isCancel())
@@ -400,16 +399,16 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
     }
 
     @Override
-    public boolean middleClick(@NotNull TachyonPlayer player, int slot) {
+    public boolean middleClick(@NotNull Player player, int slot) {
         // TODO
         return false;
     }
 
     @Override
-    public boolean drop(@NotNull TachyonPlayer player, int mode, int slot, int button) {
+    public boolean drop(@NotNull Player player, int mode, int slot, int button) {
         final ItemStack cursor = getCursorItem();
         final boolean outsideDrop = slot == -999;
-        final ItemStack clicked = outsideDrop ? ItemStack.AIR : getItemStack(slot, OFFSET);
+        final ItemStack clicked = outsideDrop ? ItemStack.AIR : getItemStack(slot, PlayerInventoryUtils.OFFSET);
 
         final InventoryClickResult clickResult = clickProcessor.drop(null, player,
                 mode, slot, button, clicked, cursor);
@@ -419,29 +418,29 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
 
         final ItemStack resultClicked = clickResult.getClicked();
         if (resultClicked != null && !outsideDrop)
-            setItemStack(slot, OFFSET, resultClicked);
+            setItemStack(slot, PlayerInventoryUtils.OFFSET, resultClicked);
         setCursorItem(clickResult.getCursor());
 
         return !clickResult.isCancel();
     }
 
     @Override
-    public boolean shiftClick(@NotNull TachyonPlayer player, int slot) {
+    public boolean shiftClick(@NotNull Player player, int slot) {
         final ItemStack cursor = getCursorItem();
-        final ItemStack clicked = getItemStack(slot, OFFSET);
+        final ItemStack clicked = getItemStack(slot, PlayerInventoryUtils.OFFSET);
 
-        final boolean hotBarClick = convertToPacketSlot(slot) < 9;
+        final boolean hotBarClick = PlayerInventoryUtils.convertToPacketSlot(slot) < 9;
         final InventoryClickResult clickResult = clickProcessor.shiftClick(null, player, slot, clicked, cursor,
                 new InventoryClickLoopHandler(0, items.length, 1,
                         i -> {
                             if (hotBarClick) {
                                 return i < 9 ? i + 9 : i - 9;
                             } else {
-                                return convertPlayerInventorySlot(i, OFFSET);
+                                return PlayerInventoryUtils.convertPlayerInventorySlot(i, PlayerInventoryUtils.OFFSET);
                             }
                         },
-                        index -> getItemStack(index, OFFSET),
-                        (index, itemStack) -> setItemStack(index, OFFSET, itemStack)));
+                        index -> getItemStack(index, PlayerInventoryUtils.OFFSET),
+                        (index, itemStack) -> setItemStack(index, PlayerInventoryUtils.OFFSET, itemStack)));
 
         if (clickResult == null)
             return false;
@@ -455,12 +454,12 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
     }
 
     @Override
-    public boolean changeHeld(@NotNull TachyonPlayer player, int slot, int key) {
+    public boolean changeHeld(@NotNull Player player, int slot, int key) {
         if (!getCursorItem().isAir())
             return false;
 
         final ItemStack heldItem = getItemStack(key);
-        final ItemStack clicked = getItemStack(slot, OFFSET);
+        final ItemStack clicked = getItemStack(slot, PlayerInventoryUtils.OFFSET);
 
         final InventoryClickResult clickResult = clickProcessor.changeHeld(null, player, slot, key, clicked, heldItem);
 
@@ -468,7 +467,7 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
             sendSlotRefresh((short) slot, clicked);
         }
 
-        setItemStack(slot, OFFSET, clickResult.getClicked());
+        setItemStack(slot, PlayerInventoryUtils.OFFSET, clickResult.getClicked());
         setItemStack(key, clickResult.getCursor());
 
         if (!clickResult.isCancel())
@@ -481,14 +480,14 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
     }
 
     @Override
-    public boolean dragging(@NotNull TachyonPlayer player, int slot, int button) {
+    public boolean dragging(@NotNull Player player, int slot, int button) {
         final ItemStack cursor = getCursorItem();
-        final ItemStack clicked = slot != -999 ? getItemStack(slot, OFFSET) : ItemStack.AIR;
+        final ItemStack clicked = slot != -999 ? getItemStack(slot, PlayerInventoryUtils.OFFSET) : ItemStack.AIR;
 
         final InventoryClickResult clickResult = clickProcessor.dragging(null, player,
                 slot, button,
-                clicked, cursor, s -> getItemStack(s, OFFSET),
-                (s, item) -> setItemStack(s, OFFSET, item));
+                clicked, cursor, s -> getItemStack(s, PlayerInventoryUtils.OFFSET),
+                (s, item) -> setItemStack(s, PlayerInventoryUtils.OFFSET, item));
 
         if (clickResult == null) {
             return false;
@@ -503,7 +502,7 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
     }
 
     @Override
-    public boolean doubleClick(@NotNull TachyonPlayer player, int slot) {
+    public boolean doubleClick(@NotNull Player player, int slot) {
         final ItemStack cursor = getCursorItem();
 
         final InventoryClickResult clickResult = clickProcessor.doubleClick(null, player, slot, cursor,

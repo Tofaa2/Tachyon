@@ -1,7 +1,7 @@
 package net.tachyon.event.player;
 
 import net.tachyon.entity.TachyonPlayer;
-import net.tachyon.event.PlayerEvent;
+import net.tachyon.event.types.PlayerEvent;
 import net.tachyon.network.packet.client.play.ClientPluginMessagePacket;
 import org.jetbrains.annotations.NotNull;
 

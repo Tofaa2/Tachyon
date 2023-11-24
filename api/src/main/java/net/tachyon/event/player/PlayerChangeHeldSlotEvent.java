@@ -1,8 +1,8 @@
 package net.tachyon.event.player;
 
-import net.tachyon.entity.TachyonPlayer;
-import net.tachyon.event.PlayerEvent;
-import net.tachyon.event.CancellableEvent;
+import net.tachyon.entity.Player;
+import net.tachyon.event.types.PlayerEvent;
+import net.tachyon.event.types.CancellableEvent;
 import net.tachyon.utils.MathUtils;
 import net.tachyon.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ public class PlayerChangeHeldSlotEvent extends PlayerEvent implements Cancellabl
 
     private boolean cancelled;
 
-    public PlayerChangeHeldSlotEvent(@NotNull TachyonPlayer player, byte slot) {
+    public PlayerChangeHeldSlotEvent(@NotNull Player player, byte slot) {
         super(player);
         this.slot = slot;
     }

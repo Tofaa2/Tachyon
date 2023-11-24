@@ -12,7 +12,7 @@ import net.tachyon.coordinate.Vec;
 import net.tachyon.data.Data;
 import net.tachyon.data.DataContainer;
 import net.tachyon.entity.metadata.TachyonEntityMeta;
-import net.tachyon.event.Event;
+import net.tachyon.event.types.Event;
 import net.tachyon.event.EventCallback;
 import net.tachyon.event.entity.*;
 import net.tachyon.event.EventHandler;

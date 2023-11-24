@@ -3,8 +3,8 @@ package net.tachyon.event.player;
 import net.kyori.adventure.text.Component;
 import net.tachyon.entity.Player;
 import net.tachyon.entity.TachyonPlayer;
-import net.tachyon.event.PlayerEvent;
-import net.tachyon.event.CancellableEvent;
+import net.tachyon.event.types.PlayerEvent;
+import net.tachyon.event.types.CancellableEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,8 +1,8 @@
 package net.tachyon.event.inventory;
 
-import net.tachyon.entity.TachyonPlayer;
-import net.tachyon.event.CancellableEvent;
-import net.tachyon.event.InventoryEvent;
+import net.tachyon.entity.Player;
+import net.tachyon.event.types.CancellableEvent;
+import net.tachyon.event.types.InventoryEvent;
 import net.tachyon.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,15 +10,15 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Called when a player open an {@link Inventory}.
  * <p>
- * Executed by {@link TachyonPlayer#openInventory(Inventory)}.
+ * Executed by {@link Player#openInventory(Inventory)}.
  */
 public class InventoryOpenEvent extends InventoryEvent implements CancellableEvent {
 
-    private final TachyonPlayer player;
+    private final Player player;
 
     private boolean cancelled;
 
-    public InventoryOpenEvent(@Nullable Inventory inventory, @NotNull TachyonPlayer player) {
+    public InventoryOpenEvent(@Nullable Inventory inventory, @NotNull Player player) {
         super(inventory);
         this.player = player;
     }
@@ -29,7 +29,7 @@ public class InventoryOpenEvent extends InventoryEvent implements CancellableEve
      * @return the player who opens the inventory
      */
     @NotNull
-    public TachyonPlayer getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 

@@ -2,7 +2,7 @@ package net.tachyon.event.player;
 
 import net.kyori.adventure.text.Component;
 import net.tachyon.entity.TachyonPlayer;
-import net.tachyon.event.PlayerEvent;
+import net.tachyon.event.types.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

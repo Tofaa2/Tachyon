@@ -1,5 +1,6 @@
 package net.tachyon.event;
 
+import net.tachyon.event.types.Event;
 import org.jetbrains.annotations.NotNull;
 
 public interface EventCallback<E extends Event> {

@@ -1,7 +1,7 @@
 package net.tachyon.event.entity;
 
 import net.tachyon.entity.Entity;
-import net.tachyon.event.EntityEvent;
+import net.tachyon.event.types.EntityEvent;
 import net.tachyon.potion.Potion;
 import org.jetbrains.annotations.NotNull;
 

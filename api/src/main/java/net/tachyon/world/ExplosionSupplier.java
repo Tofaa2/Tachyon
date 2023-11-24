@@ -1,4 +1,4 @@
-package net.tachyon.instance;
+package net.tachyon.world;
 
 import net.tachyon.data.Data;
 
@@ -12,7 +12,7 @@ public interface ExplosionSupplier {
      * @param centerY        center Y of the explosion
      * @param centerZ        center Z of the explosion
      * @param strength       strength of the explosion
-     * @param additionalData data passed via {@link Instance#explode(float, float, float, float, Data)} )}. Can be null
+     * @param additionalData data passed via {@link World#explode(float, float, float, float, Data)} )}. Can be null
      * @return Explosion object representing the algorithm to use
      */
     Explosion createExplosion(float centerX, float centerY, float centerZ, float strength, Data additionalData);

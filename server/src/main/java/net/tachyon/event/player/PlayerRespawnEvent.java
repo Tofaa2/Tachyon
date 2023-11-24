@@ -2,7 +2,7 @@ package net.tachyon.event.player;
 
 import net.tachyon.coordinate.Position;
 import net.tachyon.entity.TachyonPlayer;
-import net.tachyon.event.PlayerEvent;
+import net.tachyon.event.types.PlayerEvent;
 import net.tachyon.network.packet.client.play.ClientStatusPacket;
 import org.jetbrains.annotations.NotNull;
 

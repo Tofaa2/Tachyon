@@ -1,5 +1,7 @@
-package net.tachyon.event;
+package net.tachyon.event.types;
 
+
+import net.tachyon.event.EventHandler;
 
 /**
  * Object which can be listened to by an {@link EventHandler}.

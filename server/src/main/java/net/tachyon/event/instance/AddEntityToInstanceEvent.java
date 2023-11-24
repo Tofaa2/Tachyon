@@ -1,7 +1,7 @@
 package net.tachyon.event.instance;
 
 import net.tachyon.entity.TachyonEntity;
-import net.tachyon.event.CancellableEvent;
+import net.tachyon.event.types.CancellableEvent;
 import net.tachyon.event.InstanceEvent;
 import net.tachyon.instance.Instance;
 import org.jetbrains.annotations.NotNull;

@@ -2,8 +2,8 @@ package net.tachyon.event.player;
 
 import net.tachyon.coordinate.Position;
 import net.tachyon.entity.TachyonPlayer;
-import net.tachyon.event.PlayerEvent;
-import net.tachyon.event.CancellableEvent;
+import net.tachyon.event.types.PlayerEvent;
+import net.tachyon.event.types.CancellableEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**

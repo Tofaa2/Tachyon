@@ -32,6 +32,14 @@ public interface World extends ForwardingPlayerAudience, BlockModifier, EventHan
 
     @NotNull Set<Entity> getChunkEntities(@NotNull Chunk chunk);
 
+    void setExplosionSupplier(@Nullable ExplosionSupplier explosionSupplier);
+
+    @Nullable ExplosionSupplier getExplosionSupplier();
+
+    void explode(float centerX, float centerY, float centerZ, float strength, @Nullable Data additionalData);
+
+    void explode(float centerX, float centerY, float centerZ, float strength);
+
     int getTimeRate();
 
     void setTimeRate(int timeRate);

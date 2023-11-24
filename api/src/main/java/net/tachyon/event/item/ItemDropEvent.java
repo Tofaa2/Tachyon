@@ -1,8 +1,8 @@
 package net.tachyon.event.item;
 
 import net.tachyon.entity.Player;
-import net.tachyon.event.CancellableEvent;
-import net.tachyon.event.Event;
+import net.tachyon.event.types.CancellableEvent;
+import net.tachyon.event.types.Event;
 import net.tachyon.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 

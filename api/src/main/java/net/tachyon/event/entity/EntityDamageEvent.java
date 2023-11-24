@@ -2,8 +2,8 @@ package net.tachyon.event.entity;
 
 import net.tachyon.entity.LivingEntity;
 import net.tachyon.entity.damage.DamageType;
-import net.tachyon.event.CancellableEvent;
-import net.tachyon.event.EntityEvent;
+import net.tachyon.event.types.CancellableEvent;
+import net.tachyon.event.types.EntityEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -204,8 +204,8 @@ public class TachyonLivingEntity extends TachyonEntity implements EquipmentHandl
             this.lastItemPickupCheckTime = time;
 
             final TachyonChunk chunk = getChunk(); // TODO check surrounding chunks
-            final Set<TachyonEntity> entities = instance.getChunkEntities(chunk);
-            for (TachyonEntity entity : entities) {
+            final Set<Entity> entities = instance.getChunkEntities(chunk);
+            for (Entity entity : entities) {
                 if (entity instanceof TachyonItemEntity itemEntity) {
 
                     // Do not pickup if not visible

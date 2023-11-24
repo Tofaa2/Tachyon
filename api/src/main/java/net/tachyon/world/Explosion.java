@@ -1,17 +1,16 @@
-package net.tachyon.instance;
+package net.tachyon.world;
 
+import net.tachyon.Tachyon;
 import net.tachyon.block.Block;
 import net.tachyon.coordinate.Point;
 import net.tachyon.network.packet.server.play.ExplosionPacket;
-import net.tachyon.utils.PacketUtils;
-import net.tachyon.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 /**
  * Abstract explosion.
- * Instance can provide a supplier through {@link Instance#setExplosionSupplier}
+ * Instance can provide a supplier through {@link World#setExplosionSupplier}
  */
 public abstract class Explosion {
 
@@ -75,7 +74,7 @@ public abstract class Explosion {
         postExplosion(instance, blocks, packet);
 
         // TODO send only to close players
-        PacketUtils.sendGroupedPacket(instance.getPlayers(), packet);
+        Tachyon.getServer().sendGroupedPacket(instance.getPlayers(), packet);
 
         postSend(instance, blocks);
     }

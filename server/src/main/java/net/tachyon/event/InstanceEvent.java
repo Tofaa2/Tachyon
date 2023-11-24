@@ -1,5 +1,6 @@
 package net.tachyon.event;
 
+import net.tachyon.event.types.Event;
 import net.tachyon.instance.Instance;
 import org.jetbrains.annotations.NotNull;
 

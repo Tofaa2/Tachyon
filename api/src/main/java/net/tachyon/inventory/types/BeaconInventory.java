@@ -1,4 +1,4 @@
-package net.tachyon.inventory.type;
+package net.tachyon.inventory.types;
 
 import net.kyori.adventure.text.Component;
 import net.tachyon.inventory.Inventory;
