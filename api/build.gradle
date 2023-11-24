@@ -26,4 +26,7 @@ dependencies {
         }
     }
 
+    // Path finding
+    api 'com.github.MadMartian:hydrazine-path-finding:1.5.4'
+
 }

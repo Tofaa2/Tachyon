@@ -8,10 +8,12 @@ import net.tachyon.entity.Entity;
 import net.tachyon.entity.Metadata;
 import net.tachyon.entity.Player;
 import net.tachyon.entity.metadata.EntityMeta;
+import net.tachyon.event.GlobalEventHandler;
 import net.tachyon.exception.ExceptionManager;
 import net.tachyon.network.IConnectionManager;
 import net.tachyon.network.listener.IPacketListenerManager;
 import net.tachyon.network.packet.server.ServerPacket;
+import net.tachyon.ping.ResponseDataConsumer;
 import net.tachyon.scheduler.SchedulerManager;
 import net.tachyon.scoreboard.TeamManager;
 import net.tachyon.utils.MathUtils;
@@ -52,13 +54,15 @@ public abstract class Server {
     private final KeyPair secretKeypair;
     private final ExceptionManager exceptionManager;
     private final ServerSettings settings;
+    private final GlobalEventHandler globalEventHandler;
+    private ResponseDataConsumer responseDataConsumer;
 
     Server(@NotNull ServerSettings settings) {
         Check.stateCondition(!MathUtils.isBetween(settings.chunkViewDistance(), 2, 32), "Chunk view distance must be between 2 and 32");
         Check.stateCondition(!MathUtils.isBetween(settings.entityViewDistance(), 0, 32), "Entity view distance must be between 0 and 32");
         this.settings = settings;
         this.exceptionManager = new ExceptionManager();
-
+        this.globalEventHandler = new GlobalEventHandler();
         KeyPair kp;
         try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
@@ -72,7 +76,35 @@ public abstract class Server {
         this.secretKeypair = kp;
     }
 
+    /**
+     * Gets the consumer executed to show server-list data.
+     *
+     * @return the response data consumer
+     */
+    @Nullable
+    public ResponseDataConsumer getResponseDataConsumer() {
+        return responseDataConsumer;
+    }
 
+    /**
+     * Sets the consumer executed to show server-list data.
+     * @param responseDataConsumer the response data consumer
+     */
+    public void setResponseDataConsumer(@Nullable ResponseDataConsumer responseDataConsumer) {
+        this.responseDataConsumer = responseDataConsumer;
+    }
+
+    /**
+     * Gets the global event handler.
+     * <p>
+     * Used to register event callback at a global scale.
+     *
+     * @return the global event handler
+     */
+    @NotNull
+    public GlobalEventHandler getGlobalEventHandler() {
+        return globalEventHandler;
+    }
 
     public abstract @NotNull TeamManager getTeamManager();
 

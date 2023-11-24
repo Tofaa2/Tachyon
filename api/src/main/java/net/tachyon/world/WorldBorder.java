@@ -32,6 +32,8 @@ public interface WorldBorder {
 
     boolean isInside(@NotNull Point point);
 
+    CollisionAxis getCollisionAxis(@NotNull Point point);
+
     enum CollisionAxis {
         X,
         Z,

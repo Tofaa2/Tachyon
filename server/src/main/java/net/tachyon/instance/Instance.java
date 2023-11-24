@@ -19,7 +19,7 @@ import net.tachyon.block.CustomBlock;
 import net.tachyon.entity.pathfinding.PFInstanceSpace;
 import net.tachyon.event.Event;
 import net.tachyon.event.EventCallback;
-import net.tachyon.event.handler.EventHandler;
+import net.tachyon.event.EventHandler;
 import net.tachyon.event.instance.AddEntityToInstanceEvent;
 import net.tachyon.event.instance.InstanceTickEvent;
 import net.tachyon.event.instance.RemoveEntityFromInstanceEvent;
@@ -89,9 +89,9 @@ public abstract class Instance implements EventHandler, DataContainer, World {
     // Entities present in this instance
     protected final Set<TachyonEntity> entities = new CopyOnWriteArraySet<>();
     protected final Set<Player> players = new CopyOnWriteArraySet<>();
-    protected final Set<EntityCreature> creatures = new CopyOnWriteArraySet<>();
+    protected final Set<TachyonEntityCreature> creatures = new CopyOnWriteArraySet<>();
     protected final Set<ObjectEntity> objectEntities = new CopyOnWriteArraySet<>();
-    protected final Set<ExperienceOrb> experienceOrbs = new CopyOnWriteArraySet<>();
+    protected final Set<TachyonExperienceOrb> experienceOrbs = new CopyOnWriteArraySet<>();
     // Entities per chunk
     protected final Long2ObjectMap<Set<TachyonEntity>> chunkEntities = Long2ObjectMaps.synchronize(new Long2ObjectOpenHashMap<>());
     private final Object entitiesLock = new Object(); // Lock used to prevent the entities Set and Map to be subject to race condition
@@ -475,7 +475,7 @@ public abstract class Instance implements EventHandler, DataContainer, World {
      * @return an unmodifiable {@link Set} containing all the creatures in the instance
      */
     @NotNull
-    public Set<EntityCreature> getCreatures() {
+    public Set<TachyonEntityCreature> getCreatures() {
         return Collections.unmodifiableSet(creatures);
     }
 
@@ -495,7 +495,7 @@ public abstract class Instance implements EventHandler, DataContainer, World {
      * @return an unmodifiable {@link Set} containing all the experience orbs in the instance
      */
     @NotNull
-    public Set<ExperienceOrb> getExperienceOrbs() {
+    public Set<TachyonExperienceOrb> getExperienceOrbs() {
         return Collections.unmodifiableSet(experienceOrbs);
     }
 
@@ -946,12 +946,12 @@ public abstract class Instance implements EventHandler, DataContainer, World {
             this.entities.add(entity);
             if (entity instanceof TachyonPlayer) {
                 this.players.add((TachyonPlayer) entity);
-            } else if (entity instanceof EntityCreature) {
-                this.creatures.add((EntityCreature) entity);
+            } else if (entity instanceof TachyonEntityCreature) {
+                this.creatures.add((TachyonEntityCreature) entity);
             } else if (entity instanceof ObjectEntity) {
                 this.objectEntities.add((ObjectEntity) entity);
-            } else if (entity instanceof ExperienceOrb) {
-                this.experienceOrbs.add((ExperienceOrb) entity);
+            } else if (entity instanceof TachyonExperienceOrb) {
+                this.experienceOrbs.add((TachyonExperienceOrb) entity);
             }
         }
     }
@@ -973,11 +973,11 @@ public abstract class Instance implements EventHandler, DataContainer, World {
             this.entities.remove(entity);
             if (entity instanceof TachyonPlayer) {
                 this.players.remove(entity);
-            } else if (entity instanceof EntityCreature) {
+            } else if (entity instanceof TachyonEntityCreature) {
                 this.creatures.remove(entity);
             } else if (entity instanceof ObjectEntity) {
                 this.objectEntities.remove(entity);
-            } else if (entity instanceof ExperienceOrb) {
+            } else if (entity instanceof TachyonExperienceOrb) {
                 this.experienceOrbs.remove(entity);
             }
         }

@@ -84,7 +84,6 @@ public final class MinecraftServer extends Server {
     private boolean initialized;
     private boolean started;
     private boolean stopping;
-    private static ResponseDataConsumer responseDataConsumer;
 
     public MinecraftServer(@NotNull ServerSettings settings) {
         super(settings);
@@ -201,17 +200,6 @@ public final class MinecraftServer extends Server {
         return this.dataManager;
     }
 
-    /**
-     * Gets the global event handler.
-     * <p>
-     * Used to register event callback at a global scale.
-     *
-     * @return the global event handler
-     */
-    @NotNull
-    public static GlobalEventHandler getGlobalEventHandler() {
-        return instance.GLOBAL_EVENT_HANDLER;
-    }
 
     /**
      * Gets the manager handling all incoming packets
@@ -321,15 +309,6 @@ public final class MinecraftServer extends Server {
     }
 
     /**
-     * Gets the consumer executed to show server-list data.
-     *
-     * @return the response data consumer
-     */
-    public static ResponseDataConsumer getResponseDataConsumer() {
-        return responseDataConsumer;
-    }
-
-    /**
      * Gets the manager handling the server ticks.
      *
      * @return the update manager
@@ -344,38 +323,20 @@ public final class MinecraftServer extends Server {
      *
      * @param address              the server address
      * @param port                 the server port
-     * @param responseDataConsumer the response data consumer, can be null
      */
-    public void start(@NotNull String address, int port, @Nullable ResponseDataConsumer responseDataConsumer) {
+    public void start(@NotNull String address, int port) {
         Check.stateCondition(!initialized, "#start can only be called after #init");
         Check.stateCondition(started, "The server is already started");
-
         started = true;
-
         LOGGER.info("Starting " + getBrandName() + " server.");
-        MinecraftServer.responseDataConsumer = responseDataConsumer;
-
         updateManager.start();
-
         // Init & start the TCP server
         nettyServer.init();
         nettyServer.start(address, port);
-
         LOGGER.info(getBrandName() + " server started successfully.");
-
         commandManager.startConsoleThread();
     }
 
-    /**
-     * Starts the server.
-     *
-     * @param address the server address
-     * @param port    the server port
-     * @see #start(String, int, ResponseDataConsumer)
-     */
-    public void start(@NotNull String address, int port) {
-        start(address, port, null);
-    }
 
     /**
      * Stops this server properly (saves if needed, kicking players, etc.)

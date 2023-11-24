@@ -206,7 +206,7 @@ public class TachyonLivingEntity extends TachyonEntity implements EquipmentHandl
             final TachyonChunk chunk = getChunk(); // TODO check surrounding chunks
             final Set<TachyonEntity> entities = instance.getChunkEntities(chunk);
             for (TachyonEntity entity : entities) {
-                if (entity instanceof ItemEntity itemEntity) {
+                if (entity instanceof TachyonItemEntity itemEntity) {
 
                     // Do not pickup if not visible
                     if (this instanceof TachyonPlayer && !entity.isViewer((TachyonPlayer) this))
@@ -500,7 +500,7 @@ public class TachyonLivingEntity extends TachyonEntity implements EquipmentHandl
     }
 
     /**
-     * When set to false, the entity will not be able to pick {@link ItemEntity} on the ground.
+     * When set to false, the entity will not be able to pick {@link TachyonItemEntity} on the ground.
      *
      * @param canPickupItem can the entity pickup item
      */
@@ -615,11 +615,9 @@ public class TachyonLivingEntity extends TachyonEntity implements EquipmentHandl
         return fireDamagePeriod;
     }
 
+
     /**
-     * Changes the delay between two fire damage applications.
-     *
-     * @param fireDamagePeriod the delay
-     * @param timeUnit         the time unit
+     * {@inheritDoc}
      */
     public void setFireDamagePeriod(long fireDamagePeriod, @NotNull TimeUnit timeUnit) {
         fireDamagePeriod = timeUnit.toMilliseconds(fireDamagePeriod);

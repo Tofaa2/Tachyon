@@ -242,8 +242,8 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
             final TachyonChunk chunk = getChunk(); // TODO check surrounding chunks
             final Set<TachyonEntity> entities = instance.getChunkEntities(chunk);
             for (TachyonEntity entity : entities) {
-                if (entity instanceof ExperienceOrb) {
-                    final ExperienceOrb experienceOrb = (ExperienceOrb) entity;
+                if (entity instanceof TachyonExperienceOrb) {
+                    final TachyonExperienceOrb experienceOrb = (TachyonExperienceOrb) entity;
                     final BoundingBox itemBoundingBox = experienceOrb.getBoundingBox();
                     if (expandedBoundingBox.intersect(itemBoundingBox)) {
                         if (experienceOrb.shouldRemove() || experienceOrb.isRemoveScheduled())
@@ -1362,6 +1362,7 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
      *
      * @return the player current gamemode
      */
+    @NotNull
     public GameMode getGameMode() {
         return gameMode;
     }

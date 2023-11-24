@@ -10,15 +10,17 @@ import net.tachyon.data.Data;
 import net.tachyon.entity.Entity;
 import net.tachyon.entity.EntityType;
 import net.tachyon.entity.Player;
+import net.tachyon.event.EventHandler;
 import net.tachyon.world.chunk.Chunk;
 import net.tachyon.world.chunk.ChunkCallback;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 
-public interface World extends ForwardingPlayerAudience, BlockModifier {
+public interface World extends ForwardingPlayerAudience, BlockModifier, EventHandler {
 
     @NotNull UUID getUuid();
 
@@ -27,6 +29,8 @@ public interface World extends ForwardingPlayerAudience, BlockModifier {
     @NotNull LevelType getLevelType();
 
     @NotNull WorldBorder getWorldBorder();
+
+    @NotNull Set<Entity> getChunkEntities(@NotNull Chunk chunk);
 
     int getTimeRate();
 
@@ -59,6 +63,8 @@ public interface World extends ForwardingPlayerAudience, BlockModifier {
     @NotNull Collection<Entity> getEntities();
 
     @Nullable Chunk getChunk(int chunkX, int chunkZ);
+
+    @Nullable Chunk getChunkAt(Point blockPosition);
 
     @Nullable Data getBlockData(int x, int y, int z);
 

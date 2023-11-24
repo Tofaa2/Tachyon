@@ -37,6 +37,10 @@ public interface Player extends LivingEntity, CommandSender {
 
     void chat(@NotNull String message);
 
+    @NotNull GameMode getGameMode();
+
+    void setGameMode(@NotNull GameMode gameMode);
+
     int getFood();
 
     void setFood(int food);

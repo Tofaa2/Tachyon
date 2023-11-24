@@ -198,7 +198,7 @@ public abstract class ThreadProvider {
      * @param time     the current time in ms
      */
     protected void updateCreatures(@NotNull Instance instance, @NotNull TachyonChunk chunk, long time) {
-        conditionalEntityUpdate(instance, chunk, time, entity -> entity instanceof EntityCreature);
+        conditionalEntityUpdate(instance, chunk, time, entity -> entity instanceof TachyonEntityCreature);
     }
 
     /**

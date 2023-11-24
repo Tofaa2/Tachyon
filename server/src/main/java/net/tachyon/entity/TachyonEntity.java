@@ -15,7 +15,7 @@ import net.tachyon.entity.metadata.TachyonEntityMeta;
 import net.tachyon.event.Event;
 import net.tachyon.event.EventCallback;
 import net.tachyon.event.entity.*;
-import net.tachyon.event.handler.EventHandler;
+import net.tachyon.event.EventHandler;
 import net.tachyon.instance.Instance;
 import net.tachyon.instance.InstanceManager;
 import net.tachyon.block.CustomBlock;
@@ -40,6 +40,7 @@ import net.tachyon.world.World;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,7 +52,7 @@ import java.util.function.Consumer;
 /**
  * Could be a player, a monster, or an object.
  * <p>
- * To create your own entity you probably want to extends {@link ObjectEntity} or {@link EntityCreature} instead.
+ * To create your own entity you probably want to extends {@link ObjectEntity} or {@link TachyonEntityCreature} instead.
  */
 public class TachyonEntity implements Entity,  EventHandler, DataContainer, PermissionHandler {
 
@@ -712,6 +713,11 @@ public class TachyonEntity implements Entity,  EventHandler, DataContainer, Perm
         return entityType;
     }
 
+    @Override
+    public double getDistanceSquared(@NotNull Entity entity) {
+        return position.distanceSquared(entity.getPosition());
+    }
+
     /**
      * Gets the entity {@link UUID}.
      *
@@ -793,7 +799,7 @@ public class TachyonEntity implements Entity,  EventHandler, DataContainer, Perm
      *
      * @return the entity instance, can be null if the entity doesn't have an instance yet
      */
-    @Nullable
+    @UnknownNullability
     public Instance getInstance() {
         return instance;
     }
@@ -916,6 +922,11 @@ public class TachyonEntity implements Entity,  EventHandler, DataContainer, Perm
 
     public boolean hasNoGravity() {
         return false;
+    }
+
+    @Override
+    public void modifyPosition(Position position) {
+        UNSAFE_modifyPosition(position);
     }
 
     /**
@@ -1220,6 +1231,16 @@ public class TachyonEntity implements Entity,  EventHandler, DataContainer, Perm
         this.position = new Position(this.position.x(), this.position.y(), this.position.z(), yaw, pitch);
         this.cacheYaw = yaw;
         this.cachePitch = pitch;
+    }
+
+    @Override
+    public void setWorld(@NotNull World world) {
+        setInstance((Instance) world);
+    }
+
+    @Override
+    public void setWorld(@NotNull World world, Position position) {
+        setInstance((Instance) world, position);
     }
 
     /**
