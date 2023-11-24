@@ -1,7 +1,7 @@
 package net.tachyon.event.player;
 
 import net.kyori.adventure.text.Component;
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +14,7 @@ public class PlayerDeathEvent extends PlayerEvent {
     private String deathText;
     private Component chatMessage;
 
-    public PlayerDeathEvent(@NotNull TachyonPlayer player, String deathText, Component chatMessage) {
+    public PlayerDeathEvent(@NotNull Player player, String deathText, Component chatMessage) {
         super(player);
         this.deathText = deathText;
         this.chatMessage = chatMessage;

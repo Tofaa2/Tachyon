@@ -1,7 +1,7 @@
 package net.tachyon.event.player;
 
 import net.tachyon.coordinate.Point;
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.CancellableEvent;
 import net.tachyon.event.types.PlayerEvent;
 import net.tachyon.coordinate.BlockFace;
@@ -24,7 +24,7 @@ public class PlayerBlockInteractEvent extends PlayerEvent implements Cancellable
 
     private boolean cancelled;
 
-    public PlayerBlockInteractEvent(@NotNull TachyonPlayer player,
+    public PlayerBlockInteractEvent(@NotNull Player player,
                                     @NotNull Point blockPosition, @NotNull BlockFace blockFace) {
         super(player);
         this.blockPosition = blockPosition;

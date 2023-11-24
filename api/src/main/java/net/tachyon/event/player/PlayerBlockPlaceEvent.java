@@ -4,7 +4,7 @@ import net.tachyon.Tachyon;
 import net.tachyon.block.BlockManager;
 import net.tachyon.coordinate.Point;
 import net.tachyon.data.Data;
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.CancellableEvent;
 import net.tachyon.event.types.PlayerEvent;
 import net.tachyon.block.CustomBlock;
@@ -28,7 +28,7 @@ public class PlayerBlockPlaceEvent extends PlayerEvent implements CancellableEve
 
     private boolean cancelled;
 
-    public PlayerBlockPlaceEvent(@NotNull TachyonPlayer player, short blockStateId, @NotNull Point blockPosition) {
+    public PlayerBlockPlaceEvent(@NotNull Player player, short blockStateId, @NotNull Point blockPosition) {
         super(player);
         this.blockStateId = blockStateId;
         this.blockPosition = blockPosition;

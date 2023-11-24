@@ -1,7 +1,6 @@
 package net.tachyon.event.player;
 
 import net.tachyon.entity.Player;
-import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.event.types.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,14 +9,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PlayerSettingsChangeEvent extends PlayerEvent {
 
-    public PlayerSettingsChangeEvent(@NotNull TachyonPlayer player) {
+    public PlayerSettingsChangeEvent(@NotNull Player player) {
         super(player);
     }
 
     /**
      * Gets the player who changed his settings.
      * <p>
-     * You can retrieve the new player settings with {@link TachyonPlayer#getSettings()}.
+     * You can retrieve the new player settings with {@link Player#getSettings()}.
      *
      * @return the player
      */

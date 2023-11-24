@@ -1,6 +1,6 @@
 package net.tachyon.event.player;
 
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.PlayerEvent;
 import net.tachyon.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ public class PlayerEatEvent extends PlayerEvent {
 
     private final ItemStack foodItem;
 
-    public PlayerEatEvent(@NotNull TachyonPlayer player, @NotNull ItemStack foodItem) {
+    public PlayerEatEvent(@NotNull Player player, @NotNull ItemStack foodItem) {
         super(player);
         this.foodItem = foodItem;
     }

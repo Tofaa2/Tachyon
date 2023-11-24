@@ -3,8 +3,6 @@ package net.tachyon.data.type.array;
 import net.tachyon.binary.BinaryReader;
 import net.tachyon.binary.BinaryWriter;
 import net.tachyon.data.DataType;
-import net.tachyon.utils.binary.TachyonBinaryReader;
-import net.tachyon.utils.binary.TachyonBinaryWriter;
 import org.jetbrains.annotations.NotNull;
 
 public class DoubleArrayData extends DataType<double[]> {

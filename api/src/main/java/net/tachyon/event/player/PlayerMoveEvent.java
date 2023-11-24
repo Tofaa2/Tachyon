@@ -1,7 +1,7 @@
 package net.tachyon.event.player;
 
 import net.tachyon.coordinate.Position;
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.PlayerEvent;
 import net.tachyon.event.types.CancellableEvent;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ public class PlayerMoveEvent extends PlayerEvent implements CancellableEvent {
 
     private boolean cancelled;
 
-    public PlayerMoveEvent(@NotNull TachyonPlayer player, @NotNull Position newPosition) {
+    public PlayerMoveEvent(@NotNull Player player, @NotNull Position newPosition) {
         super(player);
         this.newPosition = newPosition;
     }

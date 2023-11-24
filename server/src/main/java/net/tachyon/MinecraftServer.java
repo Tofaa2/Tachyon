@@ -78,7 +78,6 @@ public final class MinecraftServer extends Server {
     private SchedulerManager schedulerManager;
     private BenchmarkManager benchmarkManager;
     private TachyonBiomeManager biomeManager;
-    private final GlobalEventHandler GLOBAL_EVENT_HANDLER = new GlobalEventHandler();
     private UpdateManager updateManager;
     // Data
     private boolean initialized;

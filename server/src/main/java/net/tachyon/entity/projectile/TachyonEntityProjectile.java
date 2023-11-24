@@ -152,7 +152,7 @@ public class TachyonEntityProjectile extends TachyonEntity implements EntityProj
 
         Instance instance = getInstance();
         TachyonChunk chunk = null;
-        Collection<TachyonEntity> entities = null;
+        Collection<Entity> entities = null;
 
         /*
           What we're about to do is to discretely jump from the previous position to the new one.
@@ -194,7 +194,7 @@ public class TachyonEntityProjectile extends TachyonEntity implements EntityProj
             final double x = pos.getX();
             final double y = pos.getY();
             final double z = pos.getZ();
-            Optional<TachyonEntity> victimOptional = entities.stream()
+            Optional<Entity> victimOptional = entities.stream()
                     .filter(entity -> entity.getBoundingBox().intersect(x, y, z))
                     .findAny();
             if (victimOptional.isPresent()) {

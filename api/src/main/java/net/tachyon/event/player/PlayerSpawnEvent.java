@@ -1,8 +1,10 @@
 package net.tachyon.event.player;
 
-import net.tachyon.entity.TachyonPlayer;
+
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.PlayerEvent;
-import net.tachyon.instance.Instance;
+
+import net.tachyon.world.World;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -10,10 +12,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PlayerSpawnEvent extends PlayerEvent {
 
-    private final Instance spawnInstance;
+    private final World spawnInstance;
     private final boolean firstSpawn;
 
-    public PlayerSpawnEvent(@NotNull TachyonPlayer player, @NotNull Instance spawnInstance, boolean firstSpawn) {
+    public PlayerSpawnEvent(@NotNull Player player, @NotNull World spawnInstance, boolean firstSpawn) {
         super(player);
         this.spawnInstance = spawnInstance;
         this.firstSpawn = firstSpawn;
@@ -25,7 +27,7 @@ public class PlayerSpawnEvent extends PlayerEvent {
      * @return the instance
      */
     @NotNull
-    public Instance getSpawnInstance() {
+    public World getSpawnInstance() {
         return spawnInstance;
     }
 

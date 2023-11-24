@@ -1256,7 +1256,7 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
 
         // Manage entities in unchecked chunks
         EntityUtils.forEachRange(instance, newChunk.toPosition(), entityViewDistance, entity -> {
-            if (entity.isAutoViewable() && !entity.viewers.contains(this)) {
+            if (entity.isAutoViewable() && !entity.getViewers().contains(this)) {
                 entity.addViewer(this);
             }
 

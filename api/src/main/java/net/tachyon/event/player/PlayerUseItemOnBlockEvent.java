@@ -1,7 +1,7 @@
 package net.tachyon.event.player;
 
 import net.tachyon.coordinate.Point;
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.PlayerEvent;
 import net.tachyon.item.ItemStack;
 import net.tachyon.coordinate.Direction;
@@ -16,7 +16,7 @@ public class PlayerUseItemOnBlockEvent extends PlayerEvent {
     private final Point position;
     private final Direction blockFace;
 
-    public PlayerUseItemOnBlockEvent(@NotNull TachyonPlayer player,
+    public PlayerUseItemOnBlockEvent(@NotNull Player player,
                                      @NotNull ItemStack itemStack,
                                      @NotNull Point position, @NotNull Direction blockFace) {
         super(player);

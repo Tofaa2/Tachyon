@@ -1,7 +1,7 @@
 package net.tachyon.event.player;
 
 import net.tachyon.coordinate.Point;
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.CancellableEvent;
 import net.tachyon.event.types.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * Called when a {@link Player} start digging a block,
  * can be used to forbid the {@link Player} from mining it.
  * <p>
- * Be aware that cancelling this event does not necessary prevent the player from breaking the block
+ * Be aware that cancelling this event does not necessarily prevent the player from breaking the block
  * (could be because of high latency or a modified client) so cancelling {@link PlayerBlockBreakEvent} is also necessary.
  * Could be fixed in future Minestom version.
  */
@@ -22,7 +22,7 @@ public class PlayerStartDiggingEvent extends PlayerEvent implements CancellableE
 
     private boolean cancelled;
 
-    public PlayerStartDiggingEvent(@NotNull TachyonPlayer player, @NotNull Point blockPosition, int blockStateId, int customBlockId) {
+    public PlayerStartDiggingEvent(@NotNull Player player, @NotNull Point blockPosition, int blockStateId, int customBlockId) {
         super(player);
         this.blockPosition = blockPosition;
         this.blockStateId = blockStateId;

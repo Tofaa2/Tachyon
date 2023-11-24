@@ -1,6 +1,6 @@
 package net.tachyon.event.player;
 
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.CancellableEvent;
 import net.tachyon.event.types.PlayerEvent;
 import net.tachyon.item.ItemStack;
@@ -15,7 +15,7 @@ public class PlayerUseItemEvent extends PlayerEvent implements CancellableEvent 
 
     private boolean cancelled;
 
-    public PlayerUseItemEvent(@NotNull TachyonPlayer player, @NotNull ItemStack itemStack) {
+    public PlayerUseItemEvent(@NotNull Player player, @NotNull ItemStack itemStack) {
         super(player);
         this.itemStack = itemStack;
     }

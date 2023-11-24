@@ -1,6 +1,6 @@
 package net.tachyon.event.player;
 
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.PlayerEvent;
 import net.tachyon.resourcepack.ResourcePackStatus;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ public class PlayerResourcePackStatusEvent extends PlayerEvent {
 
     private final ResourcePackStatus status;
 
-    public PlayerResourcePackStatusEvent(@NotNull TachyonPlayer player, @NotNull ResourcePackStatus status) {
+    public PlayerResourcePackStatusEvent(@NotNull Player player, @NotNull ResourcePackStatus status) {
         super(player);
         this.status = status;
     }

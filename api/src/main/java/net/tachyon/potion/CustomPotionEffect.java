@@ -1,6 +1,7 @@
 package net.tachyon.potion;
 
 import net.tachyon.Tachyon;
+import net.tachyon.item.metadata.PotionMeta;
 import net.tachyon.utils.clone.PublicCloneable;
 import org.jetbrains.annotations.NotNull;
 

@@ -68,3 +68,8 @@ Example of a Tachyon server configuration file:
 Tachyon uses Gradle as its build system. To build Tachyon, its made from two subprojects, the `api` and the `server` projects.
 To build the full server, run the `shadowJar` project for the `server` project. This will build the server and its dependencies into a single jar file.
 Keep in mind Tachyon depends on JAVA 17 to function.
+
+## Credits
+
+- [Minestom](https://minestom.net/) for the inspiration and some (a lot) of the code written in this project. Best server software out there for custom development
+- [PacketEvents](https:://github.com/retrooper/packetevents) for some inspiration on how to handle packets and wrappers

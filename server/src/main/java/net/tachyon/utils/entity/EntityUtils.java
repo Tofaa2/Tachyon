@@ -3,6 +3,7 @@ package net.tachyon.utils.entity;
 import net.tachyon.Tachyon;
 import net.tachyon.coordinate.Point;
 import net.tachyon.coordinate.Position;
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.instance.TachyonChunk;
 import net.tachyon.instance.Instance;
@@ -20,7 +21,7 @@ public final class EntityUtils {
 
     public static void forEachRange(@NotNull Instance instance, @NotNull Position position,
                                     int viewDistance,
-                                    @NotNull Consumer<TachyonEntity> consumer) {
+                                    @NotNull Consumer<Entity> consumer) {
         final long[] chunksInRange = ChunkUtils.getChunksInRange(position, viewDistance);
 
         for (long chunkIndex : chunksInRange) {

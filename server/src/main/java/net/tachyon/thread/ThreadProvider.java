@@ -222,13 +222,12 @@ public abstract class ThreadProvider {
      */
     protected void conditionalEntityUpdate(@NotNull Instance instance, @NotNull TachyonChunk chunk, long time,
                                            @Nullable EntityValidator condition) {
-        final Set<TachyonEntity> entities = instance.getChunkEntities(chunk);
-
+        final Set<Entity> entities = instance.getChunkEntities(chunk);
         if (!entities.isEmpty()) {
-            for (TachyonEntity entity : entities) {
+            for (Entity entity : entities) {
                 if (condition != null && !condition.isValid(entity))
                     continue;
-                entity.tick(time);
+                ((TachyonEntity) entity).tick(time);
             }
         }
 

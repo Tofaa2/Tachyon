@@ -4,6 +4,7 @@ import net.tachyon.Tachyon;
 import net.tachyon.block.BlockManager;
 import net.tachyon.coordinate.Point;
 import net.tachyon.data.Data;
+import net.tachyon.entity.Entity;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.GameMode;
 import net.tachyon.entity.TachyonPlayer;
@@ -118,11 +119,11 @@ public class BlockPlacementListener {
         if (useMaterial.isBlock()) {
             if (!chunk.isReadOnly()) {
                 final Block block = useMaterial.getBlock();
-                final Set<TachyonEntity> entities = instance.getChunkEntities(chunk);
+                final Set<Entity> entities = instance.getChunkEntities(chunk);
                 // Check if the player is trying to place a block in an entity
                 boolean intersect = player.getBoundingBox().intersect(blockPosition);
                 if (!intersect && block.isSolid()) {
-                    for (TachyonEntity entity : entities) {
+                    for (Entity entity : entities) {
                         // 'player' has already been checked
                         if (entity == player)
                             continue;

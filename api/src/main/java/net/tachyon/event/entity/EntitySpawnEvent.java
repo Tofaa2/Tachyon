@@ -2,7 +2,6 @@ package net.tachyon.event.entity;
 
 import net.tachyon.entity.Entity;
 import net.tachyon.event.types.EntityEvent;
-import net.tachyon.instance.Instance;
 import net.tachyon.world.World;
 import org.jetbrains.annotations.NotNull;
 

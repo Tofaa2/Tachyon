@@ -79,15 +79,14 @@ public class TachyonItemEntity extends ObjectEntity implements ItemEntity {
             this.lastMergeCheck = time;
 
             final TachyonChunk chunk = instance.getChunkAt(getPosition());
-            final Set<TachyonEntity> entities = instance.getChunkEntities(chunk);
-            for (TachyonEntity entity : entities) {
-                if (entity instanceof TachyonItemEntity) {
+            final Set<Entity> entities = instance.getChunkEntities(chunk);
+            for (Entity entity : entities) {
+                if (entity instanceof TachyonItemEntity itemEntity) {
 
                     // Do not merge with itself
                     if (entity == this)
                         continue;
 
-                    final TachyonItemEntity itemEntity = (TachyonItemEntity) entity;
                     if (!itemEntity.isPickable() || !itemEntity.isMergeable())
                         continue;
 

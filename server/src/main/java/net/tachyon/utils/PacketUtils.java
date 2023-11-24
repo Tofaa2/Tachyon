@@ -27,7 +27,7 @@ import java.util.zip.Deflater;
  */
 public final class PacketUtils {
 
-    private static final PacketListenerManager PACKET_LISTENER_MANAGER = MinecraftServer.getPacketListenerManager();
+    private static final PacketListenerManager PACKET_LISTENER_MANAGER = (PacketListenerManager) Tachyon.getServer().getPacketListenerManager();
     private static final ThreadLocal<Deflater> DEFLATER = ThreadLocal.withInitial(() -> new Deflater(3));
 
     private PacketUtils() {

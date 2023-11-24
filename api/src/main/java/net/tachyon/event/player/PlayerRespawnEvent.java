@@ -1,20 +1,20 @@
 package net.tachyon.event.player;
 
 import net.tachyon.coordinate.Position;
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.PlayerEvent;
 import net.tachyon.network.packet.client.play.ClientStatusPacket;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Called when {@link TachyonPlayer#respawn()} is executed (for custom respawn or as a result of
+ * Called when {@link Player#respawn()} is executed (for custom respawn or as a result of
  * {@link ClientStatusPacket}
  */
 public class PlayerRespawnEvent extends PlayerEvent {
 
     private Position respawnPosition;
 
-    public PlayerRespawnEvent(@NotNull TachyonPlayer player) {
+    public PlayerRespawnEvent(@NotNull Player player) {
         super(player);
         this.respawnPosition = player.getRespawnPoint();
     }
@@ -22,7 +22,7 @@ public class PlayerRespawnEvent extends PlayerEvent {
     /**
      * Gets the respawn position.
      * <p>
-     * Is by default {@link TachyonPlayer#getRespawnPoint()}
+     * Is by default {@link Player#getRespawnPoint()}
      *
      * @return the respawn position
      */

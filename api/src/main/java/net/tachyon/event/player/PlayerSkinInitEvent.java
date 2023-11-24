@@ -1,7 +1,7 @@
 package net.tachyon.event.player;
 
+import net.tachyon.entity.Player;
 import net.tachyon.entity.PlayerSkin;
-import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.event.types.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +13,7 @@ public class PlayerSkinInitEvent extends PlayerEvent {
 
     private PlayerSkin skin;
 
-    public PlayerSkinInitEvent(@NotNull TachyonPlayer player, @Nullable PlayerSkin currentSkin) {
+    public PlayerSkinInitEvent(@NotNull Player player, @Nullable PlayerSkin currentSkin) {
         super(player);
         this.skin = currentSkin;
     }

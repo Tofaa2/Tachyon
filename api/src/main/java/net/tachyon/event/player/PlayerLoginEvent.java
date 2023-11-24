@@ -1,8 +1,9 @@
 package net.tachyon.event.player;
 
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.PlayerEvent;
-import net.tachyon.instance.Instance;
+
+import net.tachyon.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,9 +19,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public class PlayerLoginEvent extends PlayerEvent {
 
-    private Instance spawningInstance;
+    private World spawningInstance;
 
-    public PlayerLoginEvent(@NotNull TachyonPlayer player) {
+    public PlayerLoginEvent(@NotNull Player player) {
         super(player);
     }
 
@@ -32,7 +33,7 @@ public class PlayerLoginEvent extends PlayerEvent {
      * @return the spawning instance, null if not already defined
      */
     @Nullable
-    public Instance getSpawningInstance() {
+    public World getSpawningInstance() {
         return spawningInstance;
     }
 
@@ -41,7 +42,7 @@ public class PlayerLoginEvent extends PlayerEvent {
      *
      * @param instance the new spawning instance
      */
-    public void setSpawningInstance(@NotNull Instance instance) {
+    public void setSpawningWorld(@NotNull World instance) {
         this.spawningInstance = instance;
     }
 }

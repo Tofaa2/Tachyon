@@ -1,6 +1,6 @@
 package net.tachyon.event.player;
 
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +15,7 @@ public class AsyncPlayerPreLoginEvent extends PlayerEvent {
     private String username;
     private UUID playerUuid;
 
-    public AsyncPlayerPreLoginEvent(@NotNull TachyonPlayer player, @NotNull String username, @NotNull UUID playerUuid) {
+    public AsyncPlayerPreLoginEvent(@NotNull Player player, @NotNull String username, @NotNull UUID playerUuid) {
         super(player);
         this.username = username;
         this.playerUuid = playerUuid;

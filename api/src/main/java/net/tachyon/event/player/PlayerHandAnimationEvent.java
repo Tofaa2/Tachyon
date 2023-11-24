@@ -1,6 +1,6 @@
 package net.tachyon.event.player;
 
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.CancellableEvent;
 import net.tachyon.event.types.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ public class PlayerHandAnimationEvent extends PlayerEvent implements Cancellable
 
     private boolean cancelled;
 
-    public PlayerHandAnimationEvent(@NotNull TachyonPlayer player) {
+    public PlayerHandAnimationEvent(@NotNull Player player) {
         super(player);
     }
 

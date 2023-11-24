@@ -1,6 +1,6 @@
 package net.tachyon.event.player;
 
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.PlayerEvent;
 import net.tachyon.event.types.CancellableEvent;
 import net.tachyon.item.ItemStack;
@@ -18,7 +18,7 @@ public class PlayerPreEatEvent extends PlayerEvent implements CancellableEvent {
 
     private boolean cancelled;
 
-    public PlayerPreEatEvent(@NotNull TachyonPlayer player, @NotNull ItemStack foodItem, long eatingTime) {
+    public PlayerPreEatEvent(@NotNull Player player, @NotNull ItemStack foodItem, long eatingTime) {
         super(player);
         this.foodItem = foodItem;
         this.eatingTime = eatingTime;

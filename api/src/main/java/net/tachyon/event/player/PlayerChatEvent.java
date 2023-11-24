@@ -2,7 +2,6 @@ package net.tachyon.event.player;
 
 import net.kyori.adventure.text.Component;
 import net.tachyon.entity.Player;
-import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.event.types.PlayerEvent;
 import net.tachyon.event.types.CancellableEvent;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +12,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 /**
- * Called every time a {@link TachyonPlayer} write and send something in the chat.
+ * Called every time a {@link Player} write and send something in the chat.
  * The event can be cancelled to do not send anything, and the format can be changed.
  */
 public class PlayerChatEvent extends PlayerEvent implements CancellableEvent {
@@ -24,7 +23,7 @@ public class PlayerChatEvent extends PlayerEvent implements CancellableEvent {
 
     private boolean cancelled;
 
-    public PlayerChatEvent(@NotNull TachyonPlayer player, @NotNull Collection<Player> recipients, @NotNull String message) {
+    public PlayerChatEvent(@NotNull Player player, @NotNull Collection<Player> recipients, @NotNull String message) {
         super(player);
         this.recipients = new ArrayList<>(recipients);
         this.message = message;

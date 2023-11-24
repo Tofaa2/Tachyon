@@ -440,7 +440,7 @@ public final class ConnectionManager implements IConnectionManager {
 
             PlayerLoginEvent loginEvent = new PlayerLoginEvent(waitingPlayer);
             waitingPlayer.callEvent(PlayerLoginEvent.class, loginEvent);
-            final Instance spawningInstance = loginEvent.getSpawningInstance();
+            final  Instance spawningInstance = (Instance) loginEvent.getSpawningInstance();
 
             Check.notNull(spawningInstance, "You need to specify a spawning instance in the PlayerLoginEvent");
 

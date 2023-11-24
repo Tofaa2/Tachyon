@@ -4,6 +4,7 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.tachyon.command.CommandSender;
 import net.tachyon.coordinate.Point;
+import net.tachyon.coordinate.Position;
 import net.tachyon.entity.metadata.PlayerMeta;
 import net.tachyon.inventory.EquipmentHandler;
 import net.tachyon.inventory.Inventory;
@@ -44,6 +45,12 @@ public interface Player extends LivingEntity, CommandSender {
     @NotNull GameMode getGameMode();
 
     void setGameMode(@NotNull GameMode gameMode);
+
+    @NotNull PlayerSettings getSettings();
+
+    @Nullable Position getRespawnPoint();
+
+    void respawn();
 
     /**
      * Opens the specified Inventory, close the previous inventory if existing.

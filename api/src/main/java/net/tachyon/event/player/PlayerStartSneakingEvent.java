@@ -1,6 +1,6 @@
 package net.tachyon.event.player;
 
-import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.entity.Player;
 import net.tachyon.event.types.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PlayerStartSneakingEvent extends PlayerEvent {
 
-    public PlayerStartSneakingEvent(@NotNull TachyonPlayer player) {
+    public PlayerStartSneakingEvent(@NotNull Player player) {
         super(player);
     }
 }
