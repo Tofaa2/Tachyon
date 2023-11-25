@@ -3,7 +3,7 @@
 Make a project and depend on the API. For now the API is not on any maven repository, so you will have to clone the API and install it to your local maven repository.
 
 
-```
+```groovy
 dependencies {
     compileOnly 'net.tachyon.server:api:(current version)'
     
@@ -16,7 +16,7 @@ dependencies {
 
 Create a class that extends `Plugin`, it will be used as your entry point. There are handles for onLoad, onEnable and onDisable.
 
-```
+```java
 public class ExamplePlugin extends Plugin {
     @Override
     public void onLoad() {
@@ -64,6 +64,22 @@ This will generate the `plugin.json` file for you on compile time.
         description = "An example plugin",
         authors = {"Tachyon"}
 )
+public class ExamplePlugin extends Plugin {
+    @Override
+    public void onLoad() {
+        // Called when the plugin is loaded
+    }
+
+    @Override
+    public void onEnable() {
+        // Called when the plugin is enabled
+    }
+
+    @Override
+    public void onDisable() {
+        // Called when the plugin is disabled
+    }
+}
 ```
 
 A way of adding dynamic dependencies is still being worked on.
