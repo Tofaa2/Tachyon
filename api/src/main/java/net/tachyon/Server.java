@@ -32,6 +32,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
@@ -78,6 +79,11 @@ public abstract class Server {
         }
         this.secretKeypair = kp;
         this.dataDir = dataDir;
+        this.responseDataConsumer = (connection, data) -> {
+            List<String> motds = settings.motd();
+            String motd = motds.get(MathUtils.randomInt(0, motds.size() - 1));
+            data.setDescription(motd);
+        };
     }
 
     public File getDataDir() {
@@ -121,6 +127,8 @@ public abstract class Server {
     public abstract <E extends EntityMeta> BiFunction<Entity, Metadata, EntityMeta> createMeta(@NotNull Class<E> clazz);
 
     public abstract @NotNull PluginManager getPluginManager();
+
+    public abstract @NotNull WorldManager getWorldManager();
 
     /**
      * Sends a {@link ServerPacket} to multiple players.

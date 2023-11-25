@@ -12,6 +12,7 @@ import net.tachyon.extras.proxy.BungeeCordProxy;
 import net.tachyon.instance.ChunkGenerator;
 import net.tachyon.instance.ChunkPopulator;
 import net.tachyon.instance.InstanceContainer;
+import net.tachyon.instance.InstanceManager;
 import net.tachyon.instance.batch.ChunkBatch;
 import net.tachyon.world.biome.Biome;
 import net.tachyon.world.chunk.Chunk;
@@ -66,7 +67,7 @@ public final class Main {
         }
 
 
-        InstanceContainer instance = MinecraftServer.getInstanceManager().createInstanceContainer();
+        InstanceContainer instance = ((InstanceManager)Tachyon.getServer().getWorldManager()).createInstanceContainer();
         instance.setChunkGenerator(new ChunkGenerator() {
             @Override
             public void generateChunkData(@NotNull ChunkBatch batch, int chunkX, int chunkZ) {

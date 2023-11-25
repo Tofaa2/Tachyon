@@ -95,4 +95,20 @@ public final class MathUtils {
         return (a % b + b) % b;
     }
 
+    public static int randomInt(int min, int max) {
+        return (int) (Math.random() * (max - min + 1) + min);
+    }
+
+    public static float randomFloat(float min, float max) {
+        return (float) (Math.random() * (max - min + 1) + min);
+    }
+
+    public static double randomDouble(double min, double max) {
+        return (Math.random() * (max - min + 1) + min);
+    }
+
+    public static boolean randomBoolean() {
+        return Math.random() < 0.5;
+    }
+
 }

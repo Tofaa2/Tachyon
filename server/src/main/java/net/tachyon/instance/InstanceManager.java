@@ -4,6 +4,7 @@ import net.tachyon.MinecraftServer;
 import net.tachyon.utils.validate.Check;
 import net.tachyon.world.DimensionType;
 import net.tachyon.world.LevelType;
+import net.tachyon.world.WorldManager;
 import net.tachyon.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * Used to register {@link Instance}.
  */
-public final class InstanceManager {
+public final class InstanceManager implements WorldManager {
 
     private final Set<Instance> instances = new CopyOnWriteArraySet<>();
 

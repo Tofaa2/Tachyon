@@ -48,6 +48,7 @@ import net.tachyon.world.DimensionType;
 import net.tachyon.world.LevelType;
 import net.tachyon.world.World;
 import net.tachyon.biome.TachyonBiomeManager;
+import net.tachyon.world.WorldManager;
 import net.tachyon.world.biome.BiomeManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -226,19 +227,15 @@ public final class MinecraftServer extends Server {
      *
      * @return the netty server
      */
-    public static NettyServer getNettyServer() {
+    public NettyServer getNettyServer() {
         return instance.nettyServer;
     }
 
-    /**
-     * Gets the manager handling all registered instances.
-     *
-     * @return the instance manager
-     */
-    public static InstanceManager getInstanceManager() {
-        return instance.instanceManager;
-    }
 
+    @Override
+    public @NotNull WorldManager getWorldManager() {
+        return instanceManager;
+    }
 
     /**
      * Gets the manager handling commands.
