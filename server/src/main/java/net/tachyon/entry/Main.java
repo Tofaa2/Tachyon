@@ -18,6 +18,7 @@ import net.tachyon.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -26,9 +27,15 @@ public final class Main {
     private Main() {}
 
     public static void main(String[] args) {
-        Config<ServerSettings> config = Config.create(ServerSettings.class, Path.of("config.json"));
+        File dataDir;
+        if (System.getProperty("tachyon.dir") != null) {
+            dataDir = new File(System.getProperty("tachyon.dir"));
+        } else {
+            dataDir = Path.of(".").toFile();
+        }
+        Config<ServerSettings> config = Config.create(ServerSettings.class, new File(dataDir, "config.json").toPath());
         config.load(ServerSettings.DEFAULT_SETTINGS);
-        MinecraftServer server = new MinecraftServer(config.get());
+        MinecraftServer server = new MinecraftServer(config.get(), dataDir);
         Tachyon.init(server, new UnsafeServer());
         server.init();
         OptifineSupport.enable(); // Not sure if this is needed in 1.8, but better safe than sorry.

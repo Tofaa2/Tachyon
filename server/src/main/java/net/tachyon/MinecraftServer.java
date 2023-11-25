@@ -9,6 +9,7 @@ import net.tachyon.entity.Player;
 import net.tachyon.entity.metadata.EntityMeta;
 import net.tachyon.network.IConnectionManager;
 import net.tachyon.network.packet.server.ServerPacket;
+import net.tachyon.plugin.TachyonPluginManager;
 import net.tachyon.scoreboard.TeamManager;
 import net.tachyon.utils.PacketUtils;
 import net.tachyon.utils.benchmark.BenchmarkManager;
@@ -51,6 +52,7 @@ import net.tachyon.world.biome.BiomeManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.function.BiFunction;
@@ -79,13 +81,15 @@ public final class MinecraftServer extends Server {
     private BenchmarkManager benchmarkManager;
     private TachyonBiomeManager biomeManager;
     private UpdateManager updateManager;
+    private TachyonPluginManager pluginManager;
+
     // Data
     private boolean initialized;
     private boolean started;
     private boolean stopping;
 
-    public MinecraftServer(@NotNull ServerSettings settings) {
-        super(settings);
+    public MinecraftServer(@NotNull ServerSettings settings, @NotNull File dataDir) {
+        super(settings, dataDir);
         Check.stateCondition(instance != null, "The server is already initialized");
         instance = this;
     }
@@ -155,12 +159,19 @@ public final class MinecraftServer extends Server {
         schedulerManager = new SchedulerManagerImpl();
         benchmarkManager = new BenchmarkManager();
         biomeManager = new TachyonBiomeManager();
+        pluginManager = new TachyonPluginManager();
 
         updateManager = new UpdateManager(this, connectionManager);
 
         nettyServer = new NettyServer(packetProcessor);
 
         initialized = true;
+    }
+
+
+    @NotNull @Override
+    public TachyonPluginManager getPluginManager() {
+        return pluginManager;
     }
 
     @Override
@@ -334,6 +345,7 @@ public final class MinecraftServer extends Server {
         nettyServer.start(address, port);
         LOGGER.info(getBrandName() + " server started successfully.");
         commandManager.startConsoleThread();
+        pluginManager.start();
     }
 
 
@@ -347,6 +359,7 @@ public final class MinecraftServer extends Server {
         schedulerManager.shutdown();
         connectionManager.shutdown();
         nettyServer.stop();
+        pluginManager.shutdown();
         LOGGER.info("Unloading all extensions.");
         LOGGER.info("Shutting down all thread pools.");
         benchmarkManager.disable();

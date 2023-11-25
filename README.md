@@ -3,7 +3,11 @@
 
 
 ## Usage
-WARNING: Tachyon is not usage ready just yet. Though the server works, modifying it to your liking is not possible at the current state of the API. This is still being actively working on
+WARNING: Tachyon is still in development and the API is not stable/ missing certain things such as world data.
+
+## Development
+Tachyon utilizes a plugin system to add features to the server. An example of a plugin can be found in the `example-plugin` directory.
+
 
 Example of a Tachyon server configuration file:
 ```json

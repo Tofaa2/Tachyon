@@ -14,6 +14,7 @@ import net.tachyon.network.IConnectionManager;
 import net.tachyon.network.listener.IPacketListenerManager;
 import net.tachyon.network.packet.server.ServerPacket;
 import net.tachyon.ping.ResponseDataConsumer;
+import net.tachyon.plugin.PluginManager;
 import net.tachyon.scheduler.SchedulerManager;
 import net.tachyon.scoreboard.TeamManager;
 import net.tachyon.utils.MathUtils;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -56,8 +58,9 @@ public abstract class Server {
     private final ServerSettings settings;
     private final GlobalEventHandler globalEventHandler;
     private ResponseDataConsumer responseDataConsumer;
+    private final File dataDir;
 
-    Server(@NotNull ServerSettings settings) {
+    Server(@NotNull ServerSettings settings, File dataDir) {
         Check.stateCondition(!MathUtils.isBetween(settings.chunkViewDistance(), 2, 32), "Chunk view distance must be between 2 and 32");
         Check.stateCondition(!MathUtils.isBetween(settings.entityViewDistance(), 0, 32), "Entity view distance must be between 0 and 32");
         this.settings = settings;
@@ -74,6 +77,11 @@ public abstract class Server {
             kp = null;
         }
         this.secretKeypair = kp;
+        this.dataDir = dataDir;
+    }
+
+    public File getDataDir() {
+        return dataDir;
     }
 
     /**
@@ -111,6 +119,8 @@ public abstract class Server {
     public abstract @NotNull IConnectionManager getConnectionManager();
 
     public abstract <E extends EntityMeta> BiFunction<Entity, Metadata, EntityMeta> createMeta(@NotNull Class<E> clazz);
+
+    public abstract @NotNull PluginManager getPluginManager();
 
     /**
      * Sends a {@link ServerPacket} to multiple players.

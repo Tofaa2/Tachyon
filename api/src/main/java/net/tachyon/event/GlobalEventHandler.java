@@ -25,6 +25,10 @@ public final class GlobalEventHandler implements EventHandler {
         instance = this;
     }
 
+    public <T extends Event> void  registerListener(EventListener<T> listener) {
+        addEventCallback(listener.getEventClass(), EventListener.createEventCallback(listener));
+    }
+
     @NotNull
     @Override
     public Map<Class<? extends Event>, Collection<EventCallback>> getEventCallbacksMap() {
