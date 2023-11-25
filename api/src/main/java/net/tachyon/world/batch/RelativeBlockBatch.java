@@ -1,4 +1,4 @@
-package net.tachyon.instance.batch;
+package net.tachyon.world.batch;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
@@ -6,8 +6,8 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.tachyon.coordinate.Point;
 import net.tachyon.data.Data;
-import net.tachyon.instance.Instance;
 import net.tachyon.utils.validate.Check;
+import net.tachyon.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,7 +108,7 @@ public class RelativeBlockBatch implements Batch<Runnable> {
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
     @Override
-    public AbsoluteBlockBatch apply(@NotNull Instance instance, @Nullable Runnable callback) {
+    public AbsoluteBlockBatch apply(@NotNull World instance, @Nullable Runnable callback) {
         return apply(instance, 0, 0, 0, callback);
     }
 
@@ -120,7 +120,7 @@ public class RelativeBlockBatch implements Batch<Runnable> {
      * @param callback The callback to be executed when the batch is applied
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    public AbsoluteBlockBatch apply(@NotNull Instance instance, @NotNull Point position, @Nullable Runnable callback) {
+    public AbsoluteBlockBatch apply(@NotNull World instance, @NotNull Point position, @Nullable Runnable callback) {
         return apply(instance, position.blockX(), position.blockY(), position.blockZ(), callback);
     }
 
@@ -134,7 +134,7 @@ public class RelativeBlockBatch implements Batch<Runnable> {
      * @param callback The callback to be executed when the batch is applied
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    public AbsoluteBlockBatch apply(@NotNull Instance instance, int x, int y, int z, @Nullable Runnable callback) {
+    public AbsoluteBlockBatch apply(@NotNull World instance, int x, int y, int z, @Nullable Runnable callback) {
         return apply(instance, x, y, z, callback, true);
     }
 
@@ -149,7 +149,7 @@ public class RelativeBlockBatch implements Batch<Runnable> {
      * @param callback The callback to be executed when the batch is applied
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    public AbsoluteBlockBatch applyUnsafe(@NotNull Instance instance, int x, int y, int z, @Nullable Runnable callback) {
+    public AbsoluteBlockBatch applyUnsafe(@NotNull World instance, int x, int y, int z, @Nullable Runnable callback) {
         return apply(instance, x, y, z, callback, false);
     }
 
@@ -164,7 +164,7 @@ public class RelativeBlockBatch implements Batch<Runnable> {
      * @param safeCallback If true, the callback will be executed in the next instance update. Otherwise it will be executed immediately upon completion
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    protected AbsoluteBlockBatch apply(@NotNull Instance instance, int x, int y, int z, @Nullable Runnable callback, boolean safeCallback) {
+    protected AbsoluteBlockBatch apply(@NotNull World instance, int x, int y, int z, @Nullable Runnable callback, boolean safeCallback) {
         return this.toAbsoluteBatch(x, y, z).apply(instance, callback, safeCallback);
     }
 

@@ -289,7 +289,7 @@ public class PlayerInventory implements InventoryModifier, InventoryClickHandler
 
         // Sync equipment
         if (equipmentSlot != null) {
-            Tachyon.getUnsafe().syncEquipment(player, equipmentSlot);
+            player.syncEquipment(equipmentSlot);
         }
 
         // Refresh slot

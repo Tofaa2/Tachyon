@@ -1,16 +1,14 @@
 package net.tachyon.network;
 
 import io.netty.channel.Channel;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.tachyon.MinecraftServer;
-import net.tachyon.chat.ForwardingPlayerAudience;
 import net.tachyon.entity.Player;
 import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.event.player.AsyncPlayerPreLoginEvent;
 import net.tachyon.event.player.PlayerLoginEvent;
-import net.tachyon.instance.Instance;
+import net.tachyon.world.Instance;
 import net.tachyon.listener.manager.ClientPacketConsumer;
 import net.tachyon.listener.manager.ServerPacketConsumer;
 import net.tachyon.network.packet.client.login.LoginStartPacket;
@@ -447,7 +445,7 @@ public final class ConnectionManager implements IConnectionManager {
             waitingPlayer.UNSAFE_init(spawningInstance);
 
             // Spawn the player at Player#getRespawnPoint during the next instance tick
-            spawningInstance.scheduleNextTick(waitingPlayer::setInstance);
+            spawningInstance.scheduleNextTick(waitingPlayer::setWorld);
         }
     }
 

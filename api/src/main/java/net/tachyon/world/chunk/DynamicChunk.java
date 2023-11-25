@@ -1,25 +1,23 @@
-package net.tachyon.instance;
+package net.tachyon.world.chunk;
 
 import com.extollit.gaming.ai.path.model.ColumnarOcclusionFieldList;
 import it.unimi.dsi.fastutil.ints.*;
 import it.unimi.dsi.fastutil.objects.Object2ShortMap;
 import it.unimi.dsi.fastutil.objects.Object2ShortOpenHashMap;
-import net.tachyon.MinecraftServer;
+import net.tachyon.Server;
 import net.tachyon.Tachyon;
+import net.tachyon.binary.BinaryReader;
 import net.tachyon.coordinate.Point;
 import net.tachyon.data.Data;
 import net.tachyon.data.SerializableData;
-import net.tachyon.data.SerializableDataImpl;
 import net.tachyon.entity.pathfinding.PFBlockDescription;
 import net.tachyon.block.CustomBlock;
 import net.tachyon.entity.pathfinding.PFColumnarSpace;
+import net.tachyon.world.World;
 import net.tachyon.world.palette.PaletteStorage;
 import net.tachyon.network.packet.server.play.ChunkDataPacket;
-import net.tachyon.utils.binary.TachyonBinaryReader;
-import net.tachyon.utils.binary.TachyonBinaryWriter;
 import net.tachyon.utils.block.CustomBlockUtils;
 import net.tachyon.utils.OptionalCallback;
-import net.tachyon.world.chunk.ChunkCallback;
 import net.tachyon.utils.ChunkUtils;
 import net.tachyon.utils.time.CooldownUtils;
 import net.tachyon.utils.time.UpdateOption;
@@ -130,7 +128,7 @@ public class DynamicChunk extends TachyonChunk {
     }
 
     @Override
-    public void tick(long time, @NotNull Instance instance) {
+    public void tick(long time, @NotNull World instance) {
         if (updatableBlocks.isEmpty())
             return;
 
@@ -210,7 +208,7 @@ public class DynamicChunk extends TachyonChunk {
     }
 
     /**
-     * Serialize this {@link TachyonChunk} based on {@link #readChunk(TachyonBinaryReader, ChunkCallback)}
+     * Serialize this {@link TachyonChunk} based on {@link #readChunk(net.tachyon.binary.BinaryReader, ChunkCallback)}
      * <p>
      * It is also used by the default {@link IChunkLoader} which is {@link BasicChunkLoader}
      *
@@ -223,14 +221,14 @@ public class DynamicChunk extends TachyonChunk {
         Object2ShortMap<String> typeToIndexMap = new Object2ShortOpenHashMap<>();
 
         // Order of buffers in the final serialized array
-        TachyonBinaryWriter versionWriter = new TachyonBinaryWriter();
-        TachyonBinaryWriter dataIndexWriter = new TachyonBinaryWriter();
-        TachyonBinaryWriter chunkWriter = new TachyonBinaryWriter();
+        var versionWriter = Tachyon.getUnsafe().newBinaryWriter();
+        var dataIndexWriter = Tachyon.getUnsafe().newBinaryWriter();
+        var chunkWriter = Tachyon.getUnsafe().newBinaryWriter();
 
         // VERSION WRITER
         {
             versionWriter.writeInt(DATA_FORMAT_VERSION);
-            versionWriter.writeInt(MinecraftServer.PROTOCOL_VERSION);
+            versionWriter.writeInt(Server.PROTOCOL_VERSION);
         }
 
         // CHUNK DATA WRITER
@@ -295,7 +293,7 @@ public class DynamicChunk extends TachyonChunk {
             }
         }
 
-        final TachyonBinaryWriter finalBuffer = new TachyonBinaryWriter(
+        final var finalBuffer = Tachyon.getUnsafe().newBinaryWriter(
                 versionWriter.getBuffer(),
                 dataIndexWriter.getBuffer(),
                 chunkWriter.getBuffer());
@@ -304,7 +302,7 @@ public class DynamicChunk extends TachyonChunk {
     }
 
     @Override
-    public void readChunk(@NotNull TachyonBinaryReader reader, ChunkCallback callback) {
+    public void readChunk(@NotNull BinaryReader reader, ChunkCallback callback) {
         // Check the buffer length
         final int length = reader.available();
         Check.argCondition(length == 0, "The length of the buffer must be > 0");
@@ -344,7 +342,7 @@ public class DynamicChunk extends TachyonChunk {
                 // TachyonChunk data
                 final boolean hasChunkData = reader.readBoolean();
                 if (hasDataIndex && hasChunkData) {
-                    SerializableData serializableData = new SerializableDataImpl();
+                    SerializableData serializableData = Tachyon.getUnsafe().serializableDataImpl();
                     serializableData.readSerializedData(reader, typeToIndexMap);
                 }
 
@@ -373,7 +371,7 @@ public class DynamicChunk extends TachyonChunk {
                         // Data deserializer
                         if (hasDataIndex && hasBlockData) {
                             // Read the data with the deserialized index map
-                            data = new SerializableDataImpl();
+                            data = Tachyon.getUnsafe().serializableDataImpl();
                             data.readSerializedData(reader, typeToIndexMap);
                         }
                     }

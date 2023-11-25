@@ -7,20 +7,24 @@ import net.tachyon.chat.ForwardingPlayerAudience;
 import net.tachyon.coordinate.Point;
 import net.tachyon.coordinate.Position;
 import net.tachyon.data.Data;
+import net.tachyon.data.DataContainer;
 import net.tachyon.entity.Entity;
 import net.tachyon.entity.EntityType;
 import net.tachyon.entity.Player;
 import net.tachyon.event.EventHandler;
 import net.tachyon.world.chunk.Chunk;
 import net.tachyon.world.chunk.ChunkCallback;
+import net.tachyon.world.chunk.ChunkGenerator;
+import net.tachyon.world.chunk.ChunkSupplier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
-public interface World extends ForwardingPlayerAudience, BlockModifier, EventHandler {
+public interface World extends ForwardingPlayerAudience, BlockModifier, EventHandler, DataContainer {
 
     @NotNull UUID getUuid();
 
@@ -46,7 +50,13 @@ public interface World extends ForwardingPlayerAudience, BlockModifier, EventHan
 
     long getWorldAge();
 
+    void scheduleNextTick(@NotNull Consumer<World> callback);
+
     long getTime();
+
+    void setChunkGenerator(@Nullable ChunkGenerator generator);
+
+    void setChunkSupplier(@Nullable ChunkSupplier supplier);
 
     void setTime(long time);
 

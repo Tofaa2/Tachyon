@@ -78,8 +78,4 @@ public interface Chunk extends Viewable, DataContainer {
     void unload();
 
     int getBlockIndex(int x, int y, int z);
-
-    @ApiStatus.Internal
-    void UNSAFE_setBlock(int x, int y, int z, short blockStateId, short customBlockId, @Nullable Data data, boolean updatable);
-
 }

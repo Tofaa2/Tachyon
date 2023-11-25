@@ -2,13 +2,11 @@ package net.tachyon.utils.entity;
 
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
-import net.tachyon.MinecraftServer;
 import net.tachyon.Tachyon;
 import net.tachyon.command.CommandSender;
 import net.tachyon.coordinate.Position;
 import net.tachyon.entity.*;
-import net.tachyon.instance.Instance;
-import net.tachyon.network.ConnectionManager;
+import net.tachyon.world.Instance;
 import net.tachyon.utils.MathUtils;
 import net.tachyon.utils.math.IntRange;
 import net.tachyon.utils.validate.Check;

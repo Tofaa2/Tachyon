@@ -1,12 +1,9 @@
-package net.tachyon.instance;
+package net.tachyon.world;
 
 import net.tachyon.coordinate.Point;
 import net.tachyon.data.Data;
 import net.tachyon.entity.Player;
-import net.tachyon.world.chunk.ChunkCallback;
-import net.tachyon.world.SharedWorld;
-import net.tachyon.world.World;
-import net.tachyon.world.chunk.Chunk;
+import net.tachyon.world.chunk.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,6 +67,11 @@ public class SharedInstance extends Instance implements SharedWorld {
     @Override
     public void setChunkGenerator(ChunkGenerator chunkGenerator) {
         this.instanceContainer.setChunkGenerator(chunkGenerator);
+    }
+
+    @Override
+    public void setChunkSupplier(@Nullable ChunkSupplier supplier) {
+        this.instanceContainer.setChunkSupplier(supplier);
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.tachyon.item.metadata;
 
 import it.unimi.dsi.fastutil.objects.Object2ShortMap;
 import it.unimi.dsi.fastutil.objects.Object2ShortOpenHashMap;
+import kotlin.Suppress;
 import net.tachyon.Tachyon;
 import net.tachyon.item.Enchantment;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +10,7 @@ import org.jglrxavpok.hephaistos.nbt.NBTCompound;
 import org.jglrxavpok.hephaistos.nbt.NBTList;
 import org.jglrxavpok.hephaistos.nbt.NBTTypes;
 
+import javax.annotation.processing.SupportedSourceVersion;
 import java.util.Collections;
 import java.util.Map;
 
@@ -90,10 +92,11 @@ public class EnchantedBookMeta extends ItemMeta {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void write(@NotNull NBTCompound compound) {
         if (!storedEnchantmentMap.isEmpty()) {
             NBTList<NBTCompound> enchantList = new NBTList<>(NBTTypes.TAG_Compound);
-            for (Map.Entry<Enchantment, Short> entry : storedEnchantmentMap.entrySet()) {
+            for (var entry : storedEnchantmentMap.entrySet()) {
                 final Enchantment enchantment = entry.getKey();
                 final short level = entry.getValue();
 

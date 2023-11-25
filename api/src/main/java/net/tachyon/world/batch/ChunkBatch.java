@@ -1,4 +1,4 @@
-package net.tachyon.instance.batch;
+package net.tachyon.world.batch;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -6,14 +6,13 @@ import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
+import net.tachyon.Tachyon;
 import net.tachyon.coordinate.Point;
 import net.tachyon.data.Data;
-import net.tachyon.instance.Instance;
-import net.tachyon.instance.InstanceContainer;
-import net.tachyon.instance.TachyonChunk;
+import net.tachyon.world.World;
+import net.tachyon.world.chunk.TachyonChunk;
 import net.tachyon.network.packet.server.play.ChunkDataPacket;
 import net.tachyon.network.packet.server.play.MultiBlockChangePacket;
-import net.tachyon.utils.PacketUtils;
 import net.tachyon.utils.block.CustomBlockUtils;
 import net.tachyon.utils.OptionalCallback;
 import net.tachyon.world.chunk.ChunkCallback;
@@ -27,7 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * A Batch used when all of the block changed are contained inside a single chunk.
+ * A Batch used when all the block changed are contained inside a single chunk.
  * If more than one chunk is needed, use an {@link AbsoluteBlockBatch} instead.
  * <p>
  * The batch can be placed in any chunk in any instance, however it will always remain
@@ -122,7 +121,7 @@ public class ChunkBatch implements Batch<ChunkCallback> {
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
     @Override
-    public ChunkBatch apply(@NotNull Instance instance, @Nullable ChunkCallback callback) {
+    public ChunkBatch apply(@NotNull World instance, @Nullable ChunkCallback callback) {
         return apply(instance, 0, 0, callback);
     }
 
@@ -135,7 +134,7 @@ public class ChunkBatch implements Batch<ChunkCallback> {
      * @param callback The callback to be executed when the batch is applied.
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    public ChunkBatch apply(@NotNull Instance instance, int chunkX, int chunkZ, @Nullable ChunkCallback callback) {
+    public ChunkBatch apply(@NotNull World instance, int chunkX, int chunkZ, @Nullable ChunkCallback callback) {
         final Chunk chunk = instance.getChunk(chunkX, chunkZ);
         if (chunk == null) {
             LOGGER.warn("Unable to apply ChunkBatch to unloaded chunk ({}, {}) in {}.",
@@ -153,7 +152,7 @@ public class ChunkBatch implements Batch<ChunkCallback> {
      * @param callback The callback to be executed when the batch is applied
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    public ChunkBatch apply(@NotNull Instance instance, @NotNull Chunk chunk, @Nullable ChunkCallback callback) {
+    public ChunkBatch apply(@NotNull World instance, @NotNull Chunk chunk, @Nullable ChunkCallback callback) {
         return apply(instance, chunk, callback, true);
     }
 
@@ -166,7 +165,7 @@ public class ChunkBatch implements Batch<ChunkCallback> {
      * @param callback The callback to be executed when the batch is applied
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    public ChunkBatch unsafeApply(@NotNull Instance instance, @NotNull Chunk chunk, @Nullable ChunkCallback callback) {
+    public ChunkBatch unsafeApply(@NotNull World instance, @NotNull Chunk chunk, @Nullable ChunkCallback callback) {
         return apply(instance, chunk, callback, false);
     }
 
@@ -180,7 +179,7 @@ public class ChunkBatch implements Batch<ChunkCallback> {
      *                     Otherwise it will be executed immediately upon completion
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    protected ChunkBatch apply(@NotNull Instance instance,
+    protected ChunkBatch apply(@NotNull World instance,
                                @NotNull Chunk chunk, @Nullable ChunkCallback callback,
                                boolean safeCallback) {
         if (!this.options.isUnsafeApply()) this.awaitReady();
@@ -193,7 +192,7 @@ public class ChunkBatch implements Batch<ChunkCallback> {
     /**
      * Applies this batch in the current thread, executing the callback upon completion.
      */
-    private void singleThreadFlush(Instance instance, Chunk chunk, @Nullable ChunkBatch inverse,
+    private void singleThreadFlush(World instance, Chunk chunk, @Nullable ChunkBatch inverse,
                                    @Nullable ChunkCallback callback, boolean safeCallback) {
         try {
             if (!chunk.isLoaded()) {
@@ -251,14 +250,14 @@ public class ChunkBatch implements Batch<ChunkCallback> {
         if (inverse != null)
             inverse.setSeparateBlocks(x, y, z, chunk.getBlockStateId(x, y, z), chunk.getCustomBlockId(x, y, z), chunk.getBlockData(index));
 
-        chunk.UNSAFE_setBlock(x, y, z, blockId, customBlockId, data, CustomBlockUtils.hasUpdate(customBlockId));
+        Tachyon.getUnsafe().setBlock(chunk, x, y, z, blockId, customBlockId, data, CustomBlockUtils.hasUpdate(customBlockId));
         return ChunkUtils.getSectionAt(y);
     }
 
     /**
      * Updates the given chunk for all of its viewers, and executes the callback.
      */
-    private void updateChunk(@NotNull Instance instance, Chunk chunk, IntSet updatedSections, @Nullable ChunkCallback callback, boolean safeCallback) {
+    private void updateChunk(@NotNull World instance, Chunk chunk, IntSet updatedSections, @Nullable ChunkCallback callback, boolean safeCallback) {
         int changedBlocksSize = Integer.MAX_VALUE;
         if (blocks != null) {
             synchronized (blocks) {
@@ -298,17 +297,13 @@ public class ChunkBatch implements Batch<ChunkCallback> {
             for (int section : updatedSections)
                 sections[section] = 1;
             chunkDataPacket.sections = sections;
-            PacketUtils.sendGroupedPacket(chunk.getViewers(), chunkDataPacket);
+            Tachyon.getServer().sendGroupedPacket(chunk.getViewers(), chunkDataPacket);
         }
 
-        if (instance instanceof InstanceContainer) {
-            // FIXME: put method in Instance instead
-            ((InstanceContainer) instance).refreshLastBlockChangeTime();
-        }
-
+        Tachyon.getUnsafe().refreshLastBlockChangeTime(instance);
         if (callback != null) {
             if (safeCallback) {
-                ((InstanceContainer) instance).scheduleNextTick(inst -> callback.accept(chunk));
+                (instance).scheduleNextTick(inst -> callback.accept(chunk));
             } else {
                 callback.accept(chunk);
             }

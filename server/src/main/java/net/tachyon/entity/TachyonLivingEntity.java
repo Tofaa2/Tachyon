@@ -14,7 +14,7 @@ import net.tachyon.event.entity.EntityDeathEvent;
 import net.tachyon.event.entity.EntityFireEvent;
 import net.tachyon.event.item.ArmorEquipEvent;
 import net.tachyon.event.item.PickupItemEvent;
-import net.tachyon.instance.TachyonChunk;
+import net.tachyon.world.chunk.TachyonChunk;
 import net.tachyon.block.Block;
 import net.tachyon.inventory.EquipmentHandler;
 import net.tachyon.item.ItemStack;

@@ -1,4 +1,4 @@
-package net.tachyon.instance.block;
+package net.tachyon.world.block;
 
 import net.tachyon.block.Block;
 import net.tachyon.block.BlockManager;

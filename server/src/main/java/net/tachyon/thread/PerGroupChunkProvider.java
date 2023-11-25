@@ -5,7 +5,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.tachyon.Tachyon;
-import net.tachyon.instance.Instance;
+import net.tachyon.world.Instance;
 import net.tachyon.utils.ChunkUtils;
 import org.jetbrains.annotations.NotNull;
 

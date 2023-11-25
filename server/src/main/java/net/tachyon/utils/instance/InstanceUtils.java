@@ -1,8 +1,8 @@
 package net.tachyon.utils.instance;
 
-import net.tachyon.instance.Instance;
-import net.tachyon.instance.InstanceContainer;
-import net.tachyon.instance.SharedInstance;
+import net.tachyon.world.Instance;
+import net.tachyon.world.InstanceContainer;
+import net.tachyon.world.SharedInstance;
 
 public final class InstanceUtils {
 

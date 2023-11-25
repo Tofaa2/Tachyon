@@ -1,19 +1,23 @@
-package net.tachyon.instance.batch;
+package net.tachyon.world.batch;
 
+import net.tachyon.Tachyon;
 import net.tachyon.data.Data;
-import net.tachyon.instance.*;
 import net.tachyon.utils.block.CustomBlockUtils;
+import net.tachyon.world.World;
 import net.tachyon.world.chunk.ChunkCallback;
+import net.tachyon.world.chunk.ChunkGenerator;
+import net.tachyon.world.chunk.ChunkPopulator;
+import net.tachyon.world.chunk.TachyonChunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class ChunkGenerationBatch extends ChunkBatch {
-    private final InstanceContainer instance;
+    private final World instance;
     private final TachyonChunk chunk;
 
-    public ChunkGenerationBatch(InstanceContainer instance, TachyonChunk chunk) {
+    public ChunkGenerationBatch(World instance, TachyonChunk chunk) {
         super(null, null, new BatchOption());
 
         this.instance = instance;
@@ -41,7 +45,7 @@ public class ChunkGenerationBatch extends ChunkBatch {
 
                 // Update the chunk.
                 this.chunk.sendChunk();
-                this.instance.refreshLastBlockChangeTime();
+                Tachyon.getUnsafe().refreshLastBlockChangeTime(this.instance);
                 if (callback != null)
                     this.instance.scheduleNextTick(inst -> callback.accept(this.chunk));
             }

@@ -9,13 +9,12 @@ import net.tachyon.config.Config;
 import net.tachyon.extras.MojangAuth;
 import net.tachyon.extras.optifine.OptifineSupport;
 import net.tachyon.extras.proxy.BungeeCordProxy;
-import net.tachyon.instance.ChunkGenerator;
-import net.tachyon.instance.ChunkPopulator;
-import net.tachyon.instance.InstanceContainer;
-import net.tachyon.instance.InstanceManager;
-import net.tachyon.instance.batch.ChunkBatch;
+import net.tachyon.world.chunk.ChunkGenerator;
+import net.tachyon.world.chunk.ChunkPopulator;
+import net.tachyon.world.InstanceContainer;
+import net.tachyon.world.InstanceManager;
+import net.tachyon.world.batch.ChunkBatch;
 import net.tachyon.world.biome.Biome;
-import net.tachyon.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

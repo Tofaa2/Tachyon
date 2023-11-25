@@ -2,8 +2,8 @@ package net.tachyon.entity;
 
 import net.tachyon.coordinate.Position;
 import net.tachyon.event.entity.EntityItemMergeEvent;
-import net.tachyon.instance.TachyonChunk;
-import net.tachyon.instance.Instance;
+import net.tachyon.world.chunk.TachyonChunk;
+import net.tachyon.world.Instance;
 import net.tachyon.item.ItemStack;
 import net.tachyon.item.rule.StackingRule;
 import net.tachyon.utils.time.CooldownUtils;

@@ -14,11 +14,13 @@ import net.tachyon.network.packet.server.ServerPacket;
 import net.tachyon.network.player.PlayerConnection;
 import net.tachyon.scoreboard.BelowNameTag;
 import net.tachyon.stat.PlayerStatistic;
+import net.tachyon.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.util.Map;
+import java.util.Set;
 
 public interface Player extends LivingEntity, CommandSender {
 
@@ -49,6 +51,8 @@ public interface Player extends LivingEntity, CommandSender {
     @NotNull PlayerSettings getSettings();
 
     @Nullable Position getRespawnPoint();
+
+    @NotNull Set<Chunk> getViewableChunkCopy();
 
     void respawn();
 

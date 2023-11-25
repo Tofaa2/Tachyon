@@ -4,7 +4,7 @@ import net.tachyon.coordinate.Point;
 import net.tachyon.entity.GameMode;
 import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.event.player.PlayerStartDiggingEvent;
-import net.tachyon.instance.Instance;
+import net.tachyon.world.Instance;
 import net.tachyon.block.Block;
 import net.tachyon.block.CustomBlock;
 import net.tachyon.inventory.PlayerInventory;

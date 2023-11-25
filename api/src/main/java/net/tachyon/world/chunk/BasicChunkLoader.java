@@ -1,24 +1,22 @@
-package net.tachyon.instance;
+package net.tachyon.world.chunk;
 
-import net.tachyon.utils.binary.TachyonBinaryReader;
-import net.tachyon.world.chunk.ChunkCallback;
-import net.tachyon.world.chunk.ChunkSupplier;
+import net.tachyon.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A {@link IChunkLoader} used by {@link InstanceContainer}
+ * A {@link IChunkLoader} used by {@link World}
  * <p>
  * It simply save chunk serialized data from {@link TachyonChunk#getSerializedData()}
- * and deserialize it later with {@link TachyonChunk#readChunk(TachyonBinaryReader, ChunkCallback)}.
+ * and deserialize it later with {@link TachyonChunk#readChunk(net.tachyon.binary.BinaryReader, ChunkCallback)}.
  * <p>
  */
 public class BasicChunkLoader implements IChunkLoader {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(BasicChunkLoader.class);
-    private final InstanceContainer instanceContainer;
+    private final World instanceContainer;
 
     /**
      * <p>
@@ -26,9 +24,9 @@ public class BasicChunkLoader implements IChunkLoader {
      * <p>
      * WARNING: {@link TachyonChunk} implementations do not need to have the same serializing format, be careful.
      *
-     * @param instanceContainer the {@link InstanceContainer} linked to this loader
+     * @param instanceContainer the {@link World} linked to this loader
      */
-    public BasicChunkLoader(InstanceContainer instanceContainer) {
+    public BasicChunkLoader(World instanceContainer) {
         this.instanceContainer = instanceContainer;
     }
 
@@ -37,7 +35,7 @@ public class BasicChunkLoader implements IChunkLoader {
     }
 
     @Override
-    public boolean loadChunk(@NotNull Instance instance, int chunkX, int chunkZ, @Nullable ChunkCallback callback) {
+    public boolean loadChunk(@NotNull World instance, int chunkX, int chunkZ, @Nullable ChunkCallback callback) {
         return false;
     }
 

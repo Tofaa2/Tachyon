@@ -1,12 +1,10 @@
-package net.tachyon.instance;
+package net.tachyon.world;
 
 import net.tachyon.coordinate.Point;
 import net.tachyon.entity.TachyonEntity;
 import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.network.packet.server.play.WorldBorderPacket;
 import net.tachyon.utils.PacketUtils;
-import net.tachyon.world.World;
-import net.tachyon.world.WorldBorder;
 import org.jetbrains.annotations.NotNull;
 
 /**

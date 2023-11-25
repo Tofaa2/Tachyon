@@ -1,8 +1,8 @@
 package net.tachyon;
 
 import com.google.common.collect.Queues;
-import net.tachyon.instance.Instance;
-import net.tachyon.instance.InstanceManager;
+import net.tachyon.world.Instance;
+import net.tachyon.world.InstanceManager;
 import net.tachyon.network.ConnectionManager;
 import net.tachyon.thread.PerInstanceThreadProvider;
 import net.tachyon.thread.ThreadProvider;

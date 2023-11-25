@@ -1,6 +1,7 @@
-package net.tachyon.instance;
+package net.tachyon.world.chunk;
 
-import net.tachyon.instance.batch.ChunkBatch;
+import net.tachyon.world.World;
+import net.tachyon.world.batch.ChunkBatch;
 import net.tachyon.block.Block;
 import net.tachyon.world.biome.Biome;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * Responsible for the {@link TachyonChunk} generation, can be set using {@link Instance#setChunkGenerator(ChunkGenerator)}.
+ * Responsible for the {@link TachyonChunk} generation, can be set using {@link World#setChunkGenerator(ChunkGenerator)}.
  * <p>
  * Called if the instance {@link IChunkLoader} hasn't been able to load the chunk.
  */

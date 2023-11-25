@@ -1,31 +1,25 @@
-package net.tachyon.instance;
+package net.tachyon.world.chunk;
 
 import net.tachyon.Tachyon;
+import net.tachyon.binary.BinaryReader;
 import net.tachyon.block.BlockManager;
 import net.tachyon.coordinate.Position;
 import net.tachyon.data.Data;
-import net.tachyon.data.DataContainer;
 import net.tachyon.entity.Player;
-import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.entity.pathfinding.PFColumnarSpace;
 import net.tachyon.event.player.PlayerChunkLoadEvent;
 import net.tachyon.event.player.PlayerChunkUnloadEvent;
-import net.tachyon.instance.batch.Batch;
 import net.tachyon.block.Block;
 import net.tachyon.block.CustomBlock;
 import net.tachyon.network.packet.server.play.ChunkDataPacket;
 import net.tachyon.network.player.PlayerConnection;
 import net.tachyon.utils.MathUtils;
-import net.tachyon.utils.PacketUtils;
-import net.tachyon.utils.binary.TachyonBinaryReader;
+import net.tachyon.world.World;
+import net.tachyon.world.batch.Batch;
 import net.tachyon.world.biome.BiomeManager;
-import net.tachyon.world.chunk.ChunkCallback;
-import net.tachyon.world.chunk.ChunkSupplier;
 import net.tachyon.utils.ChunkUtils;
-import net.tachyon.utils.player.PlayerUtils;
 import net.tachyon.utils.validate.Check;
 import net.tachyon.world.biome.Biome;
-import net.tachyon.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,15 +29,15 @@ import java.util.concurrent.CopyOnWriteArraySet;
 // TODO light data & API
 
 /**
- * A chunk is a part of an {@link Instance}, limited by a size of 16x256x16 blocks and subdivided in 16 sections of 16 blocks height.
- * Should contains all the blocks located at those positions and manage their tick updates.
+ * A chunk is a part of a {@link World}, limited by a size of 16x256x16 blocks and subdivided in 16 sections of 16 blocks height.
+ * Should contain all the blocks located at those positions and manage their tick updates.
  * Be aware that implementations do not need to be thread-safe, all chunks are guarded by their own instance ('this').
  * <p>
- * Chunks can be serialized using {@link #getSerializedData()} and deserialized back with {@link #readChunk(TachyonBinaryReader, ChunkCallback)},
+ * Chunks can be serialized using {@link #getSerializedData()} and deserialized back with {@link #readChunk(net.tachyon.binary.BinaryReader, ChunkCallback)},
  * allowing you to implement your own storage solution if needed.
  * <p>
  * You can create your own implementation of this class by extending it
- * and create the objects in {@link InstanceContainer#setChunkSupplier(ChunkSupplier)}.
+ * and create the objects in {@link World#setChunkSupplier(ChunkSupplier)}.
  * <p>
  * You generally want to avoid storing references of this object as this could lead to a huge memory leak,
  * you should store the chunk coordinates instead.
@@ -94,7 +88,7 @@ public abstract class TachyonChunk implements Chunk {
      * This is used when the previous block has to be destroyed/replaced, meaning that it clears the previous data and update method.
      * <p>
      * WARNING: this method is not thread-safe (in order to bring performance improvement with {@link Batch}s)
-     * The thread-safe version is {@link InstanceContainer#setSeparateBlocks(int, int, int, short, short, Data)} (or any similar instance methods)
+     * The thread-safe version is {@link World#setSeparateBlocks(int, int, int, short, short, Data)} (or any similar instance methods)
      * Otherwise, you can simply do not forget to have this chunk synchronized when this is called.
      *
      * @param x             the block X
@@ -117,9 +111,9 @@ public abstract class TachyonChunk implements Chunk {
      * WARNING: this method doesn't necessary have to be thread-safe, proceed with caution.
      *
      * @param time     the time of the update in milliseconds
-     * @param instance the {@link Instance} linked to this chunk
+     * @param instance the {@link World} linked to this chunk
      */
-    public abstract void tick(long time, @NotNull Instance instance);
+    public abstract void tick(long time, @NotNull World instance);
 
     /**
      * Gets the block state id at a position.
@@ -205,7 +199,7 @@ public abstract class TachyonChunk implements Chunk {
      * Serializes the chunk into bytes.
      *
      * @return the serialized chunk, can be null if this chunk cannot be serialized
-     * @see #readChunk(TachyonBinaryReader, ChunkCallback) which should be able to read what is written in this method
+     * @see #readChunk(net.tachyon.binary.BinaryReader, ChunkCallback) which should be able to read what is written in this method
      */
     public abstract byte[] getSerializedData();
 
@@ -221,7 +215,7 @@ public abstract class TachyonChunk implements Chunk {
      *                 WARNING: this need to be called to notify the instance.
      * @see #getSerializedData() which is responsible for the serialized data given
      */
-    public abstract void readChunk(@NotNull TachyonBinaryReader reader, @Nullable ChunkCallback callback);
+    public abstract void readChunk(@NotNull BinaryReader reader, @Nullable ChunkCallback callback);
 
     /**
      * Creates a {@link ChunkDataPacket} with this chunk data ready to be written.
@@ -269,7 +263,7 @@ public abstract class TachyonChunk implements Chunk {
      * @return the {@link CustomBlock} at the block index
      */
     @Nullable
-    protected CustomBlock getCustomBlock(int index) {
+    public CustomBlock getCustomBlock(int index) {
         final int x = ChunkUtils.blockIndexToChunkPositionX(index);
         final int y = ChunkUtils.blockIndexToChunkPositionY(index);
         final int z = ChunkUtils.blockIndexToChunkPositionZ(index);
@@ -339,7 +333,7 @@ public abstract class TachyonChunk implements Chunk {
     /**
      * Gets if this chunk is read-only.
      * <p>
-     * Being read-only should prevent block placing/breaking and setting block from an {@link Instance}.
+     * Being read-only should prevent block placing/breaking and setting block from an {@link World}.
      * It does not affect {@link IChunkLoader} and {@link ChunkGenerator}.
      *
      * @return true if the chunk is read-only
@@ -351,7 +345,7 @@ public abstract class TachyonChunk implements Chunk {
     /**
      * Changes the read state of the chunk.
      * <p>
-     * Being read-only should prevent block placing/breaking and setting block from an {@link Instance}.
+     * Being read-only should prevent block placing/breaking and setting block from an {@link World}.
      * It does not affect {@link IChunkLoader} and {@link ChunkGenerator}.
      *
      * @param readOnly true to make the chunk read-only, false otherwise
@@ -410,20 +404,16 @@ public abstract class TachyonChunk implements Chunk {
      * Sends the chunk to {@code player} and add it to the player viewing chunks collection
      * and send a {@link PlayerChunkLoadEvent}.
      *
-     * @param p the viewer to add
+     * @param player the viewer to add
      * @return true if the player has just been added to the viewer collection
      */
     @Override
-    public boolean addViewer(@NotNull Player p) {
-        TachyonPlayer player = (TachyonPlayer) p;
+    public boolean addViewer(@NotNull Player player) {
         final boolean result = this.viewers.add(player);
-
         // Add to the viewable chunks set
-        player.getViewableChunks().add(this);
-
+        Tachyon.getUnsafe().addViewableChunk(player, this);
         // Send the chunk data & light packets to the player
         sendChunk(player);
-
         if (result) {
             PlayerChunkLoadEvent playerChunkLoadEvent = new PlayerChunkLoadEvent(player, chunkX, chunkZ);
             player.callEvent(PlayerChunkLoadEvent.class, playerChunkLoadEvent);
@@ -436,16 +426,15 @@ public abstract class TachyonChunk implements Chunk {
      * Removes the chunk to the player viewing chunks collection
      * and send a {@link PlayerChunkUnloadEvent}.
      *
-     * @param p the viewer to remove
+     * @param player the viewer to remove
      * @return true if the player has just been removed to the viewer collection
      */
     @Override
-    public boolean removeViewer(@NotNull Player p) {
-        TachyonPlayer player = (TachyonPlayer) p;
+    public boolean removeViewer(@NotNull Player player) {
         final boolean result = this.viewers.remove(player);
 
         // Remove from the viewable chunks set
-        player.getViewableChunks().remove(this);
+        Tachyon.getUnsafe().removeViewableChunk(player, this);
 
         if (result) {
             PlayerChunkUnloadEvent playerChunkUnloadEvent = new PlayerChunkUnloadEvent(player, chunkX, chunkZ);
@@ -510,7 +499,7 @@ public abstract class TachyonChunk implements Chunk {
      * Sends a full {@link ChunkDataPacket} to all chunk viewers.
      */
     public synchronized void sendChunkUpdate() {
-        PacketUtils.sendGroupedPacket(getViewers(), getFreshPartialDataPacket());
+        Tachyon.getServer().sendGroupedPacket(getViewers(), getFreshPartialDataPacket());
     }
 
     /**
@@ -521,8 +510,6 @@ public abstract class TachyonChunk implements Chunk {
      * @throws IllegalArgumentException if {@code section} is not a valid section
      */
     public synchronized void sendChunkSectionUpdate(int section, @NotNull Player player) {
-        if (!PlayerUtils.isNettyClient(player))
-            return;
         Check.argCondition(!MathUtils.isBetween(section, 0, CHUNK_SECTION_COUNT),
                 "The chunk section " + section + " does not exist");
 

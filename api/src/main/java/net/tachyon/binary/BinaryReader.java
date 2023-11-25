@@ -41,6 +41,8 @@ public interface BinaryReader {
 
     @NotNull ItemStack readSlot();
 
+    int available();
+
     /**
      * Reads a string size by a var-int.
      * <p>

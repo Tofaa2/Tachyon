@@ -1,4 +1,4 @@
-package net.tachyon.instance;
+package net.tachyon.world;
 
 import com.google.common.collect.Queues;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -12,14 +12,12 @@ import net.tachyon.coordinate.Point;
 import net.tachyon.coordinate.Position;
 import net.tachyon.coordinate.Vec;
 import net.tachyon.data.Data;
-import net.tachyon.data.DataContainer;
 import net.tachyon.entity.*;
 import net.tachyon.block.Block;
 import net.tachyon.block.CustomBlock;
 import net.tachyon.entity.pathfinding.PFInstanceSpace;
 import net.tachyon.event.types.Event;
 import net.tachyon.event.EventCallback;
-import net.tachyon.event.EventHandler;
 import net.tachyon.event.instance.AddEntityToInstanceEvent;
 import net.tachyon.event.instance.InstanceTickEvent;
 import net.tachyon.event.instance.RemoveEntityFromInstanceEvent;
@@ -28,7 +26,6 @@ import net.tachyon.network.packet.server.play.BlockActionPacket;
 import net.tachyon.network.packet.server.play.TimeUpdatePacket;
 import net.tachyon.thread.ThreadProvider;
 import net.tachyon.utils.PacketUtils;
-import net.tachyon.world.*;
 import net.tachyon.world.chunk.ChunkCallback;
 import net.tachyon.utils.ChunkUtils;
 import net.tachyon.utils.entity.EntityUtils;
@@ -37,6 +34,8 @@ import net.tachyon.utils.time.TimeUnit;
 import net.tachyon.utils.time.UpdateOption;
 import net.tachyon.utils.validate.Check;
 import net.tachyon.world.chunk.Chunk;
+import net.tachyon.world.chunk.ChunkGenerator;
+import net.tachyon.world.chunk.TachyonChunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +56,7 @@ import java.util.function.Consumer;
  * you need to be sure to signal the {@link UpdateManager} of the changes using
  * {@link UpdateManager#signalChunkLoad(Instance, int, int)} and {@link UpdateManager#signalChunkUnload(Instance, int, int)}.
  */
-public abstract class Instance implements EventHandler, DataContainer, World {
+public abstract class Instance implements World {
 
     protected static final BlockManager BLOCK_MANAGER = Tachyon.getServer().getBlockmanager();
     protected static final UpdateManager UPDATE_MANAGER = MinecraftServer.getUpdateManager();
@@ -98,7 +97,7 @@ public abstract class Instance implements EventHandler, DataContainer, World {
     protected UUID uniqueId;
 
     // list of scheduled tasks to be executed during the next instance tick
-    protected final Queue<Consumer<Instance>> nextTick = Queues.newConcurrentLinkedQueue();
+    protected final Queue<Consumer<World>> nextTick = Queues.newConcurrentLinkedQueue();
 
     // instance custom data
     private Data data;
@@ -120,7 +119,6 @@ public abstract class Instance implements EventHandler, DataContainer, World {
         this.uniqueId = uniqueId;
         this.dimensionType = dimensionType;
         this.levelType = levelType;
-
         this.worldBorder = new InstanceWorldBorder(this);
     }
 
@@ -131,7 +129,7 @@ public abstract class Instance implements EventHandler, DataContainer, World {
      *
      * @param callback the task to execute during the next instance tick
      */
-    public void scheduleNextTick(@NotNull Consumer<Instance> callback) {
+    public void scheduleNextTick(@NotNull Consumer<World> callback) {
         this.nextTick.add(callback);
     }
 
@@ -1007,7 +1005,7 @@ public abstract class Instance implements EventHandler, DataContainer, World {
     public void tick(long time) {
         // Scheduled tasks
         if (!nextTick.isEmpty()) {
-            Consumer<Instance> callback;
+            Consumer<World> callback;
             while ((callback = nextTick.poll()) != null) {
                 callback.accept(this);
             }

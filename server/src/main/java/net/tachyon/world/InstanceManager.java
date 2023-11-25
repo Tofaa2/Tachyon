@@ -1,10 +1,7 @@
-package net.tachyon.instance;
+package net.tachyon.world;
 
 import net.tachyon.MinecraftServer;
 import net.tachyon.utils.validate.Check;
-import net.tachyon.world.DimensionType;
-import net.tachyon.world.LevelType;
-import net.tachyon.world.WorldManager;
 import net.tachyon.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,6 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.stream.Collectors;
 
 /**
  * Used to register {@link Instance}.
@@ -172,4 +170,50 @@ public final class InstanceManager implements WorldManager {
         MinecraftServer.getUpdateManager().signalInstanceCreate(instance);
     }
 
+    @Override
+    public @NotNull World createWorld(@NotNull UUID uuid, @NotNull DimensionType dimension, @NotNull LevelType levelType) {
+        InstanceContainer instance = new InstanceContainer(uuid, dimension, levelType);
+        registerInstance(instance);
+        return instance;
+    }
+
+    @Override
+    public @NotNull World createWorld(@NotNull DimensionType dimension, @NotNull LevelType levelType) {
+        return createInstanceContainer(dimension, levelType);
+    }
+
+    @Override
+    public @NotNull World createWorld(@NotNull UUID uuid, @NotNull DimensionType dimension) {
+        InstanceContainer instance = new InstanceContainer(uuid, dimension, LevelType.FLAT);
+        registerInstance(instance);
+        return instance;
+    }
+
+    @Override
+    public @NotNull World createWorld(@NotNull DimensionType dimension) {
+        return createInstanceContainer(dimension);
+    }
+
+    @Override
+    public @NotNull World createWorld() {
+        return createInstanceContainer();
+    }
+
+    @Override
+    public @NotNull SharedWorld createSharedWorld(@NotNull World world) {
+        return createSharedInstance((InstanceContainer) world) ;
+    }
+
+    @Override
+    public @NotNull Set<World> getWorlds() {
+        return Set.copyOf(this.instances);
+    }
+
+    @Override
+    public @NotNull Set<SharedWorld> getSharedWorlds() {
+        return this.instances.stream()
+                .filter(instance -> instance instanceof SharedInstance)
+                .map(instance -> (SharedInstance) instance)
+                .collect(Collectors.toUnmodifiableSet());
+    }
 }

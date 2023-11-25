@@ -1,4 +1,4 @@
-package net.tachyon.instance;
+package net.tachyon.world;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
@@ -13,7 +13,7 @@ import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.event.instance.InstanceChunkLoadEvent;
 import net.tachyon.event.instance.InstanceChunkUnloadEvent;
 import net.tachyon.event.player.PlayerBlockBreakEvent;
-import net.tachyon.instance.batch.ChunkGenerationBatch;
+import net.tachyon.world.batch.ChunkGenerationBatch;
 import net.tachyon.block.Block;
 import net.tachyon.block.CustomBlock;
 import net.tachyon.block.rule.BlockPlacementRule;
@@ -23,15 +23,11 @@ import net.tachyon.network.packet.server.play.EffectPacket;
 import net.tachyon.utils.PacketUtils;
 import net.tachyon.utils.block.CustomBlockUtils;
 import net.tachyon.utils.OptionalCallback;
-import net.tachyon.world.chunk.ChunkCallback;
-import net.tachyon.world.chunk.ChunkSupplier;
+import net.tachyon.world.chunk.*;
 import net.tachyon.utils.ChunkUtils;
 import net.tachyon.utils.validate.Check;
-import net.tachyon.world.DimensionType;
-import net.tachyon.world.LevelType;
 import net.tachyon.world.biome.Biome;
 import net.tachyon.UpdateManager;
-import net.tachyon.world.chunk.Chunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -551,7 +547,7 @@ public class InstanceContainer extends Instance {
      * Uses {@link DynamicChunk} by default.
      * <p>
      * WARNING: if you need to save this instance's chunks later,
-     * the code needs to be predictable for {@link IChunkLoader#loadChunk(Instance, int, int, ChunkCallback)}
+     * the code needs to be predictable for {@link IChunkLoader#loadChunk(World, int, int, ChunkCallback)}
      * to create the correct type of {@link TachyonChunk}. tl;dr: Need chunk save = no random type.
      *
      * @param chunkSupplier the new {@link ChunkSupplier} of this instance, chunks need to be non-null

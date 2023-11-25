@@ -1,4 +1,4 @@
-package net.tachyon.instance.batch;
+package net.tachyon.world.batch;
 
 import net.tachyon.world.World;
 import org.jetbrains.annotations.Contract;

@@ -1,7 +1,7 @@
 package net.tachyon.event.instance;
 
 import net.tachyon.event.InstanceEvent;
-import net.tachyon.instance.Instance;
+import net.tachyon.world.Instance;
 import org.jetbrains.annotations.NotNull;
 
 /**

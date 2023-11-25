@@ -2,7 +2,7 @@ package net.tachyon.entity;
 
 import net.tachyon.coordinate.Position;
 import net.tachyon.coordinate.Vec;
-import net.tachyon.instance.Instance;
+import net.tachyon.world.Instance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

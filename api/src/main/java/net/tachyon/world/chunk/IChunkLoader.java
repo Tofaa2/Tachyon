@@ -1,10 +1,10 @@
-package net.tachyon.instance;
+package net.tachyon.world.chunk;
 
-import net.tachyon.MinecraftServer;
+import net.tachyon.Server;
 import net.tachyon.Tachyon;
 import net.tachyon.utils.OptionalCallback;
-import net.tachyon.world.chunk.ChunkCallback;
 import net.tachyon.utils.thread.ServerThread;
+import net.tachyon.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +29,7 @@ public interface IChunkLoader {
      *                 never called if the method returns false. Can be null.
      * @return true if the chunk loaded successfully, false otherwise
      */
-    boolean loadChunk(@NotNull Instance instance, int chunkX, int chunkZ, @Nullable ChunkCallback callback);
+    boolean loadChunk(@NotNull World instance, int chunkX, int chunkZ, @Nullable ChunkCallback callback);
 
     /**
      * Saves a {@link TachyonChunk} with an optional callback for when it is done.
@@ -53,7 +53,7 @@ public interface IChunkLoader {
      */
     default void saveChunks(@NotNull Collection<TachyonChunk> chunks, @Nullable Runnable callback) {
         if (supportsParallelSaving()) {
-            ExecutorService parallelSavingThreadPool = new ServerThread(Tachyon.getServer().getChunkSavingThreadCount(), MinecraftServer.THREAD_NAME_PARALLEL_CHUNK_SAVING, true);
+            ExecutorService parallelSavingThreadPool = new ServerThread(Tachyon.getServer().getChunkSavingThreadCount(), Server.THREAD_NAME_PARALLEL_CHUNK_SAVING, true);
             chunks.forEach(c -> parallelSavingThreadPool.execute(() -> saveChunk(c, null)));
             try {
                 parallelSavingThreadPool.shutdown();

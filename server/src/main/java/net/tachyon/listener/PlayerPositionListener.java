@@ -3,7 +3,7 @@ package net.tachyon.listener;
 import net.tachyon.coordinate.Position;
 import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.event.player.PlayerMoveEvent;
-import net.tachyon.instance.Instance;
+import net.tachyon.world.Instance;
 import net.tachyon.network.packet.client.play.ClientPlayerLookPacket;
 import net.tachyon.network.packet.client.play.ClientPlayerPacket;
 import net.tachyon.network.packet.client.play.ClientPlayerPositionAndLookPacket;

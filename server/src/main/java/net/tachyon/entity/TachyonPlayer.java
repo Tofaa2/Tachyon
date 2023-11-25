@@ -20,8 +20,9 @@ import net.tachyon.event.item.ItemDropEvent;
 import net.tachyon.event.item.ItemUpdateStateEvent;
 import net.tachyon.event.item.PickupExperienceEvent;
 import net.tachyon.event.player.*;
-import net.tachyon.instance.TachyonChunk;
-import net.tachyon.instance.Instance;
+import net.tachyon.world.chunk.Chunk;
+import net.tachyon.world.chunk.TachyonChunk;
+import net.tachyon.world.Instance;
 import net.tachyon.inventory.Inventory;
 import net.tachyon.inventory.PlayerInventory;
 import net.tachyon.item.ItemStack;
@@ -1601,6 +1602,11 @@ public class TachyonPlayer extends TachyonLivingEntity implements Player {
      */
     public Set<TachyonChunk> getViewableChunks() {
         return viewableChunks;
+    }
+
+    @Override
+    public @NotNull Set<Chunk> getViewableChunkCopy() {
+        return Set.copyOf(viewableChunks);
     }
 
     /**

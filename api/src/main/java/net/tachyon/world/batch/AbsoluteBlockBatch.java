@@ -1,11 +1,11 @@
-package net.tachyon.instance.batch;
+package net.tachyon.world.batch;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import net.tachyon.Tachyon;
 import net.tachyon.data.Data;
-import net.tachyon.instance.TachyonChunk;
-import net.tachyon.instance.Instance;
-import net.tachyon.instance.InstanceContainer;
+import net.tachyon.world.World;
+import net.tachyon.world.chunk.TachyonChunk;
 import net.tachyon.utils.ChunkUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -90,7 +90,7 @@ public class AbsoluteBlockBatch implements Batch<Runnable> {
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
     @Override
-    public AbsoluteBlockBatch apply(@NotNull Instance instance, @Nullable Runnable callback) {
+    public AbsoluteBlockBatch apply(@NotNull World instance, @Nullable Runnable callback) {
         return apply(instance, callback, true);
     }
 
@@ -102,7 +102,7 @@ public class AbsoluteBlockBatch implements Batch<Runnable> {
      * @param callback The callback to be executed when the batch is applied
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    public AbsoluteBlockBatch unsafeApply(@NotNull Instance instance, @Nullable Runnable callback) {
+    public AbsoluteBlockBatch unsafeApply(@NotNull World instance, @Nullable Runnable callback) {
         return apply(instance, callback, false);
     }
 
@@ -115,7 +115,7 @@ public class AbsoluteBlockBatch implements Batch<Runnable> {
      *                     Otherwise it will be executed immediately upon completion
      * @return The inverse of this batch, if inverse is enabled in the {@link BatchOption}
      */
-    protected AbsoluteBlockBatch apply(@NotNull Instance instance, @Nullable Runnable callback, boolean safeCallback) {
+    protected AbsoluteBlockBatch apply(@NotNull World instance, @Nullable Runnable callback, boolean safeCallback) {
         if (!this.options.isUnsafeApply()) this.awaitReady();
 
         final AbsoluteBlockBatch inverse = this.options.shouldCalculateInverse() ? new AbsoluteBlockBatch() : null;
@@ -133,11 +133,7 @@ public class AbsoluteBlockBatch implements Batch<Runnable> {
                     // Execute the callback if this was the last chunk to process
                     if (isLast) {
                         if (inverse != null) inverse.readyLatch.countDown();
-
-                        if (instance instanceof InstanceContainer) {
-                            // FIXME: put method in Instance instead
-                            ((InstanceContainer) instance).refreshLastBlockChangeTime();
-                        }
+                        Tachyon.getUnsafe().refreshLastBlockChangeTime(instance);
 
                         if (callback != null) {
                             if (safeCallback) {
