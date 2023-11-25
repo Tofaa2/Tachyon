@@ -2,12 +2,8 @@
  A lightweight fast multi-threaded 1.8 legacy Minecraft server implementation
 
 
-## Usage
-WARNING: Tachyon is still in development and the API is not stable/ missing certain things such as world data.
-
-## Development
-Tachyon utilizes a plugin system to add features to the server. An example of a plugin can be found in the `example-plugin` directory.
-
+## Usage And Development
+For more information regarding how to work with Tachyon, visit our Gitbooks page.
 
 Example of a Tachyon server configuration file:
 ```json
@@ -67,11 +63,6 @@ Example of a Tachyon server configuration file:
 | thread.chunk-saving-thread-count | The amount of chunk saving threads to use. -1 to use the amount of processors                      |
 | proxy.bungee | Whether or not the server is behind a BungeeCord proxy                                                      |
 | proxy.velocity | Whether or not the server is behind a Velocity proxy                                                        |
-
-## Building
-Tachyon uses Gradle as its build system. To build Tachyon, its made from two subprojects, the `api` and the `server` projects.
-To build the full server, run the `shadowJar` project for the `server` project. This will build the server and its dependencies into a single jar file.
-Keep in mind Tachyon depends on JAVA 17 to function.
 
 ## Credits
 
