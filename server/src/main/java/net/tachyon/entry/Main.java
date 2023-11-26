@@ -6,6 +6,8 @@ import net.tachyon.Tachyon;
 import net.tachyon.UnsafeServer;
 import net.tachyon.block.Block;
 import net.tachyon.config.Config;
+import net.tachyon.coordinate.Position;
+import net.tachyon.event.player.PlayerLoginEvent;
 import net.tachyon.extras.MojangAuth;
 import net.tachyon.extras.optifine.OptifineSupport;
 import net.tachyon.extras.proxy.BungeeCordProxy;
@@ -91,7 +93,10 @@ public final class Main {
             }
         });
 
-
+        Tachyon.getServer().getGlobalEventHandler().addEventCallback(PlayerLoginEvent.class, event -> {
+            event.setSpawningWorld(instance);
+            event.getPlayer().setRespawnPoint(new Position(0, 66, 0));
+        });
 
         String[] split = config.get().host().split(":");
         String host = split[0];

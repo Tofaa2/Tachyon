@@ -1,5 +1,4 @@
 plugins {
-    id 'java'
     id 'java-library'
 }
 
@@ -28,5 +27,8 @@ dependencies {
 
     // Path finding
     api 'com.github.MadMartian:hydrazine-path-finding:1.5.4'
+
+    api group: 'org.apache.commons', name: 'commons-text', version: '1.10.0'
+
 
 }

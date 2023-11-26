@@ -1,14 +1,14 @@
 package net.tachyon.listener;
 
-import net.tachyon.command.CommandManager;
-import net.tachyon.command.builder.CommandSyntax;
-import net.tachyon.command.builder.arguments.Argument;
-import net.tachyon.command.builder.parser.ArgumentQueryResult;
-import net.tachyon.command.builder.parser.CommandParser;
-import net.tachyon.command.builder.parser.CommandQueryResult;
-import net.tachyon.command.builder.suggestion.Suggestion;
-import net.tachyon.command.builder.suggestion.SuggestionCallback;
-import net.tachyon.command.builder.suggestion.SuggestionEntry;
+import net.tachyon.command.TachyonCommandManager;
+import net.tachyon.command.CommandSyntax;
+import net.tachyon.command.arguments.Argument;
+import net.tachyon.command.parser.ArgumentQueryResult;
+import net.tachyon.command.parser.CommandParser;
+import net.tachyon.command.parser.CommandQueryResult;
+import net.tachyon.command.suggestion.Suggestion;
+import net.tachyon.command.suggestion.SuggestionCallback;
+import net.tachyon.command.suggestion.SuggestionEntry;
 import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.network.packet.client.play.ClientTabCompletePacket;
 import net.tachyon.network.packet.server.play.TabCompletePacket;
@@ -21,7 +21,7 @@ public class TabCompleteListener {
     public static void listener(ClientTabCompletePacket packet, TachyonPlayer player) {
         final String text = packet.text;
 
-        String commandString = packet.text.replaceFirst(CommandManager.COMMAND_PREFIX, "");
+        String commandString = packet.text.replaceFirst(TachyonCommandManager.COMMAND_PREFIX, "");
         String[] split = commandString.split(StringUtils.SPACE);
         String commandName = split[0];
 

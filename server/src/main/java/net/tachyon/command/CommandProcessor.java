@@ -1,7 +1,5 @@
 package net.tachyon.command;
 
-import net.tachyon.command.builder.Command;
-import net.tachyon.command.builder.SimpleCommand;
 import net.tachyon.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

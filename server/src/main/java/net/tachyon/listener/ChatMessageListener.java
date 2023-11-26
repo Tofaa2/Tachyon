@@ -6,6 +6,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.tachyon.MinecraftServer;
 import net.tachyon.Tachyon;
 import net.tachyon.command.CommandManager;
+import net.tachyon.command.TachyonCommandManager;
 import net.tachyon.entity.Player;
 import net.tachyon.entity.TachyonPlayer;
 import net.tachyon.event.player.PlayerChatEvent;
@@ -20,13 +21,13 @@ import java.util.function.Function;
 
 public class ChatMessageListener {
 
-    private static final CommandManager COMMAND_MANAGER = MinecraftServer.getCommandManager();
+    private static final CommandManager COMMAND_MANAGER = Tachyon.getServer().getCommandManager();
     private static final ConnectionManager CONNECTION_MANAGER = (ConnectionManager) Tachyon.getServer().getConnectionManager();
 
     public static void listener(ClientChatMessagePacket packet, TachyonPlayer player) {
         String message = packet.message;
 
-        final String cmdPrefix = CommandManager.COMMAND_PREFIX;
+        final String cmdPrefix = TachyonCommandManager.COMMAND_PREFIX;
         if (message.startsWith(cmdPrefix)) {
             // The message is a command
             message = message.replaceFirst(cmdPrefix, "");

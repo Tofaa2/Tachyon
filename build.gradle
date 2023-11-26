@@ -1,8 +1,14 @@
 plugins {
     id 'java'
+    id 'signing'
+    id 'maven-publish'
 }
 
 allprojects {
+    apply plugin: 'java'
+    apply plugin: 'signing'
+    apply plugin: 'maven-publish'
+
     group = 'net.tachyon'
     version = '1.0-SNAPSHOT'
 
@@ -11,5 +17,9 @@ allprojects {
         maven {
             url = uri("https://jitpack.io")
         }
+    }
+
+    compileJava {
+        options.encoding = 'UTF-8'
     }
 }

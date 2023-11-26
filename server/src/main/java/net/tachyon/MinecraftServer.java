@@ -3,9 +3,7 @@ package net.tachyon;
 import net.tachyon.block.BlockManager;
 import net.tachyon.data.DataManager;
 import net.tachyon.data.TachyonDataManager;
-import net.tachyon.entity.Entity;
-import net.tachyon.entity.Metadata;
-import net.tachyon.entity.Player;
+import net.tachyon.entity.*;
 import net.tachyon.entity.metadata.EntityMeta;
 import net.tachyon.network.IConnectionManager;
 import net.tachyon.network.packet.server.ServerPacket;
@@ -13,8 +11,7 @@ import net.tachyon.plugin.TachyonPluginManager;
 import net.tachyon.scoreboard.TeamManager;
 import net.tachyon.utils.PacketUtils;
 import net.tachyon.utils.benchmark.BenchmarkManager;
-import net.tachyon.command.CommandManager;
-import net.tachyon.entity.EntityType;
+import net.tachyon.command.TachyonCommandManager;
 import net.tachyon.fluids.Fluid;
 import net.tachyon.world.InstanceContainer;
 import net.tachyon.world.InstanceManager;
@@ -73,7 +70,7 @@ public final class MinecraftServer extends Server {
     private ConnectionManager connectionManager;
     private InstanceManager instanceManager;
     private TachyonBlockManager blockManager;
-    private CommandManager commandManager;
+    private TachyonCommandManager commandManager;
     private TachyonDataManager dataManager;
     private TachyonTeamManager teamManager;
     private SchedulerManager schedulerManager;
@@ -152,7 +149,7 @@ public final class MinecraftServer extends Server {
 
         instanceManager = new InstanceManager();
         blockManager = new TachyonBlockManager();
-        commandManager = new CommandManager();
+        commandManager = new TachyonCommandManager();
         dataManager = new TachyonDataManager();
         teamManager = new TachyonTeamManager(connectionManager);
         schedulerManager = new SchedulerManagerImpl();
@@ -240,8 +237,9 @@ public final class MinecraftServer extends Server {
      *
      * @return the command manager
      */
-    public static CommandManager getCommandManager() {
-        return instance.commandManager;
+    @NotNull
+    public TachyonCommandManager getCommandManager() {
+        return commandManager;
     }
 
 
@@ -304,6 +302,7 @@ public final class MinecraftServer extends Server {
         return instance.started;
     }
 
+
     /**
      * Gets if the server is currently being shutdown using {@link #stopCleanly()}.
      *
@@ -311,6 +310,16 @@ public final class MinecraftServer extends Server {
      */
     public boolean isStopping() {
         return stopping;
+    }
+
+    @Override
+    public @Nullable Entity getEntity(int id) {
+        return TachyonEntity.getEntity(id);
+    }
+
+    @Override
+    public @Nullable Entity getEntity(@NotNull UUID uuid) {
+        return TachyonEntity.getEntity(uuid);
     }
 
     /**

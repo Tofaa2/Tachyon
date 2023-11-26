@@ -1,20 +1,126 @@
 package net.tachyon.item;
 
 import net.kyori.adventure.text.Component;
+import net.tachyon.Tachyon;
+import net.tachyon.attribute.Attribute;
+import net.tachyon.attribute.AttributeOperation;
+import net.tachyon.chat.ChatParser;
 import net.tachyon.item.attribute.ItemAttribute;
 import net.tachyon.item.metadata.ItemMeta;
 import net.tachyon.item.rule.StackingRule;
+import net.tachyon.utils.EnchantmentSetter;
+import net.tachyon.utils.UUIDUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jglrxavpok.hephaistos.nbt.NBTCompound;
+import org.jglrxavpok.hephaistos.nbt.NBTList;
+import org.jglrxavpok.hephaistos.nbt.NBTString;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 public sealed interface ItemStack permits ItemStackImpl {
+
+    static ItemStack fromNBT(Material material, @NotNull NBTCompound nbt) {
+        if (material == Material.AIR) return ItemStack.AIR;
+        Builder builder = ItemStack.builder(material);
+        if (nbt.containsKey("Unbreakable")) builder.unbreakable(nbt.getAsByte("Unbreakable") == 1);
+        if (nbt.containsKey("HideFlags")) builder.rawFlags(nbt.getInt("HideFlags"));
+        if (nbt.containsKey("display")) {
+            final NBTCompound display = nbt.getCompound("display");
+            if (display.containsKey("Name")) {
+                final String rawName = display.getString("Name");
+                final Component displayName = ChatParser.toComponent(rawName);
+                builder.displayName(displayName);
+            }
+            if (display.containsKey("Lore")) {
+                NBTList<NBTString> loreList = display.getList("Lore");
+                List<Component> lore = new ArrayList<>();
+                for (NBTString s : loreList) {
+                    lore.add(ChatParser.toComponent(s.getValue()));
+                }
+                builder.lore(lore);
+            }
+        }
+        // Enchantments
+        if (nbt.containsKey("ench")) {
+            Map<Enchantment, Short> enchants = new HashMap<>();
+
+            loadEnchantments(nbt.getList("ench"), enchants::put);
+            builder.enchantments(enchants);
+        }
+
+        // Attributes
+        if (nbt.containsKey("AttributeModifiers")) {
+            NBTList<NBTCompound> attributes = nbt.getList("AttributeModifiers");
+            final List<ItemAttribute> attributesList = new ArrayList<>();
+            for (NBTCompound attributeNBT : attributes) {
+                final UUID uuid;
+                {
+                    final int[] uuidArray = attributeNBT.getIntArray("UUID");
+                    uuid = UUIDUtils.intArrayToUuid(uuidArray);
+                }
+
+                final double value = attributeNBT.getAsDouble("Amount");
+                final String slot = attributeNBT.containsKey("Slot") ? attributeNBT.getString("Slot") : "MAINHAND";
+                final String attributeName = attributeNBT.getString("AttributeName");
+                final int operation = attributeNBT.getAsInt("Operation");
+                final String name = attributeNBT.getString("Name");
+
+                final Attribute attribute = Attribute.fromKey(attributeName);
+                // Wrong attribute name, stop here
+                if (attribute == null)
+                    break;
+                final AttributeOperation attributeOperation = AttributeOperation.fromId(operation);
+                // Wrong attribute operation, stop here
+                if (attributeOperation == null) {
+                    break;
+                }
+
+                // Add attribute
+                final ItemAttribute itemAttribute = new ItemAttribute(uuid, name, attribute, attributeOperation, value);
+                attributesList.add(itemAttribute);
+            }
+            builder.itemAttributes(attributesList);
+        }
+        // Hide flags
+        {
+            if (nbt.containsKey("HideFlags")) {
+                builder.rawFlags(nbt.getInt("HideFlags"));
+            }
+        }
+        builder.itemMeta((meta) -> {
+            meta.read(nbt);
+        });
+        {
+            if (nbt.containsKey("CanPlaceOn")) {
+                NBTList<NBTString> canPlaceOn = nbt.getList("CanPlaceOn");
+                canPlaceOn.forEach(x -> builder.addPlaceOn(x.getValue()));
+            }
+        }
+        {
+            if (nbt.containsKey("CanDestroy")) {
+                NBTList<NBTString> canPlaceOn = nbt.getList("CanDestroy");
+                canPlaceOn.forEach(x -> {
+                    builder.addDestroyOn(x.getValue());
+                });            }
+        }
+        return builder.build();
+    }
+
+    static void loadEnchantments(NBTList<NBTCompound> enchantments, EnchantmentSetter setter) {
+        for (NBTCompound enchantment : enchantments) {
+            final short level = enchantment.getAsShort("lvl");
+            final short id = enchantment.getAsShort("id");
+            final Enchantment enchant = Enchantment.fromId(id);
+            if (enchant != null) {
+                setter.applyEnchantment(enchant, level);
+            } else {
+                Tachyon.LOGGER.warn("Unknown enchantment type: {}", id);
+            }
+        }
+    }
 
     @NotNull ItemStack AIR = ItemStackImpl.AIR;
 

@@ -1,6 +1,7 @@
 package net.tachyon;
 
 import net.tachyon.block.BlockManager;
+import net.tachyon.command.CommandManager;
 import net.tachyon.data.DataManager;
 import net.tachyon.data.DataType;
 import net.tachyon.data.SerializableData;
@@ -89,6 +90,12 @@ public abstract class Server {
     public File getDataDir() {
         return dataDir;
     }
+
+    public abstract @Nullable Entity getEntity(@NotNull UUID uuid);
+
+    public abstract @Nullable Entity getEntity(int id);
+
+    public abstract @NotNull CommandManager getCommandManager();
 
     /**
      * Gets the consumer executed to show server-list data.

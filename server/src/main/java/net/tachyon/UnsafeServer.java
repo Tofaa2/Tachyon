@@ -3,11 +3,19 @@ package net.tachyon;
 import io.netty.buffer.ByteBuf;
 import net.tachyon.binary.BinaryReader;
 import net.tachyon.binary.BinaryWriter;
+import net.tachyon.block.Block;
 import net.tachyon.data.Data;
 import net.tachyon.data.SerializableData;
 import net.tachyon.data.SerializableDataImpl;
+import net.tachyon.entity.EntityType;
 import net.tachyon.entity.Player;
 import net.tachyon.entity.TachyonPlayer;
+import net.tachyon.item.Enchantment;
+import net.tachyon.item.Material;
+import net.tachyon.namespace.NamespaceID;
+import net.tachyon.particle.Particle;
+import net.tachyon.potion.PotionEffect;
+import net.tachyon.registry.Registries;
 import net.tachyon.world.InstanceContainer;
 import net.tachyon.utils.binary.TachyonBinaryReader;
 import net.tachyon.utils.binary.TachyonBinaryWriter;
@@ -39,6 +47,11 @@ public final class UnsafeServer implements Unsafe {
     }
 
     @Override
+    public @Nullable EntityType getEntityType(NamespaceID id) {
+        return Registries.getEntityType(id);
+    }
+
+    @Override
     public @NotNull SerializableData serializableDataImpl() {
         return new SerializableDataImpl();
     }
@@ -63,5 +76,31 @@ public final class UnsafeServer implements Unsafe {
         if (world instanceof InstanceContainer instance) {
             instance.refreshLastBlockChangeTime();
         }
+    }
+
+    @NotNull
+    @Override
+    public Material getMaterial(NamespaceID id) {
+        return Registries.getMaterial(id);
+    }
+
+    @Override
+    public @Nullable Particle getParticle(NamespaceID id) {
+        return Registries.getParticle(id);
+    }
+
+    @Override
+    public @Nullable Enchantment getEnchantment(NamespaceID id) {
+        return Registries.getEnchantment(id);
+    }
+
+    @Override
+    public @Nullable PotionEffect getPotionEffect(NamespaceID id) {
+        return Registries.getPotionEffect(id);
+    }
+
+    @Override
+    public @NotNull Block getBlock(NamespaceID id) {
+        return Registries.getBlock(id);
     }
 }

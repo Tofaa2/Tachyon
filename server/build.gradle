@@ -1,5 +1,4 @@
 plugins {
-    id 'java'
     id 'application'
 }
 
@@ -26,10 +25,6 @@ dependencies {
     implementation 'io.netty.incubator:netty-incubator-transport-native-io_uring:0.0.4.Final:linux-x86_64'
 
     implementation 'com.google.code.gson:gson:2.10.1'
-
-
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-text
-    implementation group: 'org.apache.commons', name: 'commons-text', version: '1.10.0'
 
     // Noise library for terrain generation
     // https://jitpack.io/#Articdive/Jnoise

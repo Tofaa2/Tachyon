@@ -32,6 +32,14 @@ public interface Player extends LivingEntity, CommandSender {
 
     @NotNull Map<PlayerStatistic, Integer> getStatisticValueMap();
 
+    int getLevel();
+
+    void setLevel(int level);
+
+    float getExp();
+
+    void setExp(float exp);
+
     void sendPluginMessage(@NotNull String channel, @NotNull String message);
 
     void sendPluginMessage(@NotNull String channel, byte[] data);
@@ -51,6 +59,8 @@ public interface Player extends LivingEntity, CommandSender {
     @NotNull PlayerSettings getSettings();
 
     @Nullable Position getRespawnPoint();
+
+    void setRespawnPoint(@Nullable Position position);
 
     @NotNull Set<Chunk> getViewableChunkCopy();
 
