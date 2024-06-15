@@ -1,5 +1,0 @@
-rootProject.name = 'Tachyon'
-include 'server'
-include 'api'
-include 'example-plugin'
-

@@ -1,9 +1,0 @@
-plugins {
-    id 'java'
-    id 'com.github.johnrengelman.shadow' version '7.1.0'
-}
-
-dependencies {
-    compileOnly(project(":api"))
-    annotationProcessor(project(":api"))
-}
