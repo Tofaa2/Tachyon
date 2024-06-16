@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tachyon", "Tachyon.csproj", "{8A131847-530B-49E2-AB31-8AD1852B33DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tachyon", "src\Tachyon\Tachyon.csproj", "{67E4DDF0-3668-48C6-B9B9-F76DED2297DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8A131847-530B-49E2-AB31-8AD1852B33DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A131847-530B-49E2-AB31-8AD1852B33DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A131847-530B-49E2-AB31-8AD1852B33DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A131847-530B-49E2-AB31-8AD1852B33DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67E4DDF0-3668-48C6-B9B9-F76DED2297DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67E4DDF0-3668-48C6-B9B9-F76DED2297DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67E4DDF0-3668-48C6-B9B9-F76DED2297DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67E4DDF0-3668-48C6-B9B9-F76DED2297DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
