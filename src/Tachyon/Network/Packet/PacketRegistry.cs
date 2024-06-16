@@ -14,22 +14,24 @@ public static class PacketRegistry
 
     private static ConcurrentDictionary<int, Func<IByteBuffer, IPacket>>[] _clientPackets =
         new ConcurrentDictionary<int, Func<IByteBuffer, IPacket>>[5];
-
-
-
+    
     public static void Init()
     {
+        for (int i = 0; i < _clientPackets.Length; i++)
+        {
+            _clientPackets[i] = new ConcurrentDictionary<int, Func<IByteBuffer, IPacket>>();
+        }
         
         // Handshake
-        RegisterClient<ClientHandshakePacket>(ConnectionState.HANDSHAKE.Id, 0x00, buffer => new ClientHandshakePacket(buffer));
-        RegisterClient<ClientHandshakeLegacyServerListPingPacket>(ConnectionState.HANDSHAKE.Id, 0xFE, buffer => new ClientHandshakeLegacyServerListPingPacket(buffer));
+        RegisterClient<ClientHandshakePacket>(ConnectionState.HANDSHAKE, 0x00, buffer => new ClientHandshakePacket(buffer));
+        RegisterClient<ClientHandshakeLegacyServerListPingPacket>(ConnectionState.HANDSHAKE, 0xFE, buffer => new ClientHandshakeLegacyServerListPingPacket(buffer));
         
         // Status
         RegisterServer<ServerStatusStatusResponsePacket>(0x00);
         RegisterServer<CommonStatusPingPacket>(0x01);
         
-        RegisterClient<ClientStatusStatusRequestPacket>(ConnectionState.STATUS.Id, 0x00, buffer => new ClientStatusStatusRequestPacket(buffer));
-        RegisterClient<CommonStatusPingPacket>(ConnectionState.STATUS.Id, 0x01, buffer => new CommonStatusPingPacket(buffer));
+        RegisterClient<ClientStatusStatusRequestPacket>(ConnectionState.STATUS, 0x00, buffer => new ClientStatusStatusRequestPacket(buffer));
+        RegisterClient<CommonStatusPingPacket>(ConnectionState.STATUS, 0x01, buffer => new CommonStatusPingPacket(buffer));
     }
     
     
@@ -38,16 +40,10 @@ public static class PacketRegistry
         _serverPacketTypes[typeof(T)] = id;
     }
 
-    private static void RegisterClient<T>(int state, int packetId, Func<IByteBuffer, IPacket> supplier)
-        where T : IPacket
-    {
-        var dict = _clientPackets[state];
-        dict[packetId] = supplier;
-    }
-    
+
     private static void RegisterClient<T>(ConnectionState state, int packetId, Func<IByteBuffer, IPacket> supplier) where T : IPacket
     {
-        var dict = _clientPackets[state.Id]!;
+        var dict = _clientPackets[(int)state]!;
         dict[packetId] = supplier;
     }
 
@@ -67,7 +63,7 @@ public static class PacketRegistry
 
     public static IPacket? CreateClientPacket(ConnectionState state, int packetId, IByteBuffer buffer)
     {
-        var dict = _clientPackets[state.Id]!;
+        var dict = _clientPackets[(int)state]!;
         return dict[packetId](buffer);
     }
     

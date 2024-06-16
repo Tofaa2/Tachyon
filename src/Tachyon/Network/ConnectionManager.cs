@@ -7,6 +7,6 @@ namespace Tachyon.Network;
 public class ConnectionManager
 {
     
-    public static readonly ConcurrentDictionary<ISocketChannel, PlayerConnection> Connections = new();
+    public readonly ConcurrentDictionary<ISocketChannel, PlayerConnection> Connections = new();
     
 }

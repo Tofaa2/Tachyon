@@ -7,5 +7,4 @@ namespace Tachyon.Network.Packet;
 public interface IGenericPacket;
 
 public interface IPacket : IWritable, IGenericPacket;
-
 public record FramedPacket(IByteBuffer Body) : IGenericPacket;

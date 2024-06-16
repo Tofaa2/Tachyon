@@ -18,11 +18,4 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Network\Packet\Type\Configuration\" />
-    <Folder Include="Network\Packet\Type\Login\" />
-    <Folder Include="Network\Packet\Type\Play\" />
-    <Folder Include="Utils\" />
-  </ItemGroup>
-
 </Project>

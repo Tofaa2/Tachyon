@@ -11,7 +11,7 @@ public record ClientHandshakePacket(int Protocol, string Address, ushort Port, C
         reader.ReadVarInt(),
         reader.ReadStr(MaxAddrSize),
         reader.ReadUnsignedShort(),
-        ConnectionState.FromId(reader.ReadVarInt())
+        reader.ReadEnum<ConnectionState>()
         ) {}
     
     private const int MaxAddrSize = 255;
@@ -21,6 +21,6 @@ public record ClientHandshakePacket(int Protocol, string Address, ushort Port, C
         writer.WriteVarInt(Protocol);
         writer.WriteStr(Address, MaxAddrSize);
         writer.WriteShort(Port);
-        writer.WriteVarInt(NextState.Id);
+        writer.WriteEnum<ConnectionState>(NextState);
     }
 }

@@ -3,20 +3,20 @@ using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using Tachyon.Network.Codec;
+using Tachyon.Network.Netty.Codec;
 
-namespace Tachyon.Network;
+namespace Tachyon.Network.Netty;
 
-public static class NettyServer
+public class NettyServer
 {
 
-    private static ServerBootstrap _bootstrap;
-    private static IEventLoopGroup _boss, _worker;
-    private static IChannel _channel;
-    private static Task _task;
+    private ServerBootstrap _bootstrap;
+    private IEventLoopGroup _boss, _worker;
+    private IChannel _channel;
+    private Task _task;
+    private Tachyon _server;
     
-    
-    public static void init()
+    public void Init()
     {
         _boss = new MultithreadEventLoopGroup(1);
         _worker = new MultithreadEventLoopGroup(10);
@@ -33,22 +33,31 @@ public static class NettyServer
                 channel.Pipeline
                     .AddLast("timeout", new ReadTimeoutHandler(30))
                     .AddLast("size-decoder", new PacketSizeDecoder())
-                    .AddLast("packet-decoder", new PacketDecoder())
+                    .AddLast("packet-decoder", new PacketDecoder(connection))
                     .AddLast("size-encoder", new PacketSizeEncoder())
                     .AddLast("packet-encoder", new PacketEncoder())
                     .AddLast("session", connection);
-                connection.SetConnectionState(ConnectionState.HANDSHAKE);
-                ConnectionManager.Connections[channel] = connection;
+                _server.ConnectionManager.Connections[channel] = connection;
+                Console.WriteLine("Channel handler added to pipeline.");
             }));
     }
 
-    public static void Start()
+    public void Start()
     {
         _task = _bootstrap.BindAsync().ContinueWith(t =>
         {
+            if (!t.IsCompletedSuccessfully)
+                Console.WriteLine("Failed to start server.");
             _channel = t.Result;
             Console.WriteLine("Server started on port 25565");
         });
+    }
+    
+    public void Stop()
+    {
+        _channel.CloseAsync().Wait();
+        _boss.ShutdownGracefullyAsync().Wait();
+        _worker.ShutdownGracefullyAsync().Wait();
     }
 
 }

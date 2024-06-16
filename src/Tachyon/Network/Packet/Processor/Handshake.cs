@@ -7,6 +7,7 @@ internal class Handshake : PacketProcessor
 {
     public override void Process(IPacket packet)
     {
+        Console.WriteLine("??????");
         if (packet is ClientHandshakePacket handshake)
         {
             var next = handshake.NextState;
