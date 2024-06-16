@@ -110,6 +110,7 @@ public class PlayerConnection : SimpleChannelInboundHandler<IPacket>
         if (!_channel.Open) return;
         try
         {
+            Console.WriteLine("reading packet " + msg.GetType());
             _packetProcessor.Process(msg);
         }
         catch (Exception e)

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Tachyon")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+04dab31aed9407b9345f6134ed82815690af5b3c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e7c014e7c261a363606547d3f99e5add9822ea74")]
 [assembly: System.Reflection.AssemblyProductAttribute("Tachyon")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Tachyon")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
