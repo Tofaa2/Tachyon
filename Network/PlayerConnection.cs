@@ -1,187 +1,120 @@
-﻿using System.Collections.Concurrent;
-using System.Net;
-using System.Net.Sockets;
-using DotNetty.Buffers;
-using DotNetty.Transport.Channels.Sockets;
-using Tachyon.Entity;
-using Tachyon.Network.Binary;
-using Tachyon.Network.Netty;
+﻿using DotNetty.Buffers;
+using DotNetty.Common.Utilities;
+using DotNetty.Transport.Channels;
 using Tachyon.Network.Packet;
-using Tachyon.Network.Processor;
-using Tachyon.Utils;
+using Tachyon.Network.Packet.Processor;
 
 namespace Tachyon.Network;
 
-public class PlayerConnection(TachyonServer server, ISocketChannel channel)
+public class PlayerConnection : SimpleChannelInboundHandler<IPacket>
 {
-
-    public static readonly int FLUSH_SIZE = 20000;
-
-    public readonly IByteBuffer TickBuffer = PooledByteBufferAllocator.Default.DirectBuffer();
-    public readonly EndPoint Address = channel.RemoteAddress;
-    private volatile ConnectionState _state;
-    public ConnectionState ConnectionState
-    {
-        get => _state;
-        set => throw new Exception("State is read-only");
-    }
-
-    public bool Online { get; private set; } = true;
-    private Player? _player;
-    public PacketProcessor PacketProcessor { get; private set; }
     
-    public void Internal_UpdateOnlineStatus(bool online)
-    {
-        Online = online;
-    }
+    public static readonly AttributeKey<ConnectionState> CONNECTION_STATE_ATTRIBUTE = AttributeKey<ConnectionState>.NewInstance("connection-state");
+
+
+    internal volatile ConnectionState _connectionState;
+    private volatile PacketProcessor _packetProcessor;
+
+    private IChannel _channel;
+
+
+    private volatile IByteBuffer _tickBuffer = Unpooled.DirectBuffer();
+    private object _tickBufferLock = new();
     
-    public void Disconnect()
+    public void SendPacket(IPacket packet)
     {
-        Online = false;
-        channel.CloseAsync();
-    }
-    
-    public void SwitchConnectionState(ConnectionState state)
-    {
-        _state = state;
-        PacketProcessor = state switch
+        lock (_tickBufferLock)
         {
-            ConnectionState.PLAY => PacketProcessor.Play(server, this),
-            ConnectionState.HANDSHAKE => PacketProcessor.Handshake(server, this),
-            ConnectionState.LOGIN => PacketProcessor.Login(server, this),
-            ConnectionState.CONFIGURATION => PacketProcessor.Configuration(server, this),
-            ConnectionState.STATUS => PacketProcessor.Status(server, this),
-            _ => PacketProcessor
-        };
-        Console.WriteLine("Switched packet state to " + state);
-    }
-    
-    public void SendPacket(IServerPacket serverPacket) {
-        if (!channel.Active)
-            return;
-
-        if (ShouldSendPacket(serverPacket)) {
-            if (_player != null) {
-                WriteRaw(serverPacket);
-                // Flush happen during #update()
-                // if (serverPacket instanceof CacheablePacket cacheablePacket && Tachyon.getServer().isPacketCachingEnabled()) {
-                //     final UUID identifier = cacheablePacket.getIdentifier();
-                //
-                //     if (identifier == null) {
-                //         // This packet explicitly asks to do not retrieve the cache
-                //         write(serverPacket);
-                //     } else {
-                //         final long timestamp = cacheablePacket.getTimestamp();
-                //         // Try to retrieve the cached buffer
-                //         TemporaryCache<TimedBuffer> temporaryCache = cacheablePacket.getCache();
-                //         TimedBuffer timedBuffer = temporaryCache.retrieve(identifier);
-                //
-                //         // Update the buffer if non-existent or outdated
-                //         final boolean shouldUpdate = timedBuffer == null ||
-                //                                      timestamp > timedBuffer.getTimestamp();
-                //
-                //         if (shouldUpdate) {
-                //             final ByteBuf buffer = PacketUtils.createFramedPacket(serverPacket, false);
-                //             timedBuffer = new TimedBuffer(buffer, timestamp);
-                //         }
-                //
-                //         temporaryCache.cache(identifier, timedBuffer);
-                //         write(new FramedPacket(timedBuffer.getBuffer()));
-                //     }
-                //
-                // } else {
-                //     write(serverPacket);
-                // }
-            } else {
-                // Player is probably not logged yet
-                WriteAndFlush(serverPacket);
+            if (_tickBuffer.ReferenceCount > 0)
+            {
+                PacketFraming.WriteFramedPacket(_tickBuffer, packet);
             }
         }
     }
 
-    public void WriteAndFlush(object data)
+    public void SendPacketNow(IPacket packet)
+    {
+        WriteAndFlush(packet);
+    }
+
+    private void WriteAndFlush(IPacket packet)
     {
         WriteWaitingPackets();
-        var future = channel.WriteAndFlushAsync(data);
-    }
-    
-    private bool ShouldSendPacket(IServerPacket packet)
-    {
-        return true; // TODO:
+        var future = _channel.WriteAndFlushAsync(packet);
     }
 
-    public void Tick()
+    public void Disconnect()
     {
-        if (channel.Active)
+        if (_channel.Open)
         {
-            WriteWaitingPackets();
-            channel.Flush();
-        }
-        
-        // TODO: Rate limitations
-    }
-
-    public void WriteRaw(object data)
-    {
-        switch (data)
-        {
-            case FramedPacket packet:
-            {
-                lock (TickBuffer)
-                {
-                    var body = packet.Body;
-                    TickBuffer.WriteBytes(body, body.ReaderIndex, body.ReadableBytes);
-                    PreventiveWrite();
-                }
-
-                break;
-            }
-            case IByteBuffer buffer:
-            {
-                lock (TickBuffer)
-                {
-                    TickBuffer.WriteBytes(buffer, buffer.ReaderIndex, buffer.ReadableBytes);
-                    PreventiveWrite();
-                }
-
-                break;
-            }
-            case IServerPacket packet:
-            {
-                var framedPacket = BufUtil.createFramedPacket(packet, true);
-                lock (TickBuffer)
-                {
-                    TickBuffer.WriteBytes(framedPacket);
-                    PreventiveWrite();
-                }
-                framedPacket.Release();
-                break;
-            }
-            default:
-                throw new ArgumentException("Invalid data type");
+            _channel.CloseAsync();
         }
     }
 
-    private void PreventiveWrite()
+    private void Flush()
     {
-        if (TickBuffer.WriterIndex > FLUSH_SIZE)
-        {
-            WriteWaitingPackets();
-        }
+        var bufferSize = _tickBuffer.WriterIndex;
+        if (bufferSize < 0 || !_channel.Active) return;
+        WriteWaitingPackets();
+        _channel.Flush();
     }
-    
+
     private void WriteWaitingPackets()
     {
-        lock (TickBuffer)
+        if (_tickBuffer.WriterIndex == 0) return;
+        IByteBuffer? copy = null;
+        lock (_tickBufferLock)
         {
-            var copy = TickBuffer.Copy();
-            var writerFuture = channel.WriteAsync(new FramedPacket(copy));
-            writerFuture.ContinueWith((task) =>
-            {
-                copy.Release();
-            });
-            TickBuffer.Clear();
+            if (_tickBuffer.ReferenceCount <= 0) return;
+            copy = _tickBuffer;
+            _tickBuffer = _tickBuffer.Allocator.Buffer(_tickBuffer.WriterIndex);
         }
+
+        var task = _channel.WriteAsync(new FramedPacket(copy));
+        task.ContinueWith(t =>
+        {
+            copy.Release();
+        });
     }
     
+    public void SetConnectionState(ConnectionState state)
+    {
+        _connectionState = state;
+        if (state == ConnectionState.HANDSHAKE)
+        {
+            _packetProcessor = PacketProcessor.Handshake(this);
+        }
+        else if (state == ConnectionState.STATUS)
+        {
+            _packetProcessor = PacketProcessor.Status(this);
+        }
+    }
+
+    public override void ChannelInactive(IChannelHandlerContext context)
+    {
+        lock (_tickBufferLock)
+        {
+            _tickBuffer.Release();
+        }
+    }
+
+    public override void ChannelActive(IChannelHandlerContext context)
+    {
+        base.ChannelActive(context);
+        _channel = context.Channel;
+        _channel.Configuration.AutoRead = true;
+    }
+
+    protected override void ChannelRead0(IChannelHandlerContext ctx, IPacket msg)
+    {
+        if (!_channel.Open) return;
+        try
+        {
+            _packetProcessor.Process(msg);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.StackTrace);
+        }
+    }
 }

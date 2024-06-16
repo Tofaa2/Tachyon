@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Tofaa\\source\\repos\\Tachyon\\Tachyon.csproj": {}
+    "D:\\Github\\Tachyon\\Tachyon.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Tofaa\\source\\repos\\Tachyon\\Tachyon.csproj": {
+    "D:\\Github\\Tachyon\\Tachyon.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Tofaa\\source\\repos\\Tachyon\\Tachyon.csproj",
+        "projectUniqueName": "D:\\Github\\Tachyon\\Tachyon.csproj",
         "projectName": "Tachyon",
-        "projectPath": "C:\\Users\\Tofaa\\source\\repos\\Tachyon\\Tachyon.csproj",
+        "projectPath": "D:\\Github\\Tachyon\\Tachyon.csproj",
         "packagesPath": "C:\\Users\\Tofaa\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Tofaa\\source\\repos\\Tachyon\\obj\\",
+        "outputPath": "D:\\Github\\Tachyon\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Tofaa\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -62,6 +62,10 @@
             "DotNetty.Transport": {
               "target": "Package",
               "version": "[0.7.6, )"
+            },
+            "Joveler.Compression.ZLib": {
+              "target": "Package",
+              "version": "[5.0.0, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",

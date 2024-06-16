@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "5L8q7cVbLB0S8Uyv8kUEFyRjGddUktoQC9rluWrDw42mxf2WnM+Uui0t/tpZ7AwttSTsRgRne2cVH/pF4PgT0g==",
+  "dgSpecHash": "jAbqLIk1OAc0Tt4/doervNNyrcfDv7TUFCQtCO6Zpg/qFhcIwTT5h6Kn1uAIK3z1ppIsCNc9cFcNVuNzd/jCBQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Tofaa\\source\\repos\\Tachyon\\Tachyon.csproj",
+  "projectFilePath": "D:\\Github\\Tachyon\\Tachyon.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tofaa\\.nuget\\packages\\dotnetty.buffers\\0.7.6\\dotnetty.buffers.0.7.6.nupkg.sha512",
     "C:\\Users\\Tofaa\\.nuget\\packages\\dotnetty.codecs\\0.7.6\\dotnetty.codecs.0.7.6.nupkg.sha512",
@@ -10,6 +10,8 @@
     "C:\\Users\\Tofaa\\.nuget\\packages\\dotnetty.common\\0.7.6\\dotnetty.common.0.7.6.nupkg.sha512",
     "C:\\Users\\Tofaa\\.nuget\\packages\\dotnetty.handlers\\0.7.6\\dotnetty.handlers.0.7.6.nupkg.sha512",
     "C:\\Users\\Tofaa\\.nuget\\packages\\dotnetty.transport\\0.7.6\\dotnetty.transport.0.7.6.nupkg.sha512",
+    "C:\\Users\\Tofaa\\.nuget\\packages\\joveler.compression.zlib\\5.0.0\\joveler.compression.zlib.5.0.0.nupkg.sha512",
+    "C:\\Users\\Tofaa\\.nuget\\packages\\joveler.dynloader\\2.3.0\\joveler.dynloader.2.3.0.nupkg.sha512",
     "C:\\Users\\Tofaa\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\5.0.0\\microsoft.extensions.dependencyinjection.5.0.0.nupkg.sha512",
     "C:\\Users\\Tofaa\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\5.0.0\\microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512",
     "C:\\Users\\Tofaa\\.nuget\\packages\\microsoft.extensions.logging\\5.0.0\\microsoft.extensions.logging.5.0.0.nupkg.sha512",

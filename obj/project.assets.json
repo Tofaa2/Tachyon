@@ -110,6 +110,61 @@
           }
         }
       },
+      "Joveler.Compression.ZLib/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Joveler.DynLoader": "2.3.0"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Joveler.Compression.ZLib.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Joveler.Compression.ZLib.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux-arm/native/libz.so": {
+            "assetType": "native",
+            "rid": "linux-arm"
+          },
+          "runtimes/linux-arm64/native/libz.so": {
+            "assetType": "native",
+            "rid": "linux-arm64"
+          },
+          "runtimes/linux-x64/native/libz.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/osx-arm64/native/libz.dylib": {
+            "assetType": "native",
+            "rid": "osx-arm64"
+          },
+          "runtimes/osx-x64/native/libz.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/win-arm64/native/zlib1.dll": {
+            "assetType": "native",
+            "rid": "win-arm64"
+          },
+          "runtimes/win-x64/native/zlib1.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x86/native/zlib1.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          }
+        }
+      },
+      "Joveler.DynLoader/2.3.0": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.1/Joveler.DynLoader.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Joveler.DynLoader.dll": {}
+        }
+      },
       "Microsoft.Extensions.DependencyInjection/5.0.0": {
         "type": "package",
         "dependencies": {
@@ -357,6 +412,47 @@
         "lib/netstandard2.0/DotNetty.Transport.xml"
       ]
     },
+    "Joveler.Compression.ZLib/5.0.0": {
+      "sha512": "oqGWE1c9Cs0wr3HsSgBP29VG+00AM1q4ivfYrDN4nI5y6gYFjdEztEIXQatSeeDoToieZilg0M/JS8JLEAnx5Q==",
+      "type": "package",
+      "path": "joveler.compression.zlib/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "build/net46/Joveler.Compression.ZLib.targets",
+        "images/Logo.png",
+        "joveler.compression.zlib.5.0.0.nupkg.sha512",
+        "joveler.compression.zlib.nuspec",
+        "lib/net46/Joveler.Compression.ZLib.dll",
+        "lib/netcoreapp3.1/Joveler.Compression.ZLib.dll",
+        "lib/netstandard2.0/Joveler.Compression.ZLib.dll",
+        "runtimes/linux-arm/native/libz.so",
+        "runtimes/linux-arm64/native/libz.so",
+        "runtimes/linux-x64/native/libz.so",
+        "runtimes/osx-arm64/native/libz.dylib",
+        "runtimes/osx-x64/native/libz.dylib",
+        "runtimes/win-arm64/native/zlib1.dll",
+        "runtimes/win-x64/native/zlib1.dll",
+        "runtimes/win-x86/native/zlib1.dll"
+      ]
+    },
+    "Joveler.DynLoader/2.3.0": {
+      "sha512": "B/MvOvjx+gt/ReMxYTEguJJtPXxDqyQwxR9laNDhORb3RDy6t7sALLD8kPW5qEJDqS8Q1MZzAif1vVmFYJcIWA==",
+      "type": "package",
+      "path": "joveler.dynloader/2.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "images/Logo.png",
+        "joveler.dynloader.2.3.0.nupkg.sha512",
+        "joveler.dynloader.nuspec",
+        "lib/net46/Joveler.DynLoader.dll",
+        "lib/netcoreapp3.1/Joveler.DynLoader.dll",
+        "lib/netstandard2.0/Joveler.DynLoader.dll"
+      ]
+    },
     "Microsoft.Extensions.DependencyInjection/5.0.0": {
       "sha512": "Rc2kb/p3Ze6cP6rhFC3PJRdWGbLvSHZc0ev7YlyeU6FmHciDMLrhoVoTUEzKPhN5ZjFgKF1Cf5fOz8mCMIkvpA==",
       "type": "package",
@@ -581,6 +677,7 @@
       "DotNetty.Common >= 0.7.6",
       "DotNetty.Handlers >= 0.7.6",
       "DotNetty.Transport >= 0.7.6",
+      "Joveler.Compression.ZLib >= 5.0.0",
       "Newtonsoft.Json >= 13.0.3"
     ]
   },
@@ -590,11 +687,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Tofaa\\source\\repos\\Tachyon\\Tachyon.csproj",
+      "projectUniqueName": "D:\\Github\\Tachyon\\Tachyon.csproj",
       "projectName": "Tachyon",
-      "projectPath": "C:\\Users\\Tofaa\\source\\repos\\Tachyon\\Tachyon.csproj",
+      "projectPath": "D:\\Github\\Tachyon\\Tachyon.csproj",
       "packagesPath": "C:\\Users\\Tofaa\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Tofaa\\source\\repos\\Tachyon\\obj\\",
+      "outputPath": "D:\\Github\\Tachyon\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Tofaa\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -645,6 +742,10 @@
           "DotNetty.Transport": {
             "target": "Package",
             "version": "[0.7.6, )"
+          },
+          "Joveler.Compression.ZLib": {
+            "target": "Package",
+            "version": "[5.0.0, )"
           },
           "Newtonsoft.Json": {
             "target": "Package",

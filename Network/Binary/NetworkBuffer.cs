@@ -1,97 +1,195 @@
-﻿using DotNetty.Buffers;
+﻿using System.Text;
+using DotNetty.Buffers;
+using DotNetty.Codecs;
 
 namespace Tachyon.Network.Binary;
 
-public class NetworkBuffer
+/** Static helper extensions for networking. */
+public static class NetworkBuffer
 {
+    private static readonly int SegmentBits = 0x7F;
+    private static readonly int ContinueBit = 0x80;
 
-    public IByteBuffer Buffer { get; internal set; }
-    
-    
-    
-    public NetworkBuffer(IByteBuffer buffer)
+    public static int Write3EmptyBytes(this IByteBuffer buffer)
     {
-        Buffer = buffer;
+        var index = buffer.WriterIndex;
+        buffer.WriteMedium(0);
+        return index;
     }
 
-     public T Read<T>(INetworkBufferType<T> type)
+    public static void Write3ByteVarInt(this IByteBuffer buffer, int startIndex, int value)
     {
-        return type.Read(this);
+        var originalIndex = buffer.WriterIndex;
+        buffer.SetWriterIndex(startIndex);
+        var encoded = (value & 0x7F) | 0x80 << 16 | ((value >> 7) & 0x7F | 0x80 << 8) | (value >> 14);
+        buffer.WriteMedium(encoded);
+        buffer.SetWriterIndex(originalIndex);
     }
-    
-    public void Write<T>(INetworkBufferType<T> type, T value)
-    {
-        type.Write(this, value);
-    }
-    
-    public void WriteCollection<T>(INetworkBufferType<T> type, IEnumerable<T> collection, int sizeCap)
-    {
-        var enumerable = collection as T[] ?? collection.ToArray();
-        int count = enumerable.Count();
-        if (count > sizeCap)
-        {
-            throw new ArgumentOutOfRangeException(nameof(collection), $"Collection size is greater than {sizeCap}");
-        }
-        Write(NetworkBufferTypes.VAR_INT, count);
-        foreach (var element in enumerable)
-        {
-            Write(type, element);
-        }
-    }
-    
-    public void WriteCollection<T>(INetworkBufferType<T> type, IEnumerable<T> collection)
-    {
-        WriteCollection(type, collection, int.MaxValue);
-    }
-    
-    public void WriteEnum<T>(T value) where T : Enum
-    {
-        Write(NetworkBufferTypes.VAR_INT, Convert.ToInt32(value));
-    }
-    
-    public void WriteOptional<T>(INetworkBufferType<T> type, T? value)
-    {
-        Write(NetworkBufferTypes.BOOLEAN, value != null);
-        if (value != null)
-        {
-            Write(type, value);
-        }
-    }
-    
-    public IEnumerable<T> ReadCollection<T>(INetworkBufferType<T> type, int sizeCap)
-    {
-        var size = Read(NetworkBufferTypes.VAR_INT);
-        if (size > sizeCap)
-        {
-            throw new ArgumentOutOfRangeException(nameof(size), $"Collection size is greater than {sizeCap}");
-        }
-        for (int i = 0; i < size; i++)
-        {
-            yield return Read(type);
-        }
-    }
-    
-    public IEnumerable<T> ReadCollection<T>(INetworkBufferType<T> type)
-    {
-        return ReadCollection(type, int.MaxValue);
-    }
-    
-    public T ReadEnum<T>() where T : Enum
+
+    public static T ReadEnum<T>(this IByteBuffer buffer) where T : Enum
     {
         var values = Enum.GetValues(typeof(T));
-        var value = Read(NetworkBufferTypes.INT);
-        if (value < 0 || value >= values.Length)
-        {
-            throw new ArgumentOutOfRangeException(nameof(value), $"Value is out of range for enum {typeof(T).Name}");
-        }
-        return (T) values.GetValue(value);
+        var index = buffer.ReadVarInt();
+        return (T) values.GetValue(index);
     }
     
-    public T? ReadOptional<T>(INetworkBufferType<T> type)
+    public static void WriteEnum<T>(this IByteBuffer buffer, T value) where T : Enum
     {
-        var exists = Read(NetworkBufferTypes.BOOLEAN);
-        if (!exists) return default;
-        return Read(type);
+        buffer.WriteVarInt(Convert.ToInt32(value));
+    }
+     
+    public static string ReadStr(this IByteBuffer buffer, int maxLength)
+    {
+        var length = buffer.ReadVarInt();
+        if (length < 0) throw new DecoderException("The received encoded string length is less than zero! Weird string!");
+        if (length > maxLength * 4) throw new DecoderException("The received string length is longer than maximum allowed (" + length + " > " + maxLength * 4 + ")");
+        var str = Encoding.UTF8.GetString(buffer.ReadAvailableBytes(length));
+        if (str.Length > maxLength) throw new DecoderException("The received string length is longer than maximum allowed (" + length + " > " + maxLength + ")");
+        return str;
+    }
+
+    public static string ReadStr(this IByteBuffer buffer)
+    {
+        return buffer.ReadStr(short.MaxValue);
+    }
+
+    public static void WriteStr(this IByteBuffer buffer, string value, int maxLength)
+    {
+        var bytes = Encoding.UTF8.GetBytes(value);
+        if (bytes.Length > maxLength) throw new EncoderException("String too big (was " + bytes.Length + " bytes encoded, max " + maxLength + ")");
+        buffer.WriteVarInt(bytes.Length);
+        buffer.WriteBytes(bytes);
+    }
+    
+    public static void WriteStr(this IByteBuffer buffer, string value)
+    {
+        buffer.WriteStr(value, short.MaxValue);
+    }
+
+    public static byte[] ReadVarIntByteArray(this IByteBuffer buffer)
+    {
+        return buffer.ReadAvailableBytes(buffer.ReadVarInt());
+    }
+
+    public static byte[] ReadVarIntByteArray(this IByteBuffer buffer, int maxLen)
+    {
+        var length = buffer.ReadVarInt();
+        if (length < 0) throw new DecoderException("The received encoded array length is less than zero! Weird array!");
+        return buffer.ReadAvailableBytes(length);
+    }
+
+    public static void WriteVarIntByteArray(this IByteBuffer buffer, byte[] value)
+    {
+        buffer.WriteVarInt(value.Length);
+        buffer.WriteBytes(value);
+    }
+
+    public static void WriteLongArray(this IByteBuffer buffer, long[] value)
+    {
+        buffer.WriteVarInt(value.Length);
+        for (var i = 0; i < value.Length; i++) buffer.WriteLong(value[i]);
+    }
+
+    public static long[] ReadLongArray(this IByteBuffer buffer)
+    {
+        var length = buffer.ReadVarInt();
+        var value = new long[length];
+        for (var i = 0; i < length; i++) value[i] = buffer.ReadLong();
+        return value;
+    }
+
+    public static Guid ReadUUID(this IByteBuffer buffer)
+    {
+        long a = buffer.ReadLong();
+        long b = buffer.ReadLong();
+        byte[] guidData = new byte[16];
+        Array.Copy(BitConverter.GetBytes(a), guidData, 8);
+        Array.Copy(BitConverter.GetBytes(b), 0, guidData, 8, 8);
+        return new Guid(guidData); // Thanks c#
+    }
+
+    public static void WriteUUID(this IByteBuffer buffer, Guid uuid)
+    {
+        var bytes = uuid.ToByteArray();
+        var long1 = BitConverter.ToInt64(bytes, 0);
+        var long2 = BitConverter.ToInt64(bytes, 8);
+        buffer.WriteLong(long1);
+        buffer.WriteLong(long2);
+    }
+
+    public static byte[] ReadAvailableBytes(this IByteBuffer buffer, int length)
+    {
+        var bytes = new byte[length];
+        buffer.ReadBytes(bytes);
+        return bytes;
+    }
+    
+    public static long ReadVarLong(this IByteBuffer buffer)
+    {
+        long value = 0;
+        int position = 0;
+        byte currentByte;
+
+        while (true) {
+            currentByte = buffer.ReadByte();
+            value |= (long) (currentByte & SegmentBits) << position;
+
+            if ((currentByte & ContinueBit) == 0) break;
+
+            position += 7;
+
+            if (position >= 64) throw new IOException("VarLong is too big");
+        }
+
+        return value;
+    }
+
+    public static void WriteVarLong(this IByteBuffer buffer, long value)
+    {
+        while (true) {
+            if ((value & ~((long) SegmentBits)) == 0) {
+                buffer.WriteByte((byte)value);
+                return;
+            }
+
+            buffer.WriteByte((byte)(value & SegmentBits) | ContinueBit);
+
+            // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
+            value >>>= 7;
+        }
+    }
+    
+    public static int ReadVarInt(this IByteBuffer buffer)
+    {
+        int value = 0;
+        int position = 0;
+        byte currentByte;
+
+        while (true) {
+            currentByte = buffer.ReadByte();
+            value |= (currentByte & SegmentBits) << position;
+
+            if ((currentByte & ContinueBit) == 0) break;
+
+            position += 7;
+
+            if (position >= 32) throw new IOException("VarInt is too big");
+        }
+
+        return value;
+    }
+
+    public static void WriteVarInt(this IByteBuffer buffer, int value)
+    {
+        while (true) {
+            if ((value & ~SegmentBits) == 0) {
+                buffer.WriteByte(value);
+                return;
+            }
+
+            buffer.WriteByte((value & SegmentBits) | ContinueBit);
+            value >>>= 7;
+        }
     }
     
 }

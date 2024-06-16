@@ -14,13 +14,15 @@
     <PackageReference Include="DotNetty.Common" Version="0.7.6" />
     <PackageReference Include="DotNetty.Handlers" Version="0.7.6" />
     <PackageReference Include="DotNetty.Transport" Version="0.7.6" />
+    <PackageReference Include="Joveler.Compression.ZLib" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Network\Packet\Configuration\" />
-    <Folder Include="Network\Packet\Login\Client\" />
-    <Folder Include="Network\Packet\Play\" />
+    <Folder Include="Network\Packet\Type\Configuration\" />
+    <Folder Include="Network\Packet\Type\Login\" />
+    <Folder Include="Network\Packet\Type\Play\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
 
 </Project>
