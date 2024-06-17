@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
+using Tachyon.Namespace;
 
 namespace Tachyon.Network.Binary;
 
@@ -38,7 +39,7 @@ public static class NetworkBuffer
         buffer.WriteVarInt(Convert.ToInt32(value));
     }
      
-    public static string ReadStr(this IByteBuffer buffer, int maxLength)
+    public static string ReadStr(this IByteBuffer buffer, int maxLength = short.MaxValue)
     {
         var length = buffer.ReadVarInt();
         if (length < 0) throw new DecoderException("The received encoded string length is less than zero! Weird string!");
@@ -48,23 +49,29 @@ public static class NetworkBuffer
         return str;
     }
 
-    public static string ReadStr(this IByteBuffer buffer)
-    {
-        return buffer.ReadStr(short.MaxValue);
-    }
-
-    public static void WriteStr(this IByteBuffer buffer, string value, int maxLength)
+    public static void WriteStr(this IByteBuffer buffer, string value, int maxLength = short.MaxValue)
     {
         var bytes = Encoding.UTF8.GetBytes(value);
         if (bytes.Length > maxLength) throw new EncoderException("String too big (was " + bytes.Length + " bytes encoded, max " + maxLength + ")");
         buffer.WriteVarInt(bytes.Length);
         buffer.WriteBytes(bytes);
     }
-    
-    public static void WriteStr(this IByteBuffer buffer, string value)
+
+    public static byte[] ReadByteArr(this IByteBuffer buffer, int maxLength= short.MaxValue)
     {
-        buffer.WriteStr(value, short.MaxValue);
+        var len = buffer.ReadVarInt();
+        if (len < 0) throw new DecoderException("The received encoded array length is less than zero! Weird array!");
+        if (len > maxLength) throw new DecoderException("The received array length is longer than maximum allowed (" + len + " > " + maxLength + ")");
+        return buffer.ReadAvailableBytes(len);
     }
+    
+    public static void WriteByteArr(this IByteBuffer buffer, int length, byte[] value, int maxLength = short.MaxValue)
+    {
+        if (value.Length > maxLength) throw new EncoderException("Array too big (was " + value.Length + " bytes, max " + maxLength + ")");
+        buffer.WriteVarInt(length);
+        buffer.WriteBytes(value);
+    }
+    
 
     public static byte[] ReadVarIntByteArray(this IByteBuffer buffer)
     {
@@ -76,6 +83,39 @@ public static class NetworkBuffer
         var length = buffer.ReadVarInt();
         if (length < 0) throw new DecoderException("The received encoded array length is less than zero! Weird array!");
         return buffer.ReadAvailableBytes(length);
+    }
+    
+    public static void WriteOptional<T>(this IByteBuffer buffer, T? value, Action<IByteBuffer, T> writer)
+    {
+        buffer.WriteBoolean(value != null);
+        if (value != null) writer(buffer, value);
+    }
+    
+    public static T? ReadOptional<T>(this IByteBuffer buffer, Func<IByteBuffer, T> reader) where T : class
+    {
+        return buffer.ReadBoolean() ? reader(buffer) : null;
+    }
+
+    public static NamespaceId ReadNamespace(this IByteBuffer buffer)
+    {
+        return NamespaceId.FromString(buffer.ReadStr());
+    }
+    
+    public static void WriteNamespace(this IByteBuffer buffer, NamespaceId value)
+    {
+        buffer.WriteStr(value.Full);
+    }
+
+    public static void WriteArray<T>(this IByteBuffer buffer, int length, IEnumerable<T> values, Action<IByteBuffer, T> writer)
+    {
+        buffer.WriteVarInt(length);
+        foreach (var value in values) writer(buffer, value);
+    }
+    
+    public static IEnumerable<T> ReadArray<T>(this IByteBuffer buffer, Func<IByteBuffer, T> reader)
+    {
+        var length = buffer.ReadVarInt();
+        for (var i = 0; i < length; i++) yield return reader(buffer);
     }
 
     public static void WriteVarIntByteArray(this IByteBuffer buffer, byte[] value)

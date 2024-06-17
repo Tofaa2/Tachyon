@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Bootstrapping;
@@ -54,6 +55,11 @@ public class NettyServer
         _task = _bootstrap.BindAsync();
         _task.ContinueWith(t =>
         {
+            if (t.IsFaulted)
+            {
+                Console.WriteLine("Failed to start server: " + t.Exception);
+                return;
+            }
             _channel = t.Result;
             Console.WriteLine("Server started on " + _channel.LocalAddress);
         });

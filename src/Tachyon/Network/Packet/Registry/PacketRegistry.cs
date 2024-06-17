@@ -1,7 +1,8 @@
 using System.Collections.Concurrent;
-using DotNetty.Buffers;
 using Tachyon.Network.Connection;
 using Tachyon.Network.Packet.Type.Handshake.Client;
+using Tachyon.Network.Packet.Type.Login.Client;
+using Tachyon.Network.Packet.Type.Login.Server;
 using Tachyon.Network.Packet.Type.Status;
 using Tachyon.Network.Packet.Type.Status.Client;
 using Tachyon.Network.Packet.Type.Status.Server;
@@ -32,6 +33,20 @@ public class PacketRegistry
         
         RegisterClient(ConnectionState.Status, 0x00, () => new ClientStatusRequestPacket());
         RegisterClient(ConnectionState.Status, 0x01,  () => new CommonStatusPingPacket());
+        
+        // Login
+        RegisterServer<ServerLoginDisconnectPacket>(0x00);
+        RegisterServer<ServerLoginEncryptionRequest>(0x01);
+        RegisterServer<ServerLoginSuccessPacket>(0x02);
+        RegisterServer<ServerLoginSetCompressionPacket>(0x03);
+        RegisterServer<ServerLoginPluginRequestPacket>(0x04);
+        RegisterServer<ServerLoginCookieRequestPacket>(0x05);
+        
+        RegisterClient(ConnectionState.Login, 0x00, () => new ClientLoginStartPacket());
+        RegisterClient(ConnectionState.Login, 0x01, () => new ClientLoginEncryptionResponsePacket());
+        RegisterClient(ConnectionState.Login, 0x02, () => new ClientLoginPluginResposePacket());
+        RegisterClient(ConnectionState.Login, 0x03, () => new ClientLoginAckgnowledgedPacket());
+        RegisterClient(ConnectionState.Login, 0x04, () => new ClientLoginCookieResponsePacket());
     }
     
     private void RegisterClient(ConnectionState state, int packetId, Func<IClientPacket> supplier)

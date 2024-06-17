@@ -14,22 +14,15 @@ public class ClientHandshakePacket : IClientPacket
     public void Read(IByteBuffer reader)
     {
         ProtocolVersion = reader.ReadVarInt();
-        ServerAddress = reader.ReadStr(255); // 255 is the max length of a hostname except for bungeee
+        ServerAddress = reader.ReadStr(255);
         ServerPort = reader.ReadUnsignedShort();
-
-        int var = reader.ReadVarInt();
-        switch (var)
+        ConnectionIntent = reader.ReadVarInt() switch
         {
-            case 1:
-                ConnectionIntent = Intent.Status;
-                break;
-            case 2:
-                ConnectionIntent = Intent.Login;
-                break;
-            case 3:
-                ConnectionIntent = Intent.Transfer;
-                break;
-        }
+            1 => Intent.Status,
+            2 => Intent.Login,
+            3 => Intent.Transfer,
+            _ => ConnectionIntent
+        };
     }
 
     public enum Intent

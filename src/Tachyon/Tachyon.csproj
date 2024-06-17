@@ -21,8 +21,6 @@
   <ItemGroup>
     <Folder Include="Network\Packet\Type\Configuration\Client\" />
     <Folder Include="Network\Packet\Type\Configuration\Server\" />
-    <Folder Include="Network\Packet\Type\Login\Client\" />
-    <Folder Include="Network\Packet\Type\Login\Status\" />
     <Folder Include="Network\Packet\Type\Play\Client\" />
     <Folder Include="Network\Packet\Type\Play\Server\" />
   </ItemGroup>

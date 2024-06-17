@@ -7,22 +7,26 @@ internal class HandshakePacketProcessor(Tachyon server, PlayerConnection connect
 {
     public override void Process(IClientPacket packet)
     {
-        if (packet is ClientHandshakePacket handshake)
+        if (packet is not ClientHandshakePacket handshake) return;
+        switch (handshake.ConnectionIntent)
         {
-
-            switch (handshake.ConnectionIntent)
+            case ClientHandshakePacket.Intent.Status:
+                connection.INTERNAL_SwitchConnectionState(ConnectionState.Status);
+                Console.WriteLine("Switched connection state to status.");
+                break;
+            case ClientHandshakePacket.Intent.Login:
             {
-                case ClientHandshakePacket.Intent.Status:
-                    connection.INTERNAL_SwitchConnectionState(ConnectionState.Status);
-                    Console.WriteLine("Switched connection state to status.");
-                    break;
-                case ClientHandshakePacket.Intent.Login:
-                    Console.WriteLine("TODO::::");
-                    break;
-                case ClientHandshakePacket.Intent.Transfer:
-                    Console.WriteLine("Transfer packet intents are not supported yet.");
-                    break;
+                connection.INTERNAL_SwitchConnectionState(ConnectionState.Login);
+                if (handshake.ProtocolVersion != 600)
+                {
+                    connection.Disconnect("{\"text\":\"Outdated Minecraft version. \",\"color\":\"#9F0F9F\"}");
+                }
+                break;
             }
+            case ClientHandshakePacket.Intent.Transfer:
+                Console.WriteLine("Transfer packet intents are not supported yet.");
+                break;
         }
     }
+    
 }

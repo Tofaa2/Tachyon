@@ -2,6 +2,7 @@
 using Tachyon.Network.Connection;
 using Tachyon.Network.Packet;
 using Tachyon.Network.Packet.Processor;
+using Tachyon.Network.Packet.Type.Login.Server;
 
 namespace Tachyon.Network;
 
@@ -22,32 +23,25 @@ public class PlayerConnection
     }
 
 
-    public void Disconnect()
+    public void Disconnect(string? reason = null)
     {
+        if (reason != null)
+        {
+            if (_state == ConnectionState.Login)
+            {
+                SendPacketNow(new ServerLoginDisconnectPacket(reason));
+            }
+        }
         var t = _channel.CloseAsync();
         t.ContinueWith(tg =>
         {
             Console.WriteLine("Disconnected from client");
-            
         });
     }
     
     public void SendPacketNow(IServerPacket packet)
     {
         _channel.WriteAndFlushAsync(packet).Wait();
-        // tg.ContinueWith(t =>
-        // {
-        //     if (t.IsCompletedSuccessfully)
-        //     {
-        //         Console.WriteLine("Sent packet successfully");
-        //     }
-        //     else
-        //     {
-        //         Console.WriteLine("Failed to send packet");
-        //     }
-        //
-        //     ;
-        // });
     }
     
     public void INTERNAL_SwitchConnectionState(ConnectionState state)
