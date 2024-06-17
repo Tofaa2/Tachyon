@@ -10,9 +10,9 @@ public class SizeDecoder : ByteToMessageDecoder
     protected override void Decode(IChannelHandlerContext context, IByteBuffer buf, List<object> output)
     {
         buf.MarkReaderIndex();
+
         var buffer = new byte[3];
-        for (int i = 0; i < buffer.Length; i++)
-        {
+        for (int i =0; i < 2; i++) {
             if (!buf.IsReadable())
             {
                 buf.ResetReaderIndex();
@@ -20,13 +20,18 @@ public class SizeDecoder : ByteToMessageDecoder
             }
 
             buffer[i] = buf.ReadByte();
-            int length = Unpooled.WrappedBuffer(buffer).ReadVarInt();
+            if (buffer[i] < 0) continue;
+
+            var length = Unpooled.WrappedBuffer(buffer).ReadVarInt();
             if (buf.ReadableBytes < length)
             {
                 buf.ResetReaderIndex();
                 return;
             }
             output.Add(buf.ReadBytes(length));
+            return;
         }
+
+        throw new CorruptedFrameException("length wider than 21 bits");
     }
 }

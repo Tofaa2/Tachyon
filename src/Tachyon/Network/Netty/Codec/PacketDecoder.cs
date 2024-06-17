@@ -3,33 +3,39 @@ using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
 using Tachyon.Network.Binary;
 using Tachyon.Network.Connection;
+using Tachyon.Network.Packet;
+using Tachyon.Network.Packet.Type.Handshake.Client;
 
 namespace Tachyon.Network.Netty.Codec;
 
 public class PacketDecoder(Tachyon server, PlayerConnection connection) : ByteToMessageDecoder
 {
 
+    private bool handshake = false;
     
     protected override void Decode(IChannelHandlerContext context, IByteBuffer buf, List<object> output)
     {
         if (buf.ReadableBytes == 0) return;
+            
         var id = buf.ReadVarInt();
+        IClientPacket? packet = server.PacketRegistry.CreateClientPacket(connection.ConnectionState, id);
         
-        var state = connection.ConnectionState;
-
-        var packet = server.PacketRegistry.CreateClientPacket(state, id);
         if (packet == null)
         {
-            Console.WriteLine("Skipping packet with id " + id + " as it is not registered in the packet registry!");
+            Console.WriteLine($"Skipping packet with state {connection.ConnectionState} and ID {id} because a packet object was not found");
             buf.SkipBytes(buf.ReadableBytes);
             return;
         }
 
+        Console.WriteLine("Incoming packet of type " + packet.GetType());
+
         packet.Read(buf);
-        if (buf.ReadableBytes > 0)
+
+        if (buf.ReadableBytes != 0)
         {
-            Console.WriteLine("Packet " + packet.GetType().Name + " did not read all bytes! Remaining: " + buf.ReadableBytes);
+            Console.WriteLine($"More bytes from packet {packet.GetType().Name} ({buf.ReadableBytes})");
         }
+
         output.Add(packet);
     }
 }

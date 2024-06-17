@@ -18,10 +18,11 @@ public class SizeEncoder : MessageToByteEncoder<IByteBuffer>
 
 
     private static int GetVarIntSize(int input) {
-        return (input & 0xFFFFFF80) == 0
-            ? 1 : (input & 0xFFFFC000) == 0
-                ? 2 : (input & 0xFFE00000) == 0
-                    ? 3 : (input & 0xF0000000) == 0
-                        ? 4 : 5;
+        for (var i = 1; i < 5; i++)
+        {
+            if ((input & (-1 << i * 7)) != 0) continue;
+            return i;
+        }
+        return 5;
     }
 }

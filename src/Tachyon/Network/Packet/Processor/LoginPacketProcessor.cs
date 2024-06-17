@@ -1,4 +1,5 @@
 using Tachyon.Network.Packet.Type.Login.Client;
+using Tachyon.Network.Packet.Type.Login.Server;
 
 namespace Tachyon.Network.Packet.Processor;
 
@@ -10,6 +11,12 @@ internal class LoginPacketProcessor(Tachyon server, PlayerConnection connection)
         {
             case ClientLoginStartPacket p:
                 Console.WriteLine($"{p.Username} with id {p.Uuid}");
+                HandleLoginStart(p);
+                break;
+            case ClientLoginPluginResposePacket p:
+                break;
+            case ClientLoginAckgnowledgedPacket p:
+                Console.WriteLine("Login ackgnowledged!!!!!!");
                 break;
         }
     }

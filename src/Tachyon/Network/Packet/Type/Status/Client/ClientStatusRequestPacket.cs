@@ -6,6 +6,6 @@ public class ClientStatusRequestPacket : IClientPacket
 {
     public void Read(IByteBuffer reader)
     {
-        // Nothing to read;
+        reader.SkipBytes(reader.ReadableBytes);
     }
 }
