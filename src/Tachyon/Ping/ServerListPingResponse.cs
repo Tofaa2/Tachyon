@@ -6,27 +6,15 @@ namespace Tachyon.Ping;
 public class ServerListPingResponse
 {
 
-    public string Version { get; set; }
-    public int Protocol { get; set; }
-    public int MaxPlayers { get; set; }
-    public int OnlinePlayers { get; set; }
-    public string JsonMotd { get; set; }
-    public string Favicon { get; set; }
-    public bool PlayersHidden { get; set; }
-    public IList<ServerListSampleEntry> SamplePlayers { get; private set; }
+    public string Version { get; set; } = Tachyon.Version;
+    public int Protocol { get; set; } = Tachyon.ProtocolVersion;
+    public int MaxPlayers { get; set; } = 10000;
+    public int OnlinePlayers { get; set; } = 0;
+    public string JsonMotd { get; set; } = "A Tachyon Server!";
+    public string Favicon { get; set; } = "";
+    public bool PlayersHidden { get; set; } = false;
+    public IList<ServerListSampleEntry> SamplePlayers { get; } = new List<ServerListSampleEntry>();
 
-    public ServerListPingResponse()
-    {
-        Version = Tachyon.Version;
-        Protocol = Tachyon.ProtocolVersion;
-        Favicon = "";
-        PlayersHidden = false;
-        OnlinePlayers = 0;
-        MaxPlayers = 10000;
-        JsonMotd = "A Tachyon Server!";
-        SamplePlayers = new List<ServerListSampleEntry>();
-    }
-    
     public void AddSamplePlayer(ServerListSampleEntry samplePlayer)
     {
         SamplePlayers.Add(samplePlayer);

@@ -1,5 +1,6 @@
 using Tachyon.Network.Packet.Type.Login.Client;
 using Tachyon.Network.Packet.Type.Login.Server;
+using Tachyon.Text;
 
 namespace Tachyon.Network.Packet.Processor;
 
@@ -36,7 +37,7 @@ internal class LoginPacketProcessor(Tachyon server, PlayerConnection connection)
             }
             catch (Exception e)
             {
-                connection.Disconnect();
+                connection.Disconnect(new TextComponent("Hello World", NamedTextColor.Yellow).WithDecoration(TextDecoration.Obfuscated));
             }
         });
     }

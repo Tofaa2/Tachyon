@@ -2,6 +2,7 @@ using Tachyon.Network.Packet.Type.Status;
 using Tachyon.Network.Packet.Type.Status.Client;
 using Tachyon.Network.Packet.Type.Status.Server;
 using Tachyon.Ping;
+using Tachyon.Text;
 
 namespace Tachyon.Network.Packet.Processor;
 
@@ -19,7 +20,7 @@ internal class StatusPacketProcessor(Tachyon server, PlayerConnection connection
                 break;
             case CommonStatusPingPacket p1:
                 connection.SendPacketNow(new CommonStatusPingPacket(p1.Payload));
-                connection.Disconnect();
+                connection.Disconnect((string)null);
                 break;
         }
     }

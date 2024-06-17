@@ -3,6 +3,7 @@ using Tachyon.Network.Connection;
 using Tachyon.Network.Packet;
 using Tachyon.Network.Packet.Processor;
 using Tachyon.Network.Packet.Type.Login.Server;
+using Tachyon.Text;
 
 namespace Tachyon.Network;
 
@@ -52,6 +53,11 @@ public class PlayerConnection
         {
             Console.WriteLine("Disconnected from client");
         });
+    }
+
+    public void Disconnect(TextComponent? reason = null)
+    {
+        Disconnect(reason?.ToJson());
     }
     
     public void SendPacketNow(IServerPacket packet)

@@ -1,5 +1,6 @@
 using Tachyon.Network.Connection;
 using Tachyon.Network.Packet.Type.Handshake.Client;
+using Tachyon.Text;
 
 namespace Tachyon.Network.Packet.Processor;
 
@@ -17,9 +18,12 @@ internal class HandshakePacketProcessor(Tachyon server, PlayerConnection connect
             case ClientHandshakePacket.Intent.Login:
             {
                 connection.INTERNAL_SwitchConnectionState(ConnectionState.Login);
-                if (handshake.ProtocolVersion != Tachyon.ProtocolVersion)
+                if (handshake.ProtocolVersion != 123)
                 {
-                    connection.Disconnect("{\"text\":\"Outdated Minecraft version. \",\"color\":\"#9F0F9F\"}");
+                    connection.Disconnect(
+                        new TextComponent("Outdated server! I'm still on " + Tachyon.Version, NamedTextColor.Red)
+                            .WithDecoration(TextDecoration.Italic)
+                        );
                 }
                 break;
             }
