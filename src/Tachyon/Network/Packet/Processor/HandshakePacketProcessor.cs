@@ -17,7 +17,7 @@ internal class HandshakePacketProcessor(Tachyon server, PlayerConnection connect
             case ClientHandshakePacket.Intent.Login:
             {
                 connection.INTERNAL_SwitchConnectionState(ConnectionState.Login);
-                if (handshake.ProtocolVersion != 600)
+                if (handshake.ProtocolVersion != Tachyon.ProtocolVersion)
                 {
                     connection.Disconnect("{\"text\":\"Outdated Minecraft version. \",\"color\":\"#9F0F9F\"}");
                 }

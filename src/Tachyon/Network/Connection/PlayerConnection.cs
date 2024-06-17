@@ -16,6 +16,18 @@ public class PlayerConnection
     private volatile PacketProcessor? _processor;
     public ConnectionState ConnectionState => _state;
     
+    private string _username = string.Empty;
+    private Guid _uuid = Guid.Empty;
+    public string Username => _username;
+    public Guid Uuid => _uuid;
+    
+    
+    public void INTERNAL_SetUserData(string username, Guid uuid)
+    {
+        _username = username;
+        _uuid = uuid;
+    }
+    
     public PlayerConnection(Tachyon server, IChannel channel)
     {
         _server = server;
