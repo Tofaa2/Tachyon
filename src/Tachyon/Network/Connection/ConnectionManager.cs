@@ -2,6 +2,7 @@
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Tachyon.Entity;
+using Tachyon.Network.Packet.Type.Login.Server;
 
 namespace Tachyon.Network.Connection;
 
@@ -39,6 +40,8 @@ public class ConnectionManager
         {
             var connection = player.Connection;
             
+            ServerLoginSuccessPacket p = new(player.Uuid, player.Username, 0, Array.Empty<ServerLoginSuccessPacket.Property>(), false);
+            connection.SendPacketNow(p);
         });
     }
 

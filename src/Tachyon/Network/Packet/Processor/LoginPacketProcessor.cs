@@ -22,8 +22,15 @@ internal class LoginPacketProcessor(Tachyon server, PlayerConnection connection)
 
         Task.Run(() =>
         {
-            Guid playerUuid;
-            
+            try
+            {
+                var uuid = server.ConnectionManager.CreatePlayerConnectionUuid(connection, packet.Username);
+                server.ConnectionManager.CreatePlayer(connection, uuid, packet.Username);
+            }
+            catch (Exception e)
+            {
+                connection.Disconnect();
+            }
         });
     }
     

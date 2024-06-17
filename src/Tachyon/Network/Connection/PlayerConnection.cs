@@ -20,7 +20,9 @@ public class PlayerConnection
     private Guid _uuid = Guid.Empty;
     public string Username => _username;
     public Guid Uuid => _uuid;
-    
+
+
+    public bool Online { get; private set; } = true;
     
     public void INTERNAL_SetUserData(string username, Guid uuid)
     {
@@ -37,6 +39,7 @@ public class PlayerConnection
 
     public void Disconnect(string? reason = null)
     {
+        Online = false;
         if (reason != null)
         {
             if (_state == ConnectionState.Login)
