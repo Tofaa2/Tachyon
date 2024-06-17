@@ -1,26 +1,41 @@
-﻿using DotNetty.Buffers;
+using DotNetty.Buffers;
 using Tachyon.Network.Binary;
 
 namespace Tachyon.Network.Packet.Type.Handshake.Client;
 
-public record ClientHandshakePacket(int Protocol, string Address, ushort Port, ConnectionState NextState ) : IPacket
+public class ClientHandshakePacket : IClientPacket
 {
 
-    public ClientHandshakePacket(IByteBuffer reader) : this(
-        
-        reader.ReadVarInt(),
-        reader.ReadStr(MaxAddrSize),
-        reader.ReadUnsignedShort(),
-        reader.ReadEnum<ConnectionState>()
-        ) {}
+    public string ServerAddress { get; private set; }
+    public ushort ServerPort { get; private set; }
+    public int ProtocolVersion { get; private set; }
+    public Intent ConnectionIntent { get; private set; }
     
-    private const int MaxAddrSize = 255;
-    
-    public void Write(IByteBuffer writer)
+    public void Read(IByteBuffer reader)
     {
-        writer.WriteVarInt(Protocol);
-        writer.WriteStr(Address, MaxAddrSize);
-        writer.WriteShort(Port);
-        writer.WriteEnum<ConnectionState>(NextState);
+        ProtocolVersion = reader.ReadVarInt();
+        ServerAddress = reader.ReadStr(255); // 255 is the max length of a hostname except for bungeee
+        ServerPort = reader.ReadUnsignedShort();
+
+        int var = reader.ReadVarInt();
+        switch (var)
+        {
+            case 1:
+                ConnectionIntent = Intent.Status;
+                break;
+            case 2:
+                ConnectionIntent = Intent.Login;
+                break;
+            case 3:
+                ConnectionIntent = Intent.Transfer;
+                break;
+        }
+    }
+
+    public enum Intent
+    {
+        Status = 1,
+        Login = 2,
+        Transfer = 3
     }
 }

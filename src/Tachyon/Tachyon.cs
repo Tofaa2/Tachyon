@@ -1,6 +1,8 @@
-﻿using Tachyon.Network;
+using System.Diagnostics;
+using DotNetty.Codecs.Mqtt.Packets;
+using Tachyon.Network.Connection;
 using Tachyon.Network.Netty;
-using Tachyon.Network.Packet;
+using Tachyon.Network.Packet.Registry;
 
 namespace Tachyon;
 
@@ -8,14 +10,14 @@ public class Tachyon
 {
 
     public ConnectionManager ConnectionManager { get; private set; }
+    public PacketRegistry PacketRegistry { get; private set; }
     public NettyServer NettyServer { get; private set; }
-
-
+    
     public void Init()
     {
-        PacketRegistry.Init();
-        ConnectionManager = new ConnectionManager();
-        NettyServer = new NettyServer();
+        PacketRegistry = new PacketRegistry(this);
+        ConnectionManager = new ConnectionManager(this);
+        NettyServer = new NettyServer(this);
         NettyServer.Init();
     }
 
@@ -25,22 +27,15 @@ public class Tachyon
         while (true)
         {
             string? s = Console.ReadLine();
-            if (s == "stop")
-            {
-                NettyServer.Stop();
-                break;
-            }
+            if (s != "exit") continue;
+            Stop();
+            break;
         }
     }
     
-    internal static void Main(string[] args)
+    public void Stop()
     {
-        Tachyon t = new();
-        t.Init();
-        t.Start();
-
+        NettyServer.Stop();
     }
-
-
 
 }

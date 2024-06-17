@@ -1,16 +1,14 @@
-﻿using DotNetty.Buffers;
+using DotNetty.Buffers;
 
 namespace Tachyon.Network.Packet.Type.Handshake.Client;
 
-public record ClientHandshakeLegacyServerListPingPacket(byte Payload) : IPacket
+public class ClientHandshakeLegacyServerListPingPacket : IClientPacket
 {
+
+    public byte Payload { get; private set; }
     
-    public ClientHandshakeLegacyServerListPingPacket(IByteBuffer buffer) : this(buffer.ReadByte())
+    public void Read(IByteBuffer reader)
     {
+        Payload = reader.ReadByte();
     }
-    
-    public void Write(IByteBuffer writer)
-    {
-        writer.WriteByte(Payload);
-    }
-} 
+}

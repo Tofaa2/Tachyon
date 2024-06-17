@@ -5,7 +5,7 @@ using Tachyon.Network.Binary;
 
 namespace Tachyon.Network.Netty.Codec;
 
-public class PacketSizeDecoder : ByteToMessageDecoder
+public class SizeDecoder : ByteToMessageDecoder
 {
     protected override void Decode(IChannelHandlerContext context, IByteBuffer buf, List<object> output)
     {
@@ -19,20 +19,14 @@ public class PacketSizeDecoder : ByteToMessageDecoder
                 return;
             }
 
-            byte b = buf.ReadByte();
-            buffer[i] = b;
-            if (b < 0) continue;
-
-            var length = Unpooled.WrappedBuffer(buffer).ReadVarInt();
+            buffer[i] = buf.ReadByte();
+            int length = Unpooled.WrappedBuffer(buffer).ReadVarInt();
             if (buf.ReadableBytes < length)
             {
                 buf.ResetReaderIndex();
                 return;
             }
             output.Add(buf.ReadBytes(length));
-            return;
         }
-
-        Console.WriteLine("Length larger than 21 bits!");
     }
 }

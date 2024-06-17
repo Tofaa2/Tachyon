@@ -1,8 +1,9 @@
-﻿using System.Net;
+using System.Net;
 using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using Tachyon.Network.Connection;
 using Tachyon.Network.Netty.Codec;
 
 namespace Tachyon.Network.Netty;
@@ -10,54 +11,60 @@ namespace Tachyon.Network.Netty;
 public class NettyServer
 {
 
+    private readonly Tachyon _server;
+
+    private Task<IChannel> _task;
+    private IEventLoopGroup _bossGroup, _workerGroup;
     private ServerBootstrap _bootstrap;
-    private IEventLoopGroup _boss, _worker;
     private IChannel _channel;
-    private Task _task;
-    private Tachyon _server;
     
+    public NettyServer(Tachyon server)
+    {
+        _server = server;
+    }
+
     public void Init()
     {
-        _boss = new MultithreadEventLoopGroup(1);
-        _worker = new MultithreadEventLoopGroup(10);
+        _bossGroup = new MultithreadEventLoopGroup();
+        _workerGroup = new MultithreadEventLoopGroup(); // Todo thread count
+        
         _bootstrap = new ServerBootstrap()
-            .Group(_boss, _worker)
-            .LocalAddress(IPAddress.Any, 25565)
-            .ChildOption(ChannelOption.TcpNodelay, true)
-            .ChildOption(ChannelOption.SoKeepalive, true)
+            .Group(_bossGroup, _workerGroup)
             .Channel<TcpServerSocketChannel>()
-            .ChildHandler(new ActionChannelInitializer<ISocketChannel>(channel =>
+            .ChildOption(ChannelOption.TcpNodelay, true)
+            .LocalAddress(IPAddress.Any, 25565)
+            .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
             {
 
-                var connection = new PlayerConnection();
-                channel.Pipeline
-                    .AddLast("timeout", new ReadTimeoutHandler(30))
-                    .AddLast("size-decoder", new PacketSizeDecoder())
-                    .AddLast("packet-decoder", new PacketDecoder(connection))
-                    .AddLast("size-encoder", new PacketSizeEncoder())
-                    .AddLast("packet-encoder", new PacketEncoder())
-                    .AddLast("session", connection);
-                _server.ConnectionManager.Connections[channel] = connection;
-                Console.WriteLine("Channel handler added to pipeline.");
+                var pipeline = channel.Pipeline;
+                var connection = new PlayerConnection(_server, channel);
+                pipeline
+                    .AddLast("size-decoder", new SizeDecoder())
+                    .AddLast("packet-decoder", new PacketDecoder(_server, connection))
+                    .AddLast("size-encoder", new SizeEncoder())
+                    .AddLast("packet-encoder", new PacketEncoder(_server))
+                    .AddLast("handler", new NettyChannelHandler(_server, connection));
+
+                connection.INTERNAL_SwitchConnectionState(ConnectionState.Handshake);
             }));
     }
 
     public void Start()
     {
-        _task = _bootstrap.BindAsync().ContinueWith(t =>
+        _task = _bootstrap.BindAsync();
+        _task.ContinueWith(t =>
         {
-            if (!t.IsCompletedSuccessfully)
-                Console.WriteLine("Failed to start server.");
             _channel = t.Result;
-            Console.WriteLine("Server started on port 25565");
+            Console.WriteLine("Server started on " + _channel.LocalAddress);
         });
     }
-    
+
     public void Stop()
     {
         _channel.CloseAsync().Wait();
-        _boss.ShutdownGracefullyAsync().Wait();
-        _worker.ShutdownGracefullyAsync().Wait();
+        _bossGroup.ShutdownGracefullyAsync().Wait();
+        _workerGroup.ShutdownGracefullyAsync().Wait();
+        _task.Dispose();
     }
 
 }

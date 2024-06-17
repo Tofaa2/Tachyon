@@ -6,20 +6,18 @@ using Tachyon.Network.Packet;
 
 namespace Tachyon.Network.Netty.Codec;
 
-public class PacketEncoder : MessageToByteEncoder<IPacket>
+public class PacketEncoder(Tachyon server) : MessageToByteEncoder<IServerPacket>
 {
-    protected override void Encode(IChannelHandlerContext context, IPacket message, IByteBuffer output)
+    protected override void Encode(IChannelHandlerContext context, IServerPacket message, IByteBuffer output)
     {
-        var id = PacketRegistry.GetServerPacketId(message.GetType());
-        try
+        int? packetId = server.PacketRegistry.GetServerPacketId(message.GetType());
+        if (packetId == null)
         {
-            output.WriteVarInt(id);
-            message.Write(output);
+            Console.WriteLine("Encoder received an unknown to the packet registry packet! Cannot encode!");
+            return;
         }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Failed to encode packet {message.GetType().Name} with id {id}");
-            Console.WriteLine(e);
-        }
+        
+        output.WriteVarInt(packetId.Value);
+        message.Write(output);
     }
 }

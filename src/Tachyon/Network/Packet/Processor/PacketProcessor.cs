@@ -1,23 +1,28 @@
-﻿namespace Tachyon.Network.Packet.Processor;
+namespace Tachyon.Network.Packet.Processor;
 
-public abstract class PacketProcessor
+public abstract class PacketProcessor(Tachyon server, PlayerConnection connection)
 {
 
-    public static PacketProcessor Handshake(PlayerConnection conn) => new Handshake(conn);
-    public static PacketProcessor Status(PlayerConnection conn) => new Status(conn);
+    public static PacketProcessor Handshake(Tachyon server, PlayerConnection c) =>
+        new HandshakePacketProcessor(server, c);
     
-    protected readonly PlayerConnection _connection;
-
-    protected PacketProcessor(PlayerConnection connection)
-    {
-        _connection = connection;
-    }
+    public static PacketProcessor Login(Tachyon server, PlayerConnection c) =>
+        new LoginPacketProcessor(server, c);
     
-    public abstract void Process(IPacket packet);
+    public static PacketProcessor Play(Tachyon server, PlayerConnection c) =>
+        new PlayPacketProcessor(server, c);
+    
+    public static PacketProcessor Status(Tachyon server, PlayerConnection c) =>
+        new StatusPacketProcessor(server, c);
+    
+    public static PacketProcessor Configuration(Tachyon server, PlayerConnection c) =>
+        new ConfigPacketProcessor(server, c);
+    
+    public abstract void Process(IClientPacket packet);
 
-    public void OnDisable()
+    public void OnDisconnect()
     {
-        // Nothing by default.
+        // Do nothing by default
     }
 
 }
