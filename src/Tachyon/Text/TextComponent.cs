@@ -1,64 +1,43 @@
-using System.Text.Json.Nodes;
+using System.Text.Json;
 
 namespace Tachyon.Text;
 
-public sealed class TextComponent
+public interface ITextComponent : IComponent
+{
+    
+    public ITextComponent Text(string text);
+    
+}
+
+internal class TextComponent : AbstractComponent, ITextComponent
 {
 
-    private List<TextComponent> _children = new();
-    private TextColor? _style;
-    private int _decorations = 0;
-    private string _text;
-    private JsonObject _json = new();
+    public static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        WriteIndented = false,
+        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+        IgnoreNullValues = true,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
     
     public TextComponent(string text)
     {
-        _text = text;
+        _json["text"] = text;
     }
+
+    public TextComponent() : this("") { }
 
     public TextComponent(string text, TextColor color)
     {
-        _text = text;
         _style = color;
         _json["text"] = text;
         _json["color"] = color.ToString();
     }
     
-    public TextComponent WithChild(TextComponent child)
+    public ITextComponent Text(string text)
     {
-        _children.Add(child);
-        return this;
-    }
-
-    public TextComponent WithDecoration(TextDecoration decoration)
-    {
-        _decorations |= (int)decoration;
-        foreach (var textDecoration in Enum.GetValues<TextDecoration>())
-        {
-            if (HasDecoration(textDecoration))
-            {
-                _json[textDecoration.ToString().ToLower()] = true;
-            }
-        }
+        _json["text"] = text;
         return this;
     }
     
-    public bool HasDecoration(TextDecoration decoration)
-    {
-        return (_decorations & (int)decoration) == (int)decoration;
-    }
-
-    public string ToJson()
-    {
-        if (_children.Count <= 0) return _json.ToJsonString();
-        var children = new JsonArray();
-        foreach (var child in _children)
-        {
-            children.Add(child.ToJson());
-        }
-        _json["extra"] = children;
-
-        return _json.ToJsonString();
-    }
-
 }

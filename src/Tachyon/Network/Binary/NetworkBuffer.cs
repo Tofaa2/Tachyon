@@ -2,6 +2,7 @@
 using DotNetty.Buffers;
 using DotNetty.Codecs;
 using Tachyon.Namespace;
+using Tachyon.Text;
 
 namespace Tachyon.Network.Binary;
 
@@ -57,6 +58,11 @@ public static class NetworkBuffer
         buffer.WriteBytes(bytes);
     }
 
+    public static void WriteTextComponent(this IByteBuffer buffer, IComponent component)
+    {
+        buffer.WriteStr(component.ToJson());
+    }
+    
     public static byte[] ReadByteArr(this IByteBuffer buffer, int maxLength= short.MaxValue)
     {
         var len = buffer.ReadVarInt();
@@ -108,6 +114,7 @@ public static class NetworkBuffer
 
     public static void WriteArray<T>(this IByteBuffer buffer, int length, IEnumerable<T> values, Action<IByteBuffer, T> writer)
     {
+        if (length == 0) return;
         buffer.WriteVarInt(length);
         foreach (var value in values) writer(buffer, value);
     }

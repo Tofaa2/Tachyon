@@ -8,7 +8,7 @@ public record ServerLoginSuccessPacket(
     Guid Uuid,
     string Username,
     int PropertiesLength,
-    ServerLoginSuccessPacket.Property[] Properties,
+    ServerLoginSuccessPacket.Property[]? Properties,
     bool StrictErrorHandling
 ) : IServerPacket
 {

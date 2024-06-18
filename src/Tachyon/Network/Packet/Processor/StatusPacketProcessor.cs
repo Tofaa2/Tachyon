@@ -20,7 +20,7 @@ internal class StatusPacketProcessor(Tachyon server, PlayerConnection connection
                 break;
             case CommonStatusPingPacket p1:
                 connection.SendPacketNow(new CommonStatusPingPacket(p1.Payload));
-                connection.Disconnect((string)null);
+                connection.Disconnect();
                 break;
         }
     }

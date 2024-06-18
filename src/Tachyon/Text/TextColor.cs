@@ -2,6 +2,7 @@ namespace Tachyon.Text;
 
 public abstract class TextColor 
 {
+    
     public static TextColor FromRgb(byte r, byte g, byte b) => new RgbColor(r, g, b);
     
     public readonly int R;
@@ -38,6 +39,30 @@ public class NamedTextColor : TextColor
     public static readonly NamedTextColor LightPurple = new NamedTextColor("light_purple", 255, 85, 255);
     public static readonly NamedTextColor Yellow = new NamedTextColor("yellow", 255, 255, 85);
     public static readonly NamedTextColor White = new NamedTextColor("white", 255, 255, 255);
+    
+    public static NamedTextColor GetColor(string name)
+    {
+        return name switch
+        {
+            "black" => Black,
+            "dark_blue" => DarkBlue,
+            "dark_green" => DarkGreen,
+            "dark_aqua" => DarkAqua,
+            "dark_red" => DarkRed,
+            "dark_purple" => DarkPurple,
+            "gold" => Gold,
+            "gray" => Gray,
+            "dark_gray" => DarkGray,
+            "blue" => Blue,
+            "green" => Green,
+            "aqua" => Aqua,
+            "red" => Red,
+            "light_purple" => LightPurple,
+            "yellow" => Yellow,
+            "white" => White,
+            _ => throw new ArgumentException("Invalid color name")
+        };
+    }
 
     private readonly string _name;
     

@@ -9,8 +9,8 @@ namespace Tachyon;
 public class Tachyon
 {
 
-    public static readonly int ProtocolVersion = 766;
-    public static readonly string Version = "1.20.6";
+    public static readonly int ProtocolVersion = 767;
+    public static readonly string Version = "1.21";
 
     public ConnectionManager ConnectionManager { get; private set; }
     public PacketRegistry PacketRegistry { get; private set; }

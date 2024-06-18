@@ -28,6 +28,7 @@ internal class LoginPacketProcessor(Tachyon server, PlayerConnection connection)
         connection.INTERNAL_SetUserData(packet.Username, packet.Uuid);
         // TODO: Mojang Auth
 
+        connection.SendPacketNow(new ServerLoginSuccessPacket(Guid.NewGuid(), "tofaa", 0, null, false));
         Task.Run(() =>
         {
             try
@@ -37,7 +38,7 @@ internal class LoginPacketProcessor(Tachyon server, PlayerConnection connection)
             }
             catch (Exception e)
             {
-                connection.Disconnect(new TextComponent("Hello World", NamedTextColor.Yellow).WithDecoration(TextDecoration.Obfuscated));
+                connection.Disconnect(IComponent.Text("Failed to login: " + e.Message, NamedTextColor.Red));
             }
         });
     }

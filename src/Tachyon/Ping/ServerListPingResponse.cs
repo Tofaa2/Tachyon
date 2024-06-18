@@ -1,5 +1,7 @@
-﻿using System.Text.Json.Nodes;
-using Org.BouncyCastle.Tls;
+﻿using System.Text.Json;
+using System.Text.Json.Nodes;
+using Tachyon.Text;
+using Tachyon.Util;
 
 namespace Tachyon.Ping;
 
@@ -10,7 +12,8 @@ public class ServerListPingResponse
     public int Protocol { get; set; } = Tachyon.ProtocolVersion;
     public int MaxPlayers { get; set; } = 10000;
     public int OnlinePlayers { get; set; } = 0;
-    public string JsonMotd { get; set; } = "A Tachyon Server!";
+
+    public IComponent Motd { get; set; } = IComponent.Text("A Tachyon Server!");
     public string Favicon { get; set; } = "";
     public bool PlayersHidden { get; set; } = false;
     public IList<ServerListSampleEntry> SamplePlayers { get; } = new List<ServerListSampleEntry>();
@@ -26,7 +29,7 @@ public class ServerListPingResponse
     }
 
 
-    public string ToString()
+    public override string ToString()
     {
         JsonObject versionObject = new();
         versionObject.Add("name", Version);
@@ -54,8 +57,8 @@ public class ServerListPingResponse
         response.Add("version", versionObject);
         response.Add("players", playersObject);
         response.Add("favicon", Favicon);
-        response.Add("description", JsonMotd);
-
+        response.Add("description", Motd.GetRawJson());
+        Console.WriteLine(JsonSerializer.Serialize(response, TextComponent.JsonOptions));
         return response.ToJsonString();
     }
 

@@ -1,13 +1,13 @@
 using DotNetty.Buffers;
 using Tachyon.Network.Binary;
+using Tachyon.Text;
 
 namespace Tachyon.Network.Packet.Type.Login.Server;
 
-public record ServerLoginDisconnectPacket(string JsonReason) : IServerPacket
+public record ServerLoginDisconnectPacket(IComponent Reason) : IServerPacket
 {
-    
     public void Write(IByteBuffer writer)
     {
-        writer.WriteStr(JsonReason);
+        writer.WriteTextComponent(Reason);
     }
 }

@@ -38,7 +38,7 @@ public class PlayerConnection
     }
 
 
-    public void Disconnect(string? reason = null)
+    public void Disconnect(IComponent? reason = null)
     {
         Online = false;
         if (reason != null)
@@ -54,11 +54,7 @@ public class PlayerConnection
             Console.WriteLine("Disconnected from client");
         });
     }
-
-    public void Disconnect(TextComponent? reason = null)
-    {
-        Disconnect(reason?.ToJson());
-    }
+    
     
     public void SendPacketNow(IServerPacket packet)
     {
