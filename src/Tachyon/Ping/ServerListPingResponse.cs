@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
-using Tachyon.Text;
+using Tachyon.Chat.Text;
 using Tachyon.Util;
 
 namespace Tachyon.Ping;

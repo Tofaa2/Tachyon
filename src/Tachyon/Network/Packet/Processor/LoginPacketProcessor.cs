@@ -1,6 +1,8 @@
+using Tachyon.Chat.Text;
+using Tachyon.Network.Connection;
+using Tachyon.Network.Packet.Type.Configuration.Server;
 using Tachyon.Network.Packet.Type.Login.Client;
 using Tachyon.Network.Packet.Type.Login.Server;
-using Tachyon.Text;
 
 namespace Tachyon.Network.Packet.Processor;
 
@@ -17,7 +19,6 @@ internal class LoginPacketProcessor(Tachyon server, PlayerConnection connection)
             case ClientLoginPluginResposePacket p:
                 break;
             case ClientLoginAckgnowledgedPacket p:
-                Console.WriteLine("Login ackgnowledged!!!!!!");
                 break;
         }
     }
@@ -28,13 +29,14 @@ internal class LoginPacketProcessor(Tachyon server, PlayerConnection connection)
         connection.INTERNAL_SetUserData(packet.Username, packet.Uuid);
         // TODO: Mojang Auth
 
-        connection.SendPacketNow(new ServerLoginSuccessPacket(Guid.NewGuid(), "tofaa", 0, null, false));
         Task.Run(() =>
         {
             try
             {
                 var uuid = server.ConnectionManager.CreatePlayerConnectionUuid(connection, packet.Username);
                 server.ConnectionManager.CreatePlayer(connection, uuid, packet.Username);
+                connection.SendPacketNow(new ServerConfigurationFinishPacket());
+                connection.INTERNAL_SwitchConnectionState(ConnectionState.Configuration);
             }
             catch (Exception e)
             {

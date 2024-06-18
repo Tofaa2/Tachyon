@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Tachyon.Network.Connection;
+using Tachyon.Network.Packet.Type.Configuration.Client;
 using Tachyon.Network.Packet.Type.Handshake.Client;
 using Tachyon.Network.Packet.Type.Login.Client;
 using Tachyon.Network.Packet.Type.Login.Server;
@@ -47,6 +48,10 @@ public class PacketRegistry
         RegisterClient(ConnectionState.Login, 0x02, () => new ClientLoginPluginResposePacket());
         RegisterClient(ConnectionState.Login, 0x03, () => new ClientLoginAckgnowledgedPacket());
         RegisterClient(ConnectionState.Login, 0x04, () => new ClientLoginCookieResponsePacket());
+        
+        // Configuration
+        RegisterClient(ConnectionState.Configuration, 0x00, () => new ClientConfigurationClientInfoPacket());
+        RegisterClient(ConnectionState.Configuration, 0x03, () => new ClientAcknowledgeFinishConfiguration());
     }
     
     private void RegisterClient(ConnectionState state, int packetId, Func<IClientPacket> supplier)

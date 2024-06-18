@@ -40,7 +40,7 @@ public class ConnectionManager
         {
             var connection = player.Connection;
             
-            ServerLoginSuccessPacket p = new(player.Uuid, player.Username, 0, Array.Empty<ServerLoginSuccessPacket.Property>(), false);
+            ServerLoginSuccessPacket p = new(player.Uuid, player.Username, 0, false);
             connection.SendPacketNow(p);
         });
     }

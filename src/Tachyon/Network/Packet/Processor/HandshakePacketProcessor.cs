@@ -1,6 +1,6 @@
+using Tachyon.Chat.Text;
 using Tachyon.Network.Connection;
 using Tachyon.Network.Packet.Type.Handshake.Client;
-using Tachyon.Text;
 
 namespace Tachyon.Network.Packet.Processor;
 

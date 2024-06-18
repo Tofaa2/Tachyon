@@ -1,6 +1,6 @@
 using Tachyon.Util;
 
-namespace Tachyon.Text;
+namespace Tachyon.Chat.Text;
 
 
 public interface IKeybindComponent : IComponent

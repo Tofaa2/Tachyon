@@ -11,7 +11,6 @@ namespace Tachyon.Network.Netty.Codec;
 public class PacketDecoder(Tachyon server, PlayerConnection connection) : ByteToMessageDecoder
 {
 
-    private bool handshake = false;
     
     protected override void Decode(IChannelHandlerContext context, IByteBuffer buf, List<object> output)
     {

@@ -1,8 +1,9 @@
 ﻿using System.Text;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
+using Tachyon.Chat.Text;
 using Tachyon.Namespace;
-using Tachyon.Text;
+using Tachyon.Position;
 
 namespace Tachyon.Network.Binary;
 
@@ -112,6 +113,26 @@ public static class NetworkBuffer
         buffer.WriteStr(value.Full);
     }
 
+    public static ICoordinate ReadBlockPosition(this IByteBuffer buffer)
+    {
+        long value = buffer.ReadLong(); 
+        int x = (int) (value >> 38);
+        int y = (int) (value << 52 >> 52); 
+        int z = (int) (value << 26 >> 38);
+        return new Point(x, y, z);
+    }
+
+    public static void WriteBlockPosition(this IByteBuffer buffer, ICoordinate value)
+    {
+         int blockX = value.BlockX;
+         int blockY = value.BlockY;
+         int blockZ = value.BlockZ;
+         long longPos = (((long) blockX & 0x3FFFFFF) << 38) |
+                             (((long) blockZ & 0x3FFFFFF) << 12) |
+                             ((long) blockY & 0xFFF);
+        buffer.WriteLong(longPos);
+    }
+    
     public static void WriteArray<T>(this IByteBuffer buffer, int length, IEnumerable<T> values, Action<IByteBuffer, T> writer)
     {
         if (length == 0) return;

@@ -1,7 +1,7 @@
 using System.Text.Json.Nodes;
 using Tachyon.Util;
 
-namespace Tachyon.Text;
+namespace Tachyon.Chat.Text;
 
 public interface IComponent
 {

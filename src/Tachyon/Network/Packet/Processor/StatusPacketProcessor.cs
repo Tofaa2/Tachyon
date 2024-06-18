@@ -2,7 +2,6 @@ using Tachyon.Network.Packet.Type.Status;
 using Tachyon.Network.Packet.Type.Status.Client;
 using Tachyon.Network.Packet.Type.Status.Server;
 using Tachyon.Ping;
-using Tachyon.Text;
 
 namespace Tachyon.Network.Packet.Processor;
 

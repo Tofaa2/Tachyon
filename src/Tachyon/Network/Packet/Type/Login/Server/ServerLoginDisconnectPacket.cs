@@ -1,6 +1,6 @@
 using DotNetty.Buffers;
+using Tachyon.Chat.Text;
 using Tachyon.Network.Binary;
-using Tachyon.Text;
 
 namespace Tachyon.Network.Packet.Type.Login.Server;
 

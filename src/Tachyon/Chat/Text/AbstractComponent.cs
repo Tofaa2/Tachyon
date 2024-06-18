@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace Tachyon.Text;
+namespace Tachyon.Chat.Text;
 
 internal abstract class AbstractComponent : IComponent
 {

@@ -1,4 +1,4 @@
-namespace Tachyon.Text;
+namespace Tachyon.Chat.Text;
 
 public abstract class TextColor 
 {
