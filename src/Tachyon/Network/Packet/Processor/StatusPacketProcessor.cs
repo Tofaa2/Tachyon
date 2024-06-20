@@ -1,3 +1,4 @@
+using Tachyon.Network.Packet.Registry;
 using Tachyon.Network.Packet.Type.Status;
 using Tachyon.Network.Packet.Type.Status.Client;
 using Tachyon.Network.Packet.Type.Status.Server;
@@ -5,7 +6,7 @@ using Tachyon.Ping;
 
 namespace Tachyon.Network.Packet.Processor;
 
-internal class StatusPacketProcessor(Tachyon server, PlayerConnection connection) : PacketProcessor(server, connection)
+internal class StatusPacketProcessor(PacketRegistry packetRegistry, PlayerConnection connection) : PacketProcessor(packetRegistry, connection)
 {
     public override void Process(IClientPacket packet)
     {

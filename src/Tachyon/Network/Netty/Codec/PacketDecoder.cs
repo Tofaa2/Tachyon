@@ -4,11 +4,12 @@ using DotNetty.Transport.Channels;
 using Tachyon.Network.Binary;
 using Tachyon.Network.Connection;
 using Tachyon.Network.Packet;
+using Tachyon.Network.Packet.Registry;
 using Tachyon.Network.Packet.Type.Handshake.Client;
 
 namespace Tachyon.Network.Netty.Codec;
 
-public class PacketDecoder(Tachyon server, PlayerConnection connection) : ByteToMessageDecoder
+public class PacketDecoder(PacketRegistry registry, PlayerConnection connection) : ByteToMessageDecoder
 {
 
     
@@ -17,7 +18,7 @@ public class PacketDecoder(Tachyon server, PlayerConnection connection) : ByteTo
         if (buf.ReadableBytes == 0) return;
             
         var id = buf.ReadVarInt();
-        IClientPacket? packet = server.PacketRegistry.CreateClientPacket(connection.ConnectionState, id);
+        IClientPacket? packet = registry.CreateClientPacket(connection.ConnectionState, id);
         
         if (packet == null)
         {

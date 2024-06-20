@@ -1,11 +1,12 @@
 using Tachyon.Chat.Text;
 using Tachyon.Network.Connection;
+using Tachyon.Network.Packet.Registry;
 using Tachyon.Network.Packet.Type.Handshake.Client;
 
 namespace Tachyon.Network.Packet.Processor;
 
-internal class HandshakePacketProcessor(Tachyon server, PlayerConnection connection)
-    : PacketProcessor(server, connection)
+internal class HandshakePacketProcessor(PacketRegistry packetRegistry, PlayerConnection connection)
+    : PacketProcessor(packetRegistry, connection)
 {
     private static TextComponent OutdatedServerMessage =
         new("Outdated server! I'm still on " + Tachyon.Version + " :(", NamedTextColor.Red);

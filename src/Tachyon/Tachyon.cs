@@ -1,8 +1,6 @@
-using System.Diagnostics;
-using DotNetty.Codecs.Mqtt.Packets;
+using System.Net;
+using Tachyon.Nbt;
 using Tachyon.Network.Connection;
-using Tachyon.Network.Netty;
-using Tachyon.Network.Packet.Registry;
 
 namespace Tachyon;
 
@@ -12,33 +10,47 @@ public class Tachyon
     public static readonly int ProtocolVersion = 767;
     public static readonly string Version = "1.21";
 
-    public ConnectionManager ConnectionManager { get; private set; }
-    public PacketRegistry PacketRegistry { get; private set; }
-    public NettyServer NettyServer { get; private set; }
+
+    private static volatile Server? _instance;
+    public static IServer? Process => _instance;
+
+    public static ConnectionManager ConnectionManager => _instance!.Connection;
     
-    public void Init()
+    public static void Init()
     {
-        PacketRegistry = new PacketRegistry(this);
-        ConnectionManager = new ConnectionManager(this);
-        NettyServer = new NettyServer(this);
-        NettyServer.Init();
+        if (_instance != null)
+        {
+            throw new InvalidOperationException("Server already initialized");
+        }
+
+        Server instance = new();
+        instance.Init();
+        _instance = instance;
     }
 
-    public void Start()
+    public static void Start(string host, int port)
     {
-        NettyServer.Start();
-        while (true)
+        Start(IPAddress.Parse(host), port);
+    }
+
+    public static void Start(IPAddress address, int port)
+    {
+        if (_instance == null)
         {
-            string? s = Console.ReadLine();
-            if (s != "exit") continue;
-            Stop();
-            break;
+            throw new InvalidOperationException("Server not initialized, call Tachyon#Init() first");
         }
+        _instance!.Start(address, port);
+
     }
     
-    public void Stop()
+    public static void Stop()
     {
-        NettyServer.Stop();
+        if (_instance == null)
+        {
+            throw new InvalidOperationException("Server not initialized, call Tachyon#Init() first");
+        }
+        _instance!.Stop();
     }
+    
 
 }

@@ -3,6 +3,7 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Tachyon.Entity;
 using Tachyon.Network.Packet.Type.Login.Server;
+using Tachyon.Util;
 
 namespace Tachyon.Network.Connection;
 
@@ -12,14 +13,13 @@ public class ConnectionManager
     public readonly ConcurrentDictionary<IChannel, PlayerConnection> Connections = new();
     public readonly ConcurrentDictionary<Guid, Player> Players = new();
     public readonly ConcurrentDictionary<PlayerConnection, Player> PlayersByConnection = new();
-    private readonly Tachyon _server;
 
     private IUniqueIdProvider _uuidProvider = IUniqueIdProvider.Offline;
     private IPlayerProvider _playerProvider = IPlayerProvider.Default;
     
-    public ConnectionManager(Tachyon server)
+    public ConnectionManager()
     {
-        _server = server;
+        Check.PostInit("ConnectionManager Constructor");
     }
 
 

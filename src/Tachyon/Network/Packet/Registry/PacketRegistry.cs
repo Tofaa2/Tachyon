@@ -7,6 +7,7 @@ using Tachyon.Network.Packet.Type.Login.Server;
 using Tachyon.Network.Packet.Type.Status;
 using Tachyon.Network.Packet.Type.Status.Client;
 using Tachyon.Network.Packet.Type.Status.Server;
+using Tachyon.Util;
 
 namespace Tachyon.Network.Packet.Registry;
 
@@ -17,9 +18,10 @@ public class PacketRegistry
     private ConcurrentDictionary<int, Func<IClientPacket>>[] _clientPackets =
         new ConcurrentDictionary<int, Func<IClientPacket>>[5];
 
-    public PacketRegistry(Tachyon server)
+    public PacketRegistry()
     {
-        for (int i = 0; i < _clientPackets.Length; i++)
+        Check.PostInit("Packet Registry constructor");
+        for (var i = 0; i < _clientPackets.Length; i++)
         {
             _clientPackets[i] = new ConcurrentDictionary<int, Func<IClientPacket>>();
         }
@@ -80,7 +82,5 @@ public class PacketRegistry
         var dict = _clientPackets[(int)state]!;
         return !dict.TryGetValue(packetId, out var supplier) ? null : supplier();
     }
-
-    
 
 }

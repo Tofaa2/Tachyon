@@ -3,6 +3,8 @@ using Tachyon.Chat.Text;
 using Tachyon.Network.Connection;
 using Tachyon.Network.Packet;
 using Tachyon.Network.Packet.Processor;
+using Tachyon.Network.Packet.Registry;
+using Tachyon.Network.Packet.Type.Configuration.Server;
 using Tachyon.Network.Packet.Type.Login.Server;
 
 namespace Tachyon.Network;
@@ -10,7 +12,7 @@ namespace Tachyon.Network;
 public class PlayerConnection
 {
 
-    private readonly Tachyon _server;
+    private readonly PacketRegistry _packetRegistry;
     private readonly IChannel _channel;
 
     private volatile ConnectionState _state = ConnectionState.Handshake;
@@ -31,9 +33,9 @@ public class PlayerConnection
         _uuid = uuid;
     }
     
-    public PlayerConnection(Tachyon server, IChannel channel)
+    public PlayerConnection(PacketRegistry packetRegistry, IChannel channel)
     {
-        _server = server;
+        _packetRegistry = packetRegistry;
         _channel = channel;
     }
 
@@ -43,16 +45,17 @@ public class PlayerConnection
         Online = false;
         if (reason != null)
         {
-            if (_state == ConnectionState.Login)
+            switch (_state)
             {
-                SendPacketNow(new ServerLoginDisconnectPacket(reason));
+                case ConnectionState.Login:
+                    SendPacketNow(new ServerLoginDisconnectPacket(reason));
+                    break;
+                case ConnectionState.Configuration:
+                    SendPacketNow(new ServerConfigurationDisconnectPacket(reason));
+                    break;
             }
-        }
-        var t = _channel.CloseAsync();
-        t.ContinueWith(tg =>
-        {
-            Console.WriteLine("Disconnected from client");
-        });
+        } 
+        _channel.CloseAsync();
     }
     
     
@@ -67,19 +70,19 @@ public class PlayerConnection
         switch (state)
         {
             case ConnectionState.Handshake:
-                _processor = PacketProcessor.Handshake(_server, this);
+                _processor = PacketProcessor.Handshake(_packetRegistry, this);
                 break;
             case ConnectionState.Configuration:
-                _processor = PacketProcessor.Configuration(_server, this);
+                _processor = PacketProcessor.Configuration(_packetRegistry, this);
                 break;
             case ConnectionState.Login:
-                _processor = PacketProcessor.Login(_server, this);
+                _processor = PacketProcessor.Login(_packetRegistry, this);
                 break;
             case ConnectionState.Play:
-                _processor = PacketProcessor.Play(_server, this);
+                _processor = PacketProcessor.Play(_packetRegistry, this);
                 break;
             case ConnectionState.Status:
-                _processor = PacketProcessor.Status(_server, this);
+                _processor = PacketProcessor.Status(_packetRegistry, this);
                 break;
         }
     }

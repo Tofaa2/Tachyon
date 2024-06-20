@@ -6,22 +6,26 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Tachyon.Network.Connection;
 using Tachyon.Network.Netty.Codec;
+using Tachyon.Network.Packet.Registry;
+using Tachyon.Util;
 
 namespace Tachyon.Network.Netty;
 
 public class NettyServer
 {
 
-    private readonly Tachyon _server;
-
+    private readonly PacketRegistry _packetRegistry;
+    
     private Task<IChannel> _task;
     private IEventLoopGroup _bossGroup, _workerGroup;
     private ServerBootstrap _bootstrap;
     private IChannel _channel;
     
-    public NettyServer(Tachyon server)
+    
+    public NettyServer(PacketRegistry packetRegistry)
     {
-        _server = server;
+        Check.PostInit("Netty Server constructor");
+        _packetRegistry = packetRegistry;
     }
 
     public void Init()
@@ -33,26 +37,25 @@ public class NettyServer
             .Group(_bossGroup, _workerGroup)
             .Channel<TcpServerSocketChannel>()
             .ChildOption(ChannelOption.TcpNodelay, true)
-            .LocalAddress(IPAddress.Any, 25565)
             .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
             {
 
                 var pipeline = channel.Pipeline;
-                var connection = new PlayerConnection(_server, channel);
+                var connection = new PlayerConnection(_packetRegistry, channel);
                 pipeline
                     .AddLast("size-decoder", new SizeDecoder())
-                    .AddLast("packet-decoder", new PacketDecoder(_server, connection))
+                    .AddLast("packet-decoder", new PacketDecoder(_packetRegistry, connection))
                     .AddLast("size-encoder", new SizeEncoder())
-                    .AddLast("packet-encoder", new PacketEncoder(_server))
-                    .AddLast("handler", new NettyChannelHandler(_server, connection));
+                    .AddLast("packet-encoder", new PacketEncoder(_packetRegistry))
+                    .AddLast("handler", new NettyChannelHandler(connection));
 
                 connection.INTERNAL_SwitchConnectionState(ConnectionState.Handshake);
             }));
     }
 
-    public void Start()
+    public void Start(IPAddress address, int port)
     {
-        _task = _bootstrap.BindAsync();
+        _task = _bootstrap.BindAsync(address, port);
         _task.ContinueWith(t =>
         {
             if (t.IsFaulted)

@@ -1,9 +1,10 @@
 using Tachyon.Network.Connection;
+using Tachyon.Network.Packet.Registry;
 using Tachyon.Network.Packet.Type.Configuration.Client;
 
 namespace Tachyon.Network.Packet.Processor;
 
-internal class ConfigPacketProcessor(Tachyon server, PlayerConnection connection) : PacketProcessor(server, connection)
+internal class ConfigPacketProcessor(PacketRegistry packetRegistry, PlayerConnection connection) : PacketProcessor(packetRegistry, connection)
 {
     public override void Process(IClientPacket packet)
     {

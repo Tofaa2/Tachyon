@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
+using SharpNBT;
 using Tachyon.Chat.Text;
 using Tachyon.Namespace;
 using Tachyon.Position;
@@ -10,24 +11,33 @@ namespace Tachyon.Network.Binary;
 /** Static helper extensions for networking. */
 public static class NetworkBuffer
 {
-    private static readonly int SegmentBits = 0x7F;
-    private static readonly int ContinueBit = 0x80;
+    private const int SegmentBits = 0x7F;
+    private const int ContinueBit = 0x80;
 
-    public static int Write3EmptyBytes(this IByteBuffer buffer)
+    #region NBT
+
+    public static CompoundTag ReadCompoundTag(this IByteBuffer buffer)
     {
-        var index = buffer.WriterIndex;
-        buffer.WriteMedium(0);
-        return index;
+        // convert buffer to stream, read, then update buffer reader index
+        var readerIndex = buffer.ReaderIndex;
+        var stream = new MemoryStream(buffer.Array);
+        var reader = new TagReader(stream, FormatOptions.Java);
+        var tag = reader.ReadCompound();
+        buffer.SetReaderIndex(readerIndex + (int) stream.Position);
+        return tag;
     }
 
-    public static void Write3ByteVarInt(this IByteBuffer buffer, int startIndex, int value)
+    public static void WriteCompoundTag(this IByteBuffer buffer, CompoundTag tag)
     {
-        var originalIndex = buffer.WriterIndex;
-        buffer.SetWriterIndex(startIndex);
-        var encoded = (value & 0x7F) | 0x80 << 16 | ((value >> 7) & 0x7F | 0x80 << 8) | (value >> 14);
-        buffer.WriteMedium(encoded);
-        buffer.SetWriterIndex(originalIndex);
+        var writerIndex = buffer.WriterIndex;
+        var stream = new MemoryStream(buffer.Array);
+        var writer = new TagWriter(stream, FormatOptions.Java);
+        writer.WriteCompound(tag);
+        buffer.SetWriterIndex(writerIndex + (int) stream.Position);
     }
+
+    #endregion
+    #region Enum
 
     public static T ReadEnum<T>(this IByteBuffer buffer) where T : Enum
     {
@@ -40,7 +50,10 @@ public static class NetworkBuffer
     {
         buffer.WriteVarInt(Convert.ToInt32(value));
     }
-     
+
+
+    #endregion
+    #region String
     public static string ReadStr(this IByteBuffer buffer, int maxLength = short.MaxValue)
     {
         var length = buffer.ReadVarInt();
@@ -59,11 +72,71 @@ public static class NetworkBuffer
         buffer.WriteBytes(bytes);
     }
 
+    
+
+    #endregion
+    #region Components
+
     public static void WriteTextComponent(this IByteBuffer buffer, IComponent component)
     {
         buffer.WriteStr(component.ToJson());
     }
+
+
+    #endregion
+    #region Optional
+
+    public static void WriteOptional<T>(this IByteBuffer buffer, T? value, Action<IByteBuffer, T> writer)
+    {
+        buffer.WriteBoolean(value != null);
+        if (value != null) writer(buffer, value);
+    }
     
+    public static T? ReadOptional<T>(this IByteBuffer buffer, Func<IByteBuffer, T> reader) where T : class
+    {
+        return buffer.ReadBoolean() ? reader(buffer) : null;
+    }
+
+
+    #endregion
+    #region Namespaced
+    public static NamespaceId ReadNamespace(this IByteBuffer buffer)
+    {
+        return NamespaceId.FromString(buffer.ReadStr());
+    }
+    
+    public static void WriteNamespace(this IByteBuffer buffer, NamespaceId value)
+    {
+        buffer.WriteStr(value.Full);
+    }
+
+    #endregion
+    #region Position
+
+    public static ICoordinate ReadBlockPosition(this IByteBuffer buffer)
+    {
+        long value = buffer.ReadLong(); 
+        int x = (int) (value >> 38);
+        int y = (int) (value << 52 >> 52); 
+        int z = (int) (value << 26 >> 38);
+        return new Point(x, y, z);
+    }
+    
+
+    public static void WriteBlockPosition(this IByteBuffer buffer, ICoordinate value)
+    {
+        int blockX = value.BlockX;
+        int blockY = value.BlockY;
+        int blockZ = value.BlockZ;
+        long longPos = (((long) blockX & 0x3FFFFFF) << 38) |
+                       (((long) blockZ & 0x3FFFFFF) << 12) |
+                       ((long) blockY & 0xFFF);
+        buffer.WriteLong(longPos);
+    }
+
+    #endregion
+    #region Arrays and collections
+
     public static byte[] ReadByteArr(this IByteBuffer buffer, int maxLength= short.MaxValue)
     {
         var len = buffer.ReadVarInt();
@@ -92,45 +165,11 @@ public static class NetworkBuffer
         return buffer.ReadAvailableBytes(length);
     }
     
-    public static void WriteOptional<T>(this IByteBuffer buffer, T? value, Action<IByteBuffer, T> writer)
+    public static byte[] ReadAvailableBytes(this IByteBuffer buffer, int length)
     {
-        buffer.WriteBoolean(value != null);
-        if (value != null) writer(buffer, value);
-    }
-    
-    public static T? ReadOptional<T>(this IByteBuffer buffer, Func<IByteBuffer, T> reader) where T : class
-    {
-        return buffer.ReadBoolean() ? reader(buffer) : null;
-    }
-
-    public static NamespaceId ReadNamespace(this IByteBuffer buffer)
-    {
-        return NamespaceId.FromString(buffer.ReadStr());
-    }
-    
-    public static void WriteNamespace(this IByteBuffer buffer, NamespaceId value)
-    {
-        buffer.WriteStr(value.Full);
-    }
-
-    public static ICoordinate ReadBlockPosition(this IByteBuffer buffer)
-    {
-        long value = buffer.ReadLong(); 
-        int x = (int) (value >> 38);
-        int y = (int) (value << 52 >> 52); 
-        int z = (int) (value << 26 >> 38);
-        return new Point(x, y, z);
-    }
-
-    public static void WriteBlockPosition(this IByteBuffer buffer, ICoordinate value)
-    {
-         int blockX = value.BlockX;
-         int blockY = value.BlockY;
-         int blockZ = value.BlockZ;
-         long longPos = (((long) blockX & 0x3FFFFFF) << 38) |
-                             (((long) blockZ & 0x3FFFFFF) << 12) |
-                             ((long) blockY & 0xFFF);
-        buffer.WriteLong(longPos);
+        var bytes = new byte[length];
+        buffer.ReadBytes(bytes);
+        return bytes;
     }
     
     public static void WriteArray<T>(this IByteBuffer buffer, int length, IEnumerable<T> values, Action<IByteBuffer, T> writer)
@@ -166,6 +205,9 @@ public static class NetworkBuffer
         return value;
     }
 
+    #endregion
+    #region UUID
+
     public static Guid ReadUUID(this IByteBuffer buffer)
     {
         long a = buffer.ReadLong();
@@ -185,13 +227,10 @@ public static class NetworkBuffer
         buffer.WriteLong(long2);
     }
 
-    public static byte[] ReadAvailableBytes(this IByteBuffer buffer, int length)
-    {
-        var bytes = new byte[length];
-        buffer.ReadBytes(bytes);
-        return bytes;
-    }
-    
+
+    #endregion
+    #region Varint and Varlong
+
     public static long ReadVarLong(this IByteBuffer buffer)
     {
         long value = 0;
@@ -259,5 +298,26 @@ public static class NetworkBuffer
             value >>>= 7;
         }
     }
-    
+
+    #endregion
+    #region Netty helpers
+
+    public static int Write3EmptyBytes(this IByteBuffer buffer)
+    {
+        var index = buffer.WriterIndex;
+        buffer.WriteMedium(0);
+        return index;
+    }
+
+    public static void Write3ByteVarInt(this IByteBuffer buffer, int startIndex, int value)
+    {
+        var originalIndex = buffer.WriterIndex;
+        buffer.SetWriterIndex(startIndex);
+        var encoded = (value & 0x7F) | 0x80 << 16 | ((value >> 7) & 0x7F | 0x80 << 8) | (value >> 14);
+        buffer.WriteMedium(encoded);
+        buffer.SetWriterIndex(originalIndex);
+    }
+
+
+    #endregion
 }

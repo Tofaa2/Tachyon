@@ -1,12 +1,14 @@
 using Tachyon.Chat.Text;
 using Tachyon.Network.Connection;
+using Tachyon.Network.Packet.Registry;
 using Tachyon.Network.Packet.Type.Configuration.Server;
 using Tachyon.Network.Packet.Type.Login.Client;
 using Tachyon.Network.Packet.Type.Login.Server;
 
 namespace Tachyon.Network.Packet.Processor;
 
-internal class LoginPacketProcessor(Tachyon server, PlayerConnection connection) : PacketProcessor(server, connection)
+internal class LoginPacketProcessor(PacketRegistry packetRegistry, PlayerConnection connection)
+    : PacketProcessor(packetRegistry, connection)
 {
     public override void Process(IClientPacket packet)
     {
@@ -33,8 +35,8 @@ internal class LoginPacketProcessor(Tachyon server, PlayerConnection connection)
         {
             try
             {
-                var uuid = server.ConnectionManager.CreatePlayerConnectionUuid(connection, packet.Username);
-                server.ConnectionManager.CreatePlayer(connection, uuid, packet.Username);
+                var uuid = Tachyon.ConnectionManager.CreatePlayerConnectionUuid(connection, packet.Username);
+                Tachyon.ConnectionManager.CreatePlayer(connection, uuid, packet.Username);
                 connection.SendPacketNow(new ServerConfigurationFinishPacket());
                 connection.INTERNAL_SwitchConnectionState(ConnectionState.Configuration);
             }
