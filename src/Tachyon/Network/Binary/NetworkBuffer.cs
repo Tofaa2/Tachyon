@@ -5,6 +5,7 @@ using Tachyon.Chat.Text;
 using Tachyon.Namespace;
 using Tachyon.Nbt.Io;
 using Tachyon.Position;
+using Tachyon.Util;
 
 namespace Tachyon.Network.Binary;
 
@@ -92,6 +93,7 @@ public static class NetworkBuffer
 
     #endregion
     #region Optional
+    
 
     public static void WriteOptional<T>(this IByteBuffer buffer, T? value, Action<IByteBuffer, T> writer)
     {

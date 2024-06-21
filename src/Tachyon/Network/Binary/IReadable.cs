@@ -6,6 +6,5 @@ public interface IReadable
 {
 
     void Read(IByteBuffer buffer);
-
-
+    
 }

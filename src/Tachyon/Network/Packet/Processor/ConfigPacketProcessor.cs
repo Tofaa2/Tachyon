@@ -10,7 +10,7 @@ internal class ConfigPacketProcessor(PacketRegistry packetRegistry, PlayerConnec
     {
         switch (packet)
         {
-            case ClientAcknowledgeFinishConfiguration p:
+            case ClientConfigurationAcknowledgeFinishPacket p:
             {
                 Console.WriteLine("Configuration step finished");
                 connection.INTERNAL_SwitchConnectionState(ConnectionState.Play);
