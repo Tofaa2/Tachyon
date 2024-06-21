@@ -72,6 +72,23 @@ public static class NetworkBuffer
         buffer.WriteBytes(bytes);
     }
 
+    public static string ReadUtf8String(this IByteBuffer buffer, int maxLength = short.MaxValue)
+    {
+        int length = buffer.ReadInt();
+        if (length < 0) throw new DecoderException("The received encoded string length is less than zero! Weird string!");
+        if (length > maxLength * 4) throw new DecoderException("The received string length is longer than maximum allowed (" + length + " > " + maxLength * 4 + ")");
+        var str = Encoding.UTF8.GetString(buffer.ReadAvailableBytes(length));
+        if (str.Length > maxLength) throw new DecoderException("The received string length is longer than maximum allowed (" + length + " > " + maxLength + ")");
+        return str;
+    }
+    
+    public static void WriteUtf8String(this IByteBuffer buffer, string value, int maxLength = short.MaxValue)
+    {
+        var bytes = Encoding.UTF8.GetBytes(value);
+        if (bytes.Length > maxLength) throw new EncoderException("String too big (was " + bytes.Length + " bytes encoded, max " + maxLength + ")");
+        buffer.WriteInt(bytes.Length);
+        buffer.WriteBytes(bytes);
+    }
     
 
     #endregion

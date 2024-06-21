@@ -5,12 +5,15 @@ namespace Tachyon.Nbt;
 public class NbtList<TType>(NbtType entryType, ICollection<TType> collection)
     : Nbt, ICollection<TType> where TType : Nbt
 {
+
+    public List<TType> Value => new(collection);
+    public NbtType EntryType => entryType;
     
-    public List<TType> Value { get; set; }
-    public NbtType EntryType { get; }
+    public NbtList(NbtType entryType, int size) : this(entryType, new List<TType>(size))
+    {}
     
     
-    public override NbtType Type { get; }
+    public override NbtType Type => NbtType.List;
     public IEnumerator<TType> GetEnumerator()
     {
         return Value.GetEnumerator();
