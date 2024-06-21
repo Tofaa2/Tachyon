@@ -1,9 +1,9 @@
 ﻿using System.Text;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
-using SharpNBT;
 using Tachyon.Chat.Text;
 using Tachyon.Namespace;
+using Tachyon.Nbt.Io;
 using Tachyon.Position;
 
 namespace Tachyon.Network.Binary;
@@ -16,24 +16,14 @@ public static class NetworkBuffer
 
     #region NBT
 
-    public static CompoundTag ReadCompoundTag(this IByteBuffer buffer)
+    public static Nbt.Nbt? ReadNbt(this IByteBuffer buffer)
     {
-        // convert buffer to stream, read, then update buffer reader index
-        var readerIndex = buffer.ReaderIndex;
-        var stream = new MemoryStream(buffer.Array);
-        var reader = new TagReader(stream, FormatOptions.Java);
-        var tag = reader.ReadCompound();
-        buffer.SetReaderIndex(readerIndex + (int) stream.Position);
-        return tag;
+        return NbtCodec.ByteBufToNbt(buffer);
     }
 
-    public static void WriteCompoundTag(this IByteBuffer buffer, CompoundTag tag)
+    public static void WriteNbt(this IByteBuffer buffer, Nbt.Nbt tag)
     {
-        var writerIndex = buffer.WriterIndex;
-        var stream = new MemoryStream(buffer.Array);
-        var writer = new TagWriter(stream, FormatOptions.Java);
-        writer.WriteCompound(tag);
-        buffer.SetWriterIndex(writerIndex + (int) stream.Position);
+        NbtCodec.NbtToByteBuff(tag, buffer);
     }
 
     #endregion
