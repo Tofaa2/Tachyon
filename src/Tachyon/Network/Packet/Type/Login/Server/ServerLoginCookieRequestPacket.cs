@@ -6,8 +6,8 @@ namespace Tachyon.Network.Packet.Type.Login.Server;
 
 public record ServerLoginCookieRequestPacket(NamespaceId Key) : IServerPacket
 {
-    public void Write(IByteBuffer writer)
+    public void Write(BinaryBuffer writer)
     {
-        writer.WriteNamespace(Key);
+        writer.Write(BinaryBuffer.NAMESPACE_ID, Key);
     }
 }

@@ -9,8 +9,8 @@ public record ServerStatusResponsePacket(string JsonPayload) : IServerPacket
 
     public ServerStatusResponsePacket(ServerListPingResponse response) : this(response.ToString()) {}
     
-    public void Write(IByteBuffer writer)
+    public void Write(BinaryBuffer writer)
     {
-        writer.WriteStr(JsonPayload);
+        writer.Write(BinaryBuffer.STRING,JsonPayload);
     }
 }

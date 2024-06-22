@@ -5,8 +5,8 @@ namespace Tachyon.Network.Packet.Type.Configuration.Server;
 
 public record ServerConfigurationCookieRequestPacket(string Key) : IServerPacket
 {
-    public void Write(IByteBuffer writer)
+    public void Write(BinaryBuffer writer)
     {
-        writer.WriteStr(Key);
+        writer.Write(BinaryBuffer.STRING, Key);
     }
 }

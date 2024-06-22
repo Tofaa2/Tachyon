@@ -7,8 +7,8 @@ namespace Tachyon;
 public class Tachyon
 {
 
-    public static readonly int ProtocolVersion = 767;
-    public static readonly string Version = "1.21";
+    public const int ProtocolVersion = 767;
+    public const string Version = "1.21";
 
 
     private static volatile Server? _instance;

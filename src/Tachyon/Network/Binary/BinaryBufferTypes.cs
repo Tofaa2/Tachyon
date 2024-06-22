@@ -1,8 +1,10 @@
 using DotNetty.Buffers;
 using DotNetty.Codecs;
+using Tachyon.Chat.Text;
 using Tachyon.Namespace;
 using Tachyon.Nbt.Io;
 using Tachyon.Nbt;
+using Tachyon.Network.Packet.Type.Configuration.Server;
 using Tachyon.Position;
 
 namespace Tachyon.Network.Binary;
@@ -59,6 +61,48 @@ internal record Uuid : BinaryBuffer.IType<Guid>
         var long2 = BitConverter.ToInt64(bytes, 8);
         buffer.Buffer.WriteLong(long1);
         buffer.Buffer.WriteLong(long2);
+    }
+}
+
+internal record RegistryEntry : BinaryBuffer.IType<ServerConfigurationRegistryPacket.Entry>
+{
+    public ServerConfigurationRegistryPacket.Entry Read(BinaryBuffer buffer)
+    {
+        string id = buffer.Read(BinaryBuffer.STRING);
+        var nbt = buffer.ReadOptional(BinaryBuffer.NBT);
+        return new ServerConfigurationRegistryPacket.Entry(id, nbt as NbtCompound);
+    }
+
+    public void Write(BinaryBuffer buffer, ServerConfigurationRegistryPacket.Entry value)
+    {
+        buffer.Write(BinaryBuffer.STRING, value.id);
+        buffer.WriteOptional(BinaryBuffer.NBT, value.data);
+    }
+}
+
+internal class RawBytes : BinaryBuffer.IType<byte[]>
+{
+    public byte[] Read(BinaryBuffer buffer)
+    {
+        return buffer.Buffer.ReadBytes(buffer.Buffer.ReadableBytes).Array;
+    }
+
+    public void Write(BinaryBuffer buffer, byte[] value)
+    {
+        buffer.Buffer.WriteBytes(value);
+    }
+}
+
+internal record Component : BinaryBuffer.IType<IComponent>
+{
+    public IComponent Read(BinaryBuffer buffer)
+    {
+        return IComponent.FromJson(buffer.Read(BinaryBuffer.STRING));
+    }
+
+    public void Write(BinaryBuffer buffer, IComponent value)
+    {
+        buffer.Write(BinaryBuffer.STRING, value.ToJson());
     }
 }
 

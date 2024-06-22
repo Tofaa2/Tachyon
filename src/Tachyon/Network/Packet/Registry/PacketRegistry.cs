@@ -49,7 +49,7 @@ public class PacketRegistry
         RegisterClient(ConnectionState.Login, 0x00, () => new ClientLoginStartPacket());
         RegisterClient(ConnectionState.Login, 0x01, () => new ClientLoginEncryptionResponsePacket());
         RegisterClient(ConnectionState.Login, 0x02, () => new ClientLoginPluginResposePacket());
-        RegisterClient(ConnectionState.Login, 0x03, () => new ClientLoginAckgnowledgedPacket());
+        RegisterClient(ConnectionState.Login, 0x03, () => new ClientLoginAcknowledgedPacket());
         RegisterClient(ConnectionState.Login, 0x04, () => new ClientLoginCookieResponsePacket());
         
         // Configuration

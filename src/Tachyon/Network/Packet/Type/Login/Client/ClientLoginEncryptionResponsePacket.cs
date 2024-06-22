@@ -11,11 +11,11 @@ public class ClientLoginEncryptionResponsePacket : IClientPacket
     public int VerifyTokenLength;
     public byte[] VerifyToken;
     
-    public void Read(IByteBuffer reader)
+    public void Read(BinaryBuffer reader)
     {
-        SharedSecret = reader.ReadByteArr();
+        SharedSecret = reader.Read(BinaryBuffer.BYTE_ARRAY);
         SharedSecretLength = SharedSecret.Length;
-        VerifyToken = reader.ReadByteArr();
+        VerifyToken = reader.Read(BinaryBuffer.BYTE_ARRAY);
         VerifyTokenLength = VerifyToken.Length;
     }
 }

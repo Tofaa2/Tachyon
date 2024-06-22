@@ -5,8 +5,8 @@ namespace Tachyon.Network.Packet.Type.Login.Server;
 
 public record ServerLoginSetCompressionPacket(int Threshold) : IServerPacket 
 {
-    public void Write(IByteBuffer writer)
+    public void Write(BinaryBuffer writer)
     {
-        writer.WriteVarInt(Threshold);
+        writer.Write(BinaryBuffer.VAR_INT,Threshold);
     }
 }

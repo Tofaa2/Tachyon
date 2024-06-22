@@ -16,8 +16,8 @@ public class PacketDecoder(PacketRegistry registry, PlayerConnection connection)
     protected override void Decode(IChannelHandlerContext context, IByteBuffer buf, List<object> output)
     {
         if (buf.ReadableBytes == 0) return;
-            
-        var id = buf.ReadVarInt();
+        BinaryBuffer buffer = new BinaryBuffer(buf);
+        var id = buffer.Read(BinaryBuffer.VAR_INT);
         IClientPacket? packet = registry.CreateClientPacket(connection.ConnectionState, id);
         
         if (packet == null)
@@ -29,7 +29,7 @@ public class PacketDecoder(PacketRegistry registry, PlayerConnection connection)
 
         Console.WriteLine("Incoming packet of type " + packet.GetType());
 
-        packet.Read(buf);
+        packet.Read(buffer);
 
         if (buf.ReadableBytes != 0)
         {

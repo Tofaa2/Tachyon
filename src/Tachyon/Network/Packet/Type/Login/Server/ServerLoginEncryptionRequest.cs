@@ -12,18 +12,18 @@ public record ServerLoginEncryptionRequest(
     bool ShouldAuthenticate
 ) : IServerPacket
 {
-    public void Write(IByteBuffer writer)
+    public void Write(BinaryBuffer writer)
     {
-        writer.WriteStr(ServerId);
+        writer.Write(BinaryBuffer.STRING, ServerId);
         
         // writer.WriteVarInt(PublicKeyLength);
         // writer.WriteBytes(PublicKey);
-        writer.WriteByteArr(PublicKeyLength, PublicKey);
+        writer.Buffer.WriteByteArr(PublicKeyLength, PublicKey);
         
         // writer.WriteVarInt(VerifyTokenLength);
         // writer.WriteBytes(VerifyToken);
-        writer.WriteByteArr(VerifyTokenLength, VerifyToken);
+        writer.Buffer.WriteByteArr(VerifyTokenLength, VerifyToken);
         
-        writer.WriteBoolean(ShouldAuthenticate);
+        writer.Write(BinaryBuffer.BOOL, ShouldAuthenticate);
     }
 }

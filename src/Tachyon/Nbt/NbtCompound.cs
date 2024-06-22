@@ -5,7 +5,7 @@ namespace Tachyon.Nbt;
 public class NbtCompound : Nbt, IDictionary<string, Nbt>
 {
     
-    private readonly Dictionary<string, Nbt> _value = new();
+    private readonly Dictionary<string, Nbt?> _value = new();
 
     
     public bool Has(string key)
@@ -13,7 +13,7 @@ public class NbtCompound : Nbt, IDictionary<string, Nbt>
         return _value.ContainsKey(key);
     }
     
-    public void Put(string key, Nbt value)
+    public void Put(string key, Nbt? value)
     {
         _value[key] = value;
     }
@@ -23,14 +23,14 @@ public class NbtCompound : Nbt, IDictionary<string, Nbt>
         return _value.GetValueOrDefault(key);
     }
 
-    public void Add(string key, Nbt value)
+    public void Add(string key, Nbt? value)
     {
-        throw new NotImplementedException();
+        _value.Add(key, value);
     }
 
     public bool ContainsKey(string key)
     {
-        throw new NotImplementedException();
+        return _value.ContainsKey(key);
     }
 
     public bool Remove(string key)
@@ -40,17 +40,17 @@ public class NbtCompound : Nbt, IDictionary<string, Nbt>
 
     public bool TryGetValue(string key, out Nbt value)
     {
-        throw new NotImplementedException();
+        return _value.TryGetValue(key, out value);
     }
 
     public Nbt this[string key]
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get => _value[key];
+        set => _value[key] = value;
     }
 
-    public ICollection<string> Keys { get; }
-    public ICollection<Nbt> Values { get; }
+    public ICollection<string> Keys => _value.Keys;
+    public ICollection<Nbt> Values => _value.Values;
 
 
     public override NbtType Type => NbtType.Compound;

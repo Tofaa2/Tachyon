@@ -16,13 +16,9 @@ public record ServerConfigurationRegistryPacket(
     }
 
 
-    public void Write(IByteBuffer writer)
+    public void Write(BinaryBuffer writer)
     {
-        writer.WriteStr(RegistryId);
-        writer.WriteArray(Entries.Count, Entries, (buffer, entry) =>
-        {
-            buffer.WriteStr(entry.id);
-            buffer.WriteOptional(entry.data, (b, n) => b.WriteNbt(n));
-        });
+        writer.Write(BinaryBuffer.STRING, RegistryId);
+        writer.WriteCollection(BinaryBuffer.REGISTRY_ENTRY, Entries);
     }
 }

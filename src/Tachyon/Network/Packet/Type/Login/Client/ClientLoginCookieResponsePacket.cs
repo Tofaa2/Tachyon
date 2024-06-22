@@ -12,14 +12,14 @@ public class ClientLoginCookieResponsePacket : IClientPacket
     public int PayloadLength;
     public byte[]? Payload;
     
-    public void Read(IByteBuffer reader)
+    public void Read(BinaryBuffer reader)
     {
-        Identifier = reader.ReadNamespace();
-        HasPayload = reader.ReadBoolean();
+        Identifier = reader.Read(BinaryBuffer.NAMESPACE_ID);
+        HasPayload = reader.Read(BinaryBuffer.BOOL);
         if (HasPayload)
         {
-            PayloadLength = reader.ReadVarInt();
-            Payload = reader.ReadBytes(PayloadLength).Array;
+            PayloadLength = reader.Read(BinaryBuffer.VAR_INT);
+            Payload = reader.ReadBytes(PayloadLength);
         }
     }
 }

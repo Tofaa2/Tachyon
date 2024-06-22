@@ -1,10 +1,9 @@
 using DotNetty.Buffers;
+using Tachyon.Network.Binary;
 
 namespace Tachyon.Network.Packet;
 
-public interface IServerPacket : IPacket
+public interface IServerPacket : IPacket, IWritable
 {
-    
-    void Write(IByteBuffer writer);
     
 }

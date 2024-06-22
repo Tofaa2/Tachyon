@@ -20,7 +20,7 @@ internal class LoginPacketProcessor(PacketRegistry packetRegistry, PlayerConnect
                 break;
             case ClientLoginPluginResposePacket p:
                 break;
-            case ClientLoginAckgnowledgedPacket p:
+            case ClientLoginAcknowledgedPacket p:
                 break;
         }
     }

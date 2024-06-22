@@ -5,6 +5,12 @@ namespace Tachyon.Chat.Text;
 
 public interface IComponent
 {
+
+    public static IComponent FromJson(string json)
+    {
+        throw new NotImplementedException();
+    }
+    
     public static readonly IComponent Empty = Text("");
     public static ITextComponent Text(string text) => new TextComponent(text);
     public static ITextComponent Text(string text, TextColor color) => new TextComponent(text, color);

@@ -6,8 +6,8 @@ namespace Tachyon.Network.Packet.Type.Configuration.Server;
 
 public record ServerConfigurationDisconnectPacket(IComponent Reason) : IServerPacket
 {
-    public void Write(IByteBuffer writer)
+    public void Write(BinaryBuffer writer)
     {
-        writer.WriteTextComponent(Reason);
+        writer.Write(BinaryBuffer.TEXT_COMPONENT, Reason);
     }
 }

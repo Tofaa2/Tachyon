@@ -1,11 +1,12 @@
 using DotNetty.Buffers;
+using Tachyon.Network.Binary;
 
 namespace Tachyon.Network.Packet.Type.Status.Server;
 
 public record ServerStatusPingResponsePacket(long Payload) : IServerPacket
 {
-    public void Write(IByteBuffer writer)
+    public void Write(BinaryBuffer writer)
     {
-        writer.WriteLong(Payload);
+        writer.Write(BinaryBuffer.LONG,Payload);
     }
 }

@@ -10,10 +10,10 @@ public class ClientLoginPluginResposePacket : IClientPacket
     public bool Successful;
     public byte[]? Data;
     
-    public void Read(IByteBuffer reader)
+    public void Read(BinaryBuffer reader)
     {
-        MessageId = reader.ReadVarInt();
-        Successful = reader.ReadBoolean();
+        MessageId = reader.Read(BinaryBuffer.VAR_INT);
+        Successful = reader.Read(BinaryBuffer.BOOL);
         if (Successful)
         {
             int limit = reader.Capacity;
@@ -22,7 +22,7 @@ public class ClientLoginPluginResposePacket : IClientPacket
             {
                 throw new Exception("No data in packet");
             }
-            Data = reader.ReadBytes(length).Array;
+            Data = reader.ReadBytes(length);
         }
     }
 }

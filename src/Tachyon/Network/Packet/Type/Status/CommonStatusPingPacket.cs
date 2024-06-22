@@ -1,4 +1,5 @@
 using DotNetty.Buffers;
+using Tachyon.Network.Binary;
 
 namespace Tachyon.Network.Packet.Type.Status;
 
@@ -15,13 +16,13 @@ public class CommonStatusPingPacket : IClientPacket, IServerPacket
     public CommonStatusPingPacket() {}
     
     
-    public void Read(IByteBuffer reader)
+    public void Read(BinaryBuffer reader)
     {
-        Payload = reader.ReadLong();
+        Payload = reader.Read(BinaryBuffer.LONG);
     }
 
-    public void Write(IByteBuffer writer)
+    public void Write(BinaryBuffer writer)
     {
-        writer.WriteLong(Payload);
+        writer.Write(BinaryBuffer.LONG,Payload);
     }
 }

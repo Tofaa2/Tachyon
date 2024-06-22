@@ -5,6 +5,7 @@ namespace Tachyon;
 public interface IServer
 {
 
+    
     public ConnectionManager Connection { get; }
 
 }

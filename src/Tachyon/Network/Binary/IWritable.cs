@@ -5,6 +5,6 @@ namespace Tachyon.Network.Binary;
 public interface IWritable
 {
 
-    void Write(IByteBuffer writer);
+    void Write(BinaryBuffer writer);
 
 }

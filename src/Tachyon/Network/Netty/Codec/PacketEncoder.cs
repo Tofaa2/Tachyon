@@ -19,6 +19,6 @@ public class PacketEncoder(PacketRegistry registry) : MessageToByteEncoder<IServ
         }
         
         output.WriteVarInt(packetId.Value);
-        message.Write(output);
+        message.Write(new BinaryBuffer(output));
     }
 }

@@ -5,6 +5,6 @@ namespace Tachyon.Network.Binary;
 public interface IReadable
 {
 
-    void Read(IByteBuffer buffer);
+    void Read(BinaryBuffer buffer);
     
 }

@@ -9,9 +9,14 @@ public class ClientLoginStartPacket : IClientPacket
     public string Username { get; private set; }
     public Guid Uuid { get; private set; }
     
-    public void Read(IByteBuffer reader)
+    public void Read(BinaryBuffer reader)
     {
-        Username = reader.ReadStr(16);
-        Uuid = reader.ReadUUID();
+        Username = reader.Read(BinaryBuffer.STRING);
+        if (Username.Length > 16)
+        {
+            throw new InvalidDataException("Username is too long");
+        }
+
+        Uuid = reader.Read(BinaryBuffer.UUID);
     }
 }

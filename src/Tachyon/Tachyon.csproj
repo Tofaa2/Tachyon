@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Event\" />
     <Folder Include="Network\Packet\Type\Play\Client\" />
     <Folder Include="Network\Packet\Type\Play\Server\" />
   </ItemGroup>

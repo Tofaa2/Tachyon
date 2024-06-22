@@ -12,11 +12,11 @@ public record ServerLoginSuccessPacket(
 ) : IServerPacket
 {
     
-    public void Write(IByteBuffer writer)
+    public void Write(BinaryBuffer writer)
     {
-        writer.WriteUUID(Uuid);
-        writer.WriteStr(Username);
-        writer.WriteVarInt(Properties);
-        writer.WriteBoolean(StrictErrorHandling);
+        writer.Write(BinaryBuffer.UUID, Uuid);
+        writer.Write(BinaryBuffer.STRING, Username);
+        writer.Write(BinaryBuffer.VAR_INT, Properties);
+        writer.Write(BinaryBuffer.BOOL, StrictErrorHandling);
     }
 }

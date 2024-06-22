@@ -11,18 +11,17 @@ public class ClientHandshakePacket : IClientPacket
     public int ProtocolVersion { get; private set; }
     public Intent ConnectionIntent { get; private set; }
     
-    public void Read(IByteBuffer reader)
+    public void Read(BinaryBuffer reader)
     {
-        ProtocolVersion = reader.ReadVarInt();
-        ServerAddress = reader.ReadStr(255);
-        ServerPort = reader.ReadUnsignedShort();
-        ConnectionIntent = reader.ReadVarInt() switch
+        ProtocolVersion = reader.Read(BinaryBuffer.VAR_INT);
+        ServerAddress = reader.Read(BinaryBuffer.STRING);
+        if (ServerAddress.Length > 255)
         {
-            1 => Intent.Status,
-            2 => Intent.Login,
-            3 => Intent.Transfer,
-            _ => ConnectionIntent
-        };
+            throw new ArgumentOutOfRangeException("ServerAddress", "Server address is too long");
+        }
+
+        ServerPort = reader.Read(BinaryBuffer.USHORT);
+        ConnectionIntent = reader.ReadEnum<Intent>();
     }
 
     public enum Intent
