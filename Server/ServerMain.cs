@@ -1,14 +1,14 @@
-namespace Tachyon.Common;
+﻿namespace Server;
 
-public class ShowcaseClass
+public class ServerMain
 {
     private readonly string _name;
 
-    public ShowcaseClass(string name)
+    public ServerMain(string name)
     {
         _name = name;
     }
-
+    
     public string GetName()
     {
         return _name;
