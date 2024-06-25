@@ -45,7 +45,7 @@ def generate_class(
         return
     keys = asd.keys()
     namespace = Namespace(namespace)
-    csClass = CsClass(class_name)
+    cs_class = CsClass(class_name)
     for key in keys:
         field = Field()
         field.set_field_name(friendly_name(key).replace(".", "_"))
@@ -54,10 +54,10 @@ def generate_class(
         field.add_modifier(Modifier.STATIC)
         field.add_modifier(Modifier.READONLY)
         field.set_field_value(field_value)
-        csClass.add_field(field)
-        csClass.add_modifier(Modifier.PUBLIC)
-        csClass.add_modifier(Modifier.STATIC)
-    namespace.add_class(csClass)
+        cs_class.add_field(field)
+        cs_class.add_modifier(Modifier.PUBLIC)
+        cs_class.add_modifier(Modifier.STATIC)
+    namespace.add_class(cs_class)
     file = CsFile(class_file_path)
     file.add_namespace(namespace)
     file.write_to_file()

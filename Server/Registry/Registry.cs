@@ -1,6 +1,8 @@
 ﻿using System.Text.Json.Nodes;
+using Server.Collision;
 using Server.Namespace;
 using Server.Util;
+using Server.World.Block;
 
 namespace Server.Registry;
 
@@ -9,6 +11,27 @@ public static class Registry
 
     public interface IEntry;
 
+
+    public record BlockEntry(
+        int ProtocolId,
+        string TranslationKey,
+        double ExplosionResistance,
+        double Friction,
+        short DefaultStateId,
+        bool CanSpawnIn,
+        double Hardness,
+        PushReaction PushReaction,
+        int MapColorId,
+        bool Occludes,
+        bool BlocksMotion,
+        bool Flamable,
+        bool Solid,
+        bool SolidBlocking,
+        AABB Shape,
+        AABB CollisionShape,
+        bool RedstoneConductor
+        
+        ) : IEntry;
     public record EntityEntry(
         NamespaceId Id,
         int ProtocolId,
