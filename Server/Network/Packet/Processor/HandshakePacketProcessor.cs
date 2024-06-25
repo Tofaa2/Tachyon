@@ -1,0 +1,44 @@
+using Server.Chat.Text;
+using Server.Network.Connection;
+using Server.Network.Packet.Registry;
+using Server.Network.Packet.Type.Handshake.Client;
+
+namespace Server.Network.Packet.Processor;
+
+internal class HandshakePacketProcessor(PacketRegistry packetRegistry, PlayerConnection connection)
+    : PacketProcessor(packetRegistry, connection)
+{
+    private static TextComponent OutdatedServerMessage =
+        new("Outdated server! I'm still on " + global::Server.Tachyon.Version + " :(", NamedTextColor.Red);
+
+    private static TextComponent OutdatedClientMessage =
+        new("Outdated client! Please use " + global::Server.Tachyon.Version + " :(", NamedTextColor.Red);
+
+    public override void Process(IClientPacket packet)
+    {
+        if (packet is not ClientHandshakePacket handshake) return;
+        switch (handshake.ConnectionIntent)
+        {
+            case ClientHandshakePacket.Intent.Status:
+                connection.INTERNAL_SwitchConnectionState(ConnectionState.Status);
+                global::Server.Tachyon.LOGGER.Info("Switched connection state to status.");
+                break;
+            case ClientHandshakePacket.Intent.Login:
+            {
+                connection.INTERNAL_SwitchConnectionState(ConnectionState.Login);
+                if (handshake.ProtocolVersion < global::Server.Tachyon.ProtocolVersion)
+                    connection.Disconnect(OutdatedClientMessage);
+                else if (handshake.ProtocolVersion > global::Server.Tachyon.ProtocolVersion)
+                    connection.Disconnect(OutdatedServerMessage);
+                else
+                    global::Server.Tachyon.LOGGER.Info("Switched connection state to login.");
+                break;
+            }
+            case ClientHandshakePacket.Intent.Transfer:
+                global::Server.Tachyon.LOGGER.Error("Transfer packet intents are not supported yet.");
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+}

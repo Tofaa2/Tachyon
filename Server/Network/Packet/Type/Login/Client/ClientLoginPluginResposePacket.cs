@@ -1,0 +1,27 @@
+using Server.Network.Binary;
+
+namespace Server.Network.Packet.Type.Login.Client;
+
+public class ClientLoginPluginResposePacket : IClientPacket
+{
+
+    public int MessageId;
+    public bool Successful;
+    public byte[]? Data;
+    
+    public void Read(BinaryBuffer reader)
+    {
+        MessageId = reader.Read(BinaryBuffer.VAR_INT);
+        Successful = reader.Read(BinaryBuffer.BOOL);
+        if (Successful)
+        {
+            int limit = reader.Capacity;
+            int length = limit - reader.ReaderIndex;
+            if (length <= 0)
+            {
+                throw new Exception("No data in packet");
+            }
+            Data = reader.ReadBytes(length);
+        }
+    }
+}
