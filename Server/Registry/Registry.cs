@@ -12,6 +12,14 @@ public static class Registry
     public interface IEntry;
 
 
+    public record MaterialEntry(
+        NamespaceId Id,
+        int ProtocolId,
+        string TranslationKey,
+        IBlock CorrespondingBlock,
+        JsonObject DefaultComponents
+        
+        ) : IEntry;
     public record BlockEntry(
         NamespaceId Id,
         int ProtocolId,
@@ -74,22 +82,38 @@ public static class Registry
     {
         public static readonly Resource ATTRIBUTES = new("attributes.json");
         public static readonly Resource BLOCKS = new("blocks.json");
+        public static readonly Resource MATERIALS = new("items.json");
     }
 
     public record Container<T>(Resource Resource, IDictionary<string, T> Namespaces, IObjectArray<T> Ids) where T : IStaticProtocolObject
     {
 
-        public T Get(string namespaceId)
+        public T GetOrDefault(string namespaceId, T defaultValue)
+        {
+            return Namespaces.TryGetValue(namespaceId, out var value) ? value : defaultValue;
+        }
+        
+        public T GetOrDefault(NamespaceId namespaceId, T defaultValue)
+        {
+            return Namespaces.TryGetValue(namespaceId.Full, out var value) ? value : defaultValue;
+        }
+        
+        public T GetOrDefault(int id, T defaultValue)
+        {
+            return Ids.Get(id) ?? defaultValue;
+        }
+        
+        public T? Get(string namespaceId)
         {
             return Namespaces[namespaceId];
         }
         
-        public T Get(NamespaceId namespaceId)
+        public T? Get(NamespaceId namespaceId)
         {
             return Namespaces[namespaceId.Full];
         }
 
-        public T getId(int id)
+        public T? GetId(int id)
         {
             return Ids.Get(id);
         }

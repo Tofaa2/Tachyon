@@ -23,6 +23,18 @@
       <EmbeddedResource Include="Resources\attributes.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="Resources\items.json" />
+      <EmbeddedResource Include="Resources\items.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="Resources\blocks.json" />
+      <EmbeddedResource Include="Resources\blocks.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Component\" />
     </ItemGroup>
 
 </Project>

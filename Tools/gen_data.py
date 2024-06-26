@@ -110,3 +110,11 @@ if __name__ == '__main__':
         "IBlock",
         "BlockImpl.REGISTRY.Get(\"{key}\")"
     )
+    generate_class(
+        "Server.Item.Material",
+        "Materials",
+        "items",
+        "../Server/Item/Material/Materials.cs",
+        "IMaterial",
+        "MaterialImpl.REGISTRY.Get(\"{key}\")"
+    )
