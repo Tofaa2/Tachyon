@@ -2,6 +2,12 @@
 
 namespace Server.World.Block;
 
+
+public enum A 
+{
+    
+}
+
 public class BlockFace
 {
 

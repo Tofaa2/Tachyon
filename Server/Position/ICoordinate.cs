@@ -14,4 +14,8 @@ public interface ICoordinate
     public double DistanceSquared(ICoordinate other);
     public double Distance(ICoordinate other);
     
+    public ICoordinate Add(ICoordinate other);
+    
+    public ICoordinate Add(double x, double y, double z);
+    
 }

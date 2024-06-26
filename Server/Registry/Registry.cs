@@ -13,6 +13,7 @@ public static class Registry
 
 
     public record BlockEntry(
+        NamespaceId Id,
         int ProtocolId,
         string TranslationKey,
         double ExplosionResistance,
@@ -30,7 +31,6 @@ public static class Registry
         AABB Shape,
         AABB CollisionShape,
         bool RedstoneConductor
-        
         ) : IEntry;
     public record EntityEntry(
         NamespaceId Id,
@@ -52,7 +52,7 @@ public static class Registry
         double MaxValue) : IEntry;
     
 
-    public static Container<T> CreateStaticContainer<T>(Resource resource, Func<string, JsonObject, T> loader) where T : IRegistriedStaticProtocolObject<AttributeEntry>
+    public static Container<T> CreateStaticContainer<T, TC>(Resource resource, Func<string, JsonObject, T> loader)where TC : IEntry where T : IRegistriedStaticProtocolObject<TC> 
     {
         var namespaces = new Dictionary<string, T>();
         var entries = JsonNode.Parse(File.ReadAllText(resource.fileName))!.AsObject();
@@ -73,6 +73,7 @@ public static class Registry
     public record Resource(string fileName)
     {
         public static readonly Resource ATTRIBUTES = new("attributes.json");
+        public static readonly Resource BLOCKS = new("blocks.json");
     }
 
     public record Container<T>(Resource Resource, IDictionary<string, T> Namespaces, IObjectArray<T> Ids) where T : IStaticProtocolObject

@@ -14,7 +14,17 @@ public record Location(Point Point, float Yaw, float Pitch) : ICoordinate
     {
         return Point.Distance(other);
     }
-    
+
+    public ICoordinate Add(ICoordinate other)
+    {
+        return new Location(Point.Add(other) as Point, Yaw, Pitch);
+    }
+
+    public ICoordinate Add(double x, double y, double z)
+    {
+        return new Location(Point.Add(x, y, z) as Point, Yaw, Pitch);
+    }
+
     // Overload operators
     public static Location operator +(Location a, Location b)
     {

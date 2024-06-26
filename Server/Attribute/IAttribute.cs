@@ -7,7 +7,7 @@ public interface IAttribute : IRegistriedStaticProtocolObject<Registry.Registry.
 {
     public string TranslationKey => Registry.TranslationKey;
     public double DefaultValue => Registry.DefaultValue;
-
+    
     NamespaceId IStaticProtocolObject.Id => Registry.Id;
     int IProtocolObject.ProtocolId => Registry.ProtocolId;
 }
