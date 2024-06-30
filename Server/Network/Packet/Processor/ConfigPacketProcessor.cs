@@ -1,6 +1,8 @@
+using Server.Item.Armor;
 using Server.Network.Connection;
 using Server.Network.Packet.Registry;
 using Server.Network.Packet.Type.Configuration.Client;
+using Server.Network.Packet.Type.Configuration.Server;
 
 namespace Server.Network.Packet.Processor;
 
@@ -10,6 +12,21 @@ internal class ConfigPacketProcessor(PacketRegistry packetRegistry, PlayerConnec
     {
         switch (packet)
         {
+            case ClientConfigurationClientInfoPacket s:
+                connection.SendPacketNow(ITrimMaterial.CreatePacket());
+                connection.SendPacketNow(new ServerConfigurationFinishPacket());
+                connection.INTERNAL_SwitchConnectionState(ConnectionState.Play);
+                break;
+            // case ClientConfigurationKnownDataPacksPacket d:
+            //     string packs = "";
+            //     foreach (var pack in d.KnownDataPacks)
+            //     {
+            //         packs += pack.Namespace;
+            //     }
+            //     Tachyon.LOGGER.Info("Known data packs: "  + packs);
+            //     connection.SendPacketNow(ITrimMaterial.CreatePacket());
+            //     connection.SendPacketNow(new ServerConfigurationFinishPacket());
+            //     break;
             case ClientConfigurationAcknowledgeFinishPacket p:
             {
                 Tachyon.LOGGER.Info("Configuration step finished");

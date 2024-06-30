@@ -88,6 +88,7 @@ public class PlayerConnection
 
     public void ProcessPacket(IClientPacket packet)
     {
+        Tachyon.LOGGER.Info($"Processing packet {packet.GetType().Name}");
         _processor?.Process(packet);
     }
     

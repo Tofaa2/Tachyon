@@ -13,6 +13,9 @@ public static class Registry
     public interface IEntry;
 
 
+    public record StatisticTypeEntry(
+        int ProtocolId,
+        NamespaceId Id) : IEntry;
     public record TrimMaterialEntry(
         NamespaceId Id,
         ITrimMaterial.Description Description,
@@ -92,6 +95,7 @@ public static class Registry
         public static readonly Resource BLOCKS = new("blocks.json");
         public static readonly Resource MATERIALS = new("items.json");
         public static readonly Resource TRIM_MATERIALS = new("trim_materials.json");
+        public static readonly Resource STATISTIC_TYPES = new("custom_statistics.json");
     }
 
     public record Container<T>(Resource Resource, IDictionary<string, T> Namespaces, IDictionary<int, T> Ids) where T : IStaticProtocolObject

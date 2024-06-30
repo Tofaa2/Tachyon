@@ -5,6 +5,7 @@ using Server.Network.Packet.Type.Configuration.Server;
 using Server.Network.Packet.Type.Handshake.Client;
 using Server.Network.Packet.Type.Login.Client;
 using Server.Network.Packet.Type.Login.Server;
+using Server.Network.Packet.Type.Play.Server;
 using Server.Network.Packet.Type.Status;
 using Server.Network.Packet.Type.Status.Client;
 using Server.Network.Packet.Type.Status.Server;
@@ -26,6 +27,19 @@ public class PacketRegistry
         {
             _clientPackets[i] = new ConcurrentDictionary<int, Func<IClientPacket>>();
         }
+        
+        
+        // Play
+        RegisterServer<ServerPlayBundleDelimiterPacket>(0x00);
+        RegisterServer<ServerPlaySpawnEntityPacket>(0x01);
+        RegisterServer<ServerPlaySpawnExperienceOrbPacket>(0x02);
+        RegisterServer<ServerPlayEntityAnimationPacket>(0x03);
+        RegisterServer<ServerPlayAwardStatisticsPacket>(0x04);
+        RegisterServer<ServerPlayAckgnowledgeBlockChangePacket>(0x05);
+        RegisterServer<ServerPlaySetBlockDestroyStagePacket>(0x06);
+        RegisterServer<ServerPlayBlockEntityDataPacket>(0x07);
+        RegisterServer<ServerPlayBlockActionPacket>(0x08);
+        RegisterServer<ServerPlayBlockUpdatePacket>(0x09);
         
         // Handshake
         RegisterClient(ConnectionState.Handshake, 0x00, () => new ClientHandshakePacket());

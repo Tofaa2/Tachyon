@@ -13,5 +13,15 @@ public class Entity
         Uuid = uuid;
         EntityId = Interlocked.Increment(ref _nextEntityId);
     }
+
+    public enum Animation : byte
+    {
+        SwingMainHand = 0,
+        LeaveBed = 1,
+        SwingOffHand = 3,
+        CriticalEffect = 4,
+        MagicCriticalEffect = 5
+    }
+    
     
 }

@@ -10,6 +10,11 @@ Root:
     Server: The actual library
     Server.Impl: A basic test implementation of the server
     Tools: Various basic tools, scripts etc that are used to make development easier, for example data driven content code generation
-    
+```
 
+Packet naming scheme
+```plaintext
+    [SendingSide][ConnectionState][PacketName]
+    SendingSide: Client ( the client sent the packet) or Server (the server sent the packet)
+    Ex: ServerConfigurationDisconnectPacket  | ClientStatusPingRequestpacket
 ```

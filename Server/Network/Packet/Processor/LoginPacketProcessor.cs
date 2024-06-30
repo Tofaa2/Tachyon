@@ -1,9 +1,12 @@
 using Server.Chat.Text;
+using Server.Datapack;
 using Server.Item.Armor;
 using Server.Network.Connection;
 using Server.Network.Packet.Registry;
 using Server.Network.Packet.Type.Configuration.Server;
 using Server.Network.Packet.Type.Login.Client;
+using Server.Network.Packet.Type.Login.Server;
+using Server.Util;
 
 namespace Server.Network.Packet.Processor;
 
@@ -21,6 +24,8 @@ internal class LoginPacketProcessor(PacketRegistry packetRegistry, PlayerConnect
             case ClientLoginPluginResposePacket p:
                 break;
             case ClientLoginAcknowledgedPacket p:
+                connection.INTERNAL_SwitchConnectionState(ConnectionState.Configuration);
+                connection.SendPacketNow(new ServerConfigurationKnownDataPacksPacket(new EmptyCollection<KnownDataPack>()));
                 break;
         }
     }
@@ -37,9 +42,6 @@ internal class LoginPacketProcessor(PacketRegistry packetRegistry, PlayerConnect
             {
                 var uuid = Tachyon.ConnectionManager.CreatePlayerConnectionUuid(connection, packet.Username);
                 Tachyon.ConnectionManager.CreatePlayer(connection, uuid, packet.Username);
-                connection.SendPacketNow(ITrimMaterial.CreatePacket());
-                connection.SendPacketNow(new ServerConfigurationFinishPacket());
-                connection.INTERNAL_SwitchConnectionState(ConnectionState.Configuration);
             }
             catch (Exception e)
             {
