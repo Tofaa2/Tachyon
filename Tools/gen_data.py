@@ -25,6 +25,7 @@ def fetch_dir_idiotic(file) -> dict:
 
     return attributes
 
+
 def fetch_dir(file) -> dict:
     attributes_path = "../Server/Resources/" + file + ".json"
 
@@ -52,6 +53,63 @@ def friendly_name(name: str) -> str:
     split = name.split(":")
     if len(split) > 1:
         return split[1].upper()
+
+
+def generate_constants():
+    constants = fetch_dir("constants")
+    if not constants:
+        print("No constants to display.")
+        return
+
+    keys = constants.keys()
+    namespace = Namespace("Server")
+    cs_class = CsClass("MinecraftConstants")
+    cs_class.add_modifier(Modifier.PUBLIC)
+    cs_class.add_modifier(Modifier.STATIC)
+
+    nameField = Field()
+    nameField.set_field_name("VERSION_NAME")
+    nameField.set_field_type("string")
+    nameField.set_field_value("\"" + constants["name"] + "\"")
+
+    versionField = Field()
+    versionField.set_field_name("PROTOCOL_VERSION")
+    versionField.set_field_type("int")
+    versionField.set_field_value(constants["protocol"])
+
+    worldField = Field()
+    worldField.set_field_name("WORLD_FORMAT_VERSION")
+    worldField.set_field_type("int")
+    worldField.set_field_value(constants["world"])
+
+    rpField = Field()
+    rpField.set_field_name("RESOURCE_PACK_VERSION")
+    rpField.set_field_type("int")
+    rpField.set_field_value(constants["resourcepack"])
+
+    datapackField = Field()
+    datapackField.set_field_name("DATA_PACK_VERSION")
+    datapackField.set_field_type("int")
+    datapackField.set_field_value(constants["datapack"])
+
+    listOfFields = [nameField, versionField, worldField, rpField, datapackField]
+
+    for field in listOfFields:
+        field.add_modifier(Modifier.PUBLIC)
+        field.add_modifier(Modifier.STATIC)
+        field.add_modifier(Modifier.READONLY)
+        cs_class.add_field(field)
+
+    namespace.add_class(cs_class)
+    file = CsFile("../Server/MinecraftConstants.cs")
+    file.add_namespace(namespace)
+    file.write_to_file()
+
+
+def add_modifiers(d: ModifierBound, modifiers: list):
+    for modifier in modifiers:
+        d.add_modifier(modifier)
+
 
 def generate_class(
         namespace: str,
@@ -93,6 +151,7 @@ def generate_class(
 
 
 if __name__ == '__main__':
+    generate_constants()
     generate_class(
         "Server.Attribute",
         "Attributes",
@@ -117,4 +176,12 @@ if __name__ == '__main__':
         "../Server/Item/Material/Materials.cs",
         "IMaterial",
         "MaterialImpl.REGISTRY.Get(\"{key}\")"
+    )
+    generate_class(
+        "Server.Item.Armor",
+        "TrimMaterials",
+        "trim_materials",
+        "../Server/Item/Armor/TrimMaterials.cs",
+        "ITrimMaterial",
+        "TrimMaterialImpl.REGISTRY.Get(\"{key}\")"
     )

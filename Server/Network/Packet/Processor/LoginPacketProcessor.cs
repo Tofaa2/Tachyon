@@ -1,4 +1,5 @@
 using Server.Chat.Text;
+using Server.Item.Armor;
 using Server.Network.Connection;
 using Server.Network.Packet.Registry;
 using Server.Network.Packet.Type.Configuration.Server;
@@ -34,8 +35,9 @@ internal class LoginPacketProcessor(PacketRegistry packetRegistry, PlayerConnect
         {
             try
             {
-                var uuid = global::Server.Tachyon.ConnectionManager.CreatePlayerConnectionUuid(connection, packet.Username);
-                global::Server.Tachyon.ConnectionManager.CreatePlayer(connection, uuid, packet.Username);
+                var uuid = Tachyon.ConnectionManager.CreatePlayerConnectionUuid(connection, packet.Username);
+                Tachyon.ConnectionManager.CreatePlayer(connection, uuid, packet.Username);
+                connection.SendPacketNow(ITrimMaterial.CreatePacket());
                 connection.SendPacketNow(new ServerConfigurationFinishPacket());
                 connection.INTERNAL_SwitchConnectionState(ConnectionState.Configuration);
             }

@@ -2,10 +2,10 @@
 using static Server.Registry.Registry;
 namespace Server.World.Block;
 
-internal record BlockImpl(Registry.Registry.BlockEntry Registry) : IBlock
+internal record BlockImpl(BlockEntry Registry) : IBlock
 {
 
-    internal static readonly Container<IBlock> REGISTRY = CreateStaticContainer<IBlock, BlockEntry>(
+    internal static Container<IBlock> REGISTRY = CreateStaticContainer<IBlock, BlockEntry>(
         Resource.BLOCKS, 
         (namespaceId, jsonObject) => new BlockImpl(
             new BlockEntry(
@@ -27,6 +27,5 @@ internal record BlockImpl(Registry.Registry.BlockEntry Registry) : IBlock
                 null,
                 null,
                 jsonObject["redstoneConductor"].GetValue<bool>()
-        )));
-    
+            )));
 }

@@ -1,8 +1,10 @@
 using DotNetty.Buffers;
 using Server.Chat.Text;
+using Server.Datapack;
 using Server.Namespace;
 using Server.Network.Packet.Type.Configuration.Server;
 using Server.Position;
+using Server.Resourcepack;
 using Byte = Server.Network.Binary.Byte;
 using Double = Server.Network.Binary.Double;
 using String = Server.Network.Binary.String;
@@ -31,6 +33,8 @@ public class BinaryBuffer(IByteBuffer buffer)
     public static readonly IType<ServerConfigurationRegistryPacket.Entry> REGISTRY_ENTRY = new RegistryEntry();
     public static readonly IType<byte[]> BYTE_ARRAY = new ByteArray();
     public static readonly IType<byte[]> RAW_BYTES = new RawBytes();
+    public static readonly IType<ResourcePack> RESOURCEPACK = new Resourcepack();
+    public static readonly IType<KnownDataPack> KNOWN_DATA_PACK = new DataPack();
     
     public readonly IByteBuffer Buffer = buffer;
 
@@ -120,6 +124,24 @@ public class BinaryBuffer(IByteBuffer buffer)
     
     public interface IType<T>
     {
+
+        public static IType<C> Lazy<C>(Func<BinaryBuffer, C> read, Action<BinaryBuffer, C> write)
+        {
+            return new LazyType<C>(read, write);
+        }
+        
+        internal class LazyType<C>(Func<BinaryBuffer, C> read, Action<BinaryBuffer, C> write) : IType<C>
+        {
+            public C Read(BinaryBuffer buffer)
+            {
+                return read(buffer);
+            }
+
+            public void Write(BinaryBuffer buffer, C value)
+            {
+                write(buffer, value);
+            }
+        }
 
         T Read(BinaryBuffer buffer);
         

@@ -54,7 +54,13 @@ public class PacketRegistry
         
         // Configuration
         RegisterClient(ConnectionState.Configuration, 0x00, () => new ClientConfigurationClientInfoPacket());
+        RegisterClient(ConnectionState.Configuration, 0x01, () => new ClientConfigurationCookieResponsePacket());
+        RegisterClient(ConnectionState.Configuration, 0x02, () => new ClientConfigurationPluginMessagePacket());
         RegisterClient(ConnectionState.Configuration, 0x03, () => new ClientConfigurationAcknowledgeFinishPacket());
+        RegisterClient(ConnectionState.Configuration, 0x04, () => new ClientConfigurationKeepAlivePacket());
+        RegisterClient(ConnectionState.Configuration, 0x05, () => new ClientConfigurationPongPacket());
+        RegisterClient(ConnectionState.Configuration, 0x06, () => new ClientConfigurationResourcePackResponsePacket());
+        RegisterClient(ConnectionState.Configuration, 0x07, () => new ClientConfigurationKnownDataPacksPacket());
         
         RegisterServer<ServerConfigurationCookieRequestPacket>(0x00);
         RegisterServer<ServerConfigurationPluginMessagePacket>(0x01);
@@ -64,6 +70,15 @@ public class PacketRegistry
         RegisterServer<ServerConfigurationPingPacket>(0x05);
         RegisterServer<ServerConfigurationResetChatPacket>(0x06);
         RegisterServer<ServerConfigurationRegistryPacket>(0x07);
+        RegisterServer<ServerConfigurationRemoveResourcePackPacket>(0x08);
+        RegisterServer<ServerConfigurationAddResourcePackPacket>(0x09);
+        RegisterServer<ServerConfigurationStoreCookiePacket>(0x0A);
+        RegisterServer<ServerConfigurationTransferPacket>(0x0B);
+        RegisterServer<ServerConfigurationFeatureFlagsPacket>(0x0C);
+        RegisterServer<ServerConfigurationUpdateTagsPacket>(0x0D);
+        RegisterServer<ServerConfigurationKnownDataPacksPacket>(0x0E);
+        RegisterServer<ServerConfigurationCustomReportDetailsPacket>(0x0F);
+        RegisterServer<ServerConfigurationServerLinksPacket>(0x10);
     }
     
     private void RegisterClient(ConnectionState state, int packetId, Func<IClientPacket> supplier)

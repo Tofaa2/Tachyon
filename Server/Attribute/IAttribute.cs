@@ -1,9 +1,11 @@
 ﻿using Server.Namespace;
 using Server.Registry;
+using Server.Util;
+using static Server.Registry.Registry;
 
 namespace Server.Attribute;
 
-public interface IAttribute : IRegistriedStaticProtocolObject<Registry.Registry.AttributeEntry>
+public interface IAttribute : IRegistriedStaticProtocolObject<AttributeEntry>
 {
 
     public static IAttribute? FromId(NamespaceId id)
@@ -20,8 +22,8 @@ public interface IAttribute : IRegistriedStaticProtocolObject<Registry.Registry.
     {
         return AttributeImpl.REGISTRY.GetId(protocolId);
     }
-    
-    
+
+
     public string TranslationKey => Registry.TranslationKey;
     public double DefaultValue => Registry.DefaultValue;
     

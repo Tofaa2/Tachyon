@@ -31,6 +31,14 @@
       <EmbeddedResource Include="Resources\blocks.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="Resources\constants.json" />
+      <EmbeddedResource Include="Resources\constants.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="Resources\trim_materials.json" />
+      <EmbeddedResource Include="Resources\trim_materials.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>

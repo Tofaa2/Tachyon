@@ -1,9 +1,12 @@
 ﻿using Server.Namespace;
 using Server.Registry;
+using Server.Util;
+using static Server.Registry.Registry;
+
 
 namespace Server.World.Block;
 
-public interface IBlock : IRegistriedStaticProtocolObject<Registry.Registry.BlockEntry>
+public interface IBlock : IRegistriedStaticProtocolObject<BlockEntry>
 {
 
     public static IBlock FromId(string namespaceId)

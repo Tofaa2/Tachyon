@@ -7,8 +7,8 @@ namespace Server.Ping;
 public class ServerListPingResponse
 {
 
-    public string Version { get; set; } = global::Server.Tachyon.Version;
-    public int Protocol { get; set; } = global::Server.Tachyon.ProtocolVersion;
+    public string Version { get; set; } = MinecraftConstants.VERSION_NAME;
+    public int Protocol { get; set; } = MinecraftConstants.PROTOCOL_VERSION;
     public int MaxPlayers { get; set; } = 10000;
     public int OnlinePlayers { get; set; } = 0;
 

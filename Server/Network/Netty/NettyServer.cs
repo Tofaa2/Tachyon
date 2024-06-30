@@ -59,6 +59,10 @@ public class NettyServer
             if (t.IsFaulted)
             {
                 Tachyon.LOGGER.Error("Failed to start server: " + t.Exception);
+                // free the port
+                _bossGroup.ShutdownGracefullyAsync().Wait();
+                _workerGroup.ShutdownGracefullyAsync().Wait();
+                _bootstrap = null;
                 return;
             }
             _channel = t.Result;

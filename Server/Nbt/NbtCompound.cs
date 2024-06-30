@@ -6,8 +6,13 @@ namespace Server.Nbt;
 public class NbtCompound : Nbt, IDictionary<string, Nbt>
 {
     
-    private readonly Dictionary<string, global::Server.Nbt.Nbt?> _value = new();
+    private readonly Dictionary<string, Nbt?> _value = new();
 
+    public NbtCompound() {}
+    public NbtCompound(Dictionary<string, Nbt?> value)
+    {
+        _value = value.ToDictionary(entry => entry.Key, entry => entry.Value);
+    }
     
     public bool Has(string key)
     {

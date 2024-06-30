@@ -28,11 +28,12 @@ public interface IObjectArray<T>
 internal class MulthThreadObjectArray<T> : IObjectArray<T>
 {
     private volatile T[] array;
+    private object lockObject = new();
     private int max;
 
     internal MulthThreadObjectArray(int size)
     {
-        this.array = new T[size];
+        array = new T[size];
     }
 
     public T? Get(int index)
@@ -42,19 +43,21 @@ internal class MulthThreadObjectArray<T> : IObjectArray<T>
 
     public void Set(int index, T? value)
     {
-        if (index >= array.Length)
+        lock (lockObject) 
         {
-            int newLength = index * 2 + 1;
-            T[] newAr = new T[newLength];
-            Array.Copy(array, newAr, newLength);
+            if (index >= array.Length)
+            {
+                int newLength = index * 2 + 1;
+                Array.Resize(ref array, newLength);
+            }
+            array[index] = value;
+            max = Math.Max(max, index);
         }
-        array[index] = value;
-        this.max = Math.Max(this.max, index);
     }
 
     public void Trim()
     {
-        this.array.CopyTo(this.array, max + 1);
+        array.CopyTo(array, max + 1);
     }
 }
 internal class SingleThreadObjectArray<T> : IObjectArray<T>
@@ -64,7 +67,8 @@ internal class SingleThreadObjectArray<T> : IObjectArray<T>
 
     internal SingleThreadObjectArray(int size)
     {
-        this.array = new T[size];
+        array = new T[size];
+        max = size;
     }
 
     public T? Get(int index)
@@ -76,16 +80,15 @@ internal class SingleThreadObjectArray<T> : IObjectArray<T>
     {
         if (index >= array.Length)
         {
-            int newLength = index * 2 + 1;
-            T[] newAr = new T[newLength];
-            Array.Copy(array, newAr, newLength);
+            var newLength = index * 2 + 1;
+            Array.Resize(ref array, newLength);
         }
-        array[index] = value;
-        this.max = Math.Max(this.max, index);
+        array[index] = value!;
+        max = Math.Max(max, index);
     }
 
     public void Trim()
     {
-        this.array.CopyTo(this.array, max + 1);
+        array.CopyTo(array, max + 1);
     }
 }

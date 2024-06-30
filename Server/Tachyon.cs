@@ -8,11 +8,7 @@ namespace Server;
 public class Tachyon
 {
 
-    public const int ProtocolVersion = 767;
-    public const string Version = "1.21";
-
     public static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(Tachyon));
-    
 
     private static volatile Server? _instance;
     public static IServer? Process => _instance;
@@ -26,7 +22,7 @@ public class Tachyon
             throw new InvalidOperationException("Server already initialized");
         }
 
-        global::Server.Server instance = new();
+        Server instance = new();
         instance.Init();
         _instance = instance;
     }

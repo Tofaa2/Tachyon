@@ -1,13 +1,54 @@
 using DotNetty.Codecs;
 using Server.Chat.Text;
+using Server.Datapack;
 using Server.Namespace;
 using Server.Nbt;
+using Server.Network.Packet.Type.Configuration.Client;
 using Server.Network.Packet.Type.Configuration.Server;
 using Server.Position;
+using Server.Resourcepack;
 using Tachyon.Nbt.Io;
 
 namespace Server.Network.Binary;
 
+internal record DataPack : BinaryBuffer.IType<KnownDataPack>
+{
+    public KnownDataPack Read(BinaryBuffer buffer)
+    {
+        var ns = buffer.Read(BinaryBuffer.STRING);
+        var id = buffer.Read(BinaryBuffer.STRING);
+        var version = buffer.Read(BinaryBuffer.STRING);
+        return new KnownDataPack(ns, id, version);
+    }
+
+    public void Write(BinaryBuffer buffer, KnownDataPack value)
+    {
+        buffer.Write(BinaryBuffer.STRING, value.Namespace);
+        buffer.Write(BinaryBuffer.STRING, value.Id);
+        buffer.Write(BinaryBuffer.STRING, value.Version);
+    }
+}
+internal record Resourcepack : BinaryBuffer.IType<ResourcePack>
+{
+    public ResourcePack Read(BinaryBuffer buffer)
+    {
+        var uuid = buffer.Read(BinaryBuffer.UUID);
+        var url = buffer.Read(BinaryBuffer.STRING);
+        var hash = buffer.Read(BinaryBuffer.STRING);
+        var forced = buffer.Read(BinaryBuffer.BOOL);
+        var prompt = buffer.ReadOptional(BinaryBuffer.TEXT_COMPONENT);
+        return new ResourcePack(uuid, url, hash, forced, prompt);
+    }
+
+    public void Write(BinaryBuffer buffer, ResourcePack value)
+    {
+        buffer.Write(BinaryBuffer.UUID, value.Uuid);
+        buffer.Write(BinaryBuffer.STRING, value.Url);
+        buffer.Write(BinaryBuffer.STRING, value.Hash);
+        buffer.Write(BinaryBuffer.BOOL, value.Forced);
+        buffer.WriteOptional(BinaryBuffer.TEXT_COMPONENT, value.PromptMessage);
+    }
+}
 internal record ByteArray : BinaryBuffer.IType<byte[]>
 {
     public byte[] Read(BinaryBuffer buffer)

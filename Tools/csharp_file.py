@@ -80,9 +80,13 @@ class Field(ModifierBound, Stringified):
 class CsClass(ModifierBound, Stringified):
     def __init__(self, class_name):
         super().__init__()
+        self.static_method_bodies = list() # list of strings
         self.class_name = class_name
         self.methods = list()
         self.fields = list()
+
+    def add_static_method_body(self, static_method_body):
+        self.static_method_bodies.append(static_method_body)
 
     def add_field(self, field_obj):
         self.fields.append(field_obj)

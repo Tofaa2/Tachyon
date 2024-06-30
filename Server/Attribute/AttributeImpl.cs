@@ -7,7 +7,7 @@ internal record AttributeImpl(
 ) : IAttribute
 {
 
-    internal static Container<IAttribute> REGISTRY = CreateStaticContainer<IAttribute, AttributeEntry>(
+    internal static Container<IAttribute> REGISTRY=CreateStaticContainer<IAttribute, AttributeEntry>(
         Resource.ATTRIBUTES,
         (namespaceId, jsonObject) => new AttributeImpl(
             new AttributeEntry(

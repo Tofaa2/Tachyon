@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Nodes;
 using Server.Collision;
+using Server.Item.Armor;
 using Server.Namespace;
 using Server.Util;
 using Server.World.Block;
@@ -12,6 +13,13 @@ public static class Registry
     public interface IEntry;
 
 
+    public record TrimMaterialEntry(
+        NamespaceId Id,
+        ITrimMaterial.Description Description,
+        string AssetName,
+        string Ingredient,
+        float ItemModelIndex
+        ) : IEntry;
     public record MaterialEntry(
         NamespaceId Id,
         int ProtocolId,
@@ -63,14 +71,14 @@ public static class Registry
     public static Container<T> CreateStaticContainer<T, TC>(Resource resource, Func<string, JsonObject, T> loader)where TC : IEntry where T : IRegistriedStaticProtocolObject<TC> 
     {
         var namespaces = new Dictionary<string, T>();
-        var entries = JsonNode.Parse(File.ReadAllText(resource.fileName))!.AsObject();
-        var ids = IObjectArray<T>.SingleThreaded<T>(entries.Count);
+        var entries = JsonNode.Parse(File.ReadAllText("Resources/" + resource.fileName))!.AsObject();
+        var ids = new Dictionary<int, T>(entries.Count);
         foreach (var entry in entries)
         {
             var nsid = entry.Key!;
             var obj = entry.Value!.AsObject();
             var value = loader(nsid, obj);
-            ids.Set(value.ProtocolId, value);
+            ids[value.ProtocolId] = value;
             namespaces[value.Id.Full] = value;
         }
 
@@ -83,9 +91,10 @@ public static class Registry
         public static readonly Resource ATTRIBUTES = new("attributes.json");
         public static readonly Resource BLOCKS = new("blocks.json");
         public static readonly Resource MATERIALS = new("items.json");
+        public static readonly Resource TRIM_MATERIALS = new("trim_materials.json");
     }
 
-    public record Container<T>(Resource Resource, IDictionary<string, T> Namespaces, IObjectArray<T> Ids) where T : IStaticProtocolObject
+    public record Container<T>(Resource Resource, IDictionary<string, T> Namespaces, IDictionary<int, T> Ids) where T : IStaticProtocolObject
     {
 
         public T GetOrDefault(string namespaceId, T defaultValue)
@@ -100,7 +109,7 @@ public static class Registry
         
         public T GetOrDefault(int id, T defaultValue)
         {
-            return Ids.Get(id) ?? defaultValue;
+            return Ids[id] ?? defaultValue;
         }
         
         public T? Get(string namespaceId)
@@ -115,7 +124,7 @@ public static class Registry
 
         public T? GetId(int id)
         {
-            return Ids.Get(id);
+            return Ids[id];
         }
         
         public ICollection<T> ValuesCopy => Namespaces.Values.ToList();

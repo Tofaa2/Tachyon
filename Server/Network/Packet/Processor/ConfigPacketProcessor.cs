@@ -12,7 +12,7 @@ internal class ConfigPacketProcessor(PacketRegistry packetRegistry, PlayerConnec
         {
             case ClientConfigurationAcknowledgeFinishPacket p:
             {
-                global::Server.Tachyon.LOGGER.Info("Configuration step finished");
+                Tachyon.LOGGER.Info("Configuration step finished");
                 connection.INTERNAL_SwitchConnectionState(ConnectionState.Play);
                 break;
             }

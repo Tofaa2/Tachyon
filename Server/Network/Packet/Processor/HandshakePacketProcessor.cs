@@ -8,11 +8,10 @@ namespace Server.Network.Packet.Processor;
 internal class HandshakePacketProcessor(PacketRegistry packetRegistry, PlayerConnection connection)
     : PacketProcessor(packetRegistry, connection)
 {
-    private static TextComponent OutdatedServerMessage =
-        new("Outdated server! I'm still on " + global::Server.Tachyon.Version + " :(", NamedTextColor.Red);
+    private static readonly TextComponent OutdatedServerMessage = new("Outdated server! I'm still on " + MinecraftConstants.VERSION_NAME + " :(", NamedTextColor.Red);
 
-    private static TextComponent OutdatedClientMessage =
-        new("Outdated client! Please use " + global::Server.Tachyon.Version + " :(", NamedTextColor.Red);
+    private static readonly TextComponent OutdatedClientMessage =
+        new("Outdated client! Please use " + MinecraftConstants.VERSION_NAME + " :(", NamedTextColor.Red);
 
     public override void Process(IClientPacket packet)
     {
@@ -26,12 +25,12 @@ internal class HandshakePacketProcessor(PacketRegistry packetRegistry, PlayerCon
             case ClientHandshakePacket.Intent.Login:
             {
                 connection.INTERNAL_SwitchConnectionState(ConnectionState.Login);
-                if (handshake.ProtocolVersion < global::Server.Tachyon.ProtocolVersion)
+                if (handshake.ProtocolVersion < MinecraftConstants.PROTOCOL_VERSION)
                     connection.Disconnect(OutdatedClientMessage);
-                else if (handshake.ProtocolVersion > global::Server.Tachyon.ProtocolVersion)
+                else if (handshake.ProtocolVersion > MinecraftConstants.PROTOCOL_VERSION)
                     connection.Disconnect(OutdatedServerMessage);
                 else
-                    global::Server.Tachyon.LOGGER.Info("Switched connection state to login.");
+                    Tachyon.LOGGER.Info("Switched connection state to login.");
                 break;
             }
             case ClientHandshakePacket.Intent.Transfer:
