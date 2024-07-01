@@ -44,7 +44,7 @@ public class NettyServer
                     .AddLast("size-decoder", new SizeDecoder())
                     .AddLast("packet-decoder", new PacketDecoder(_packetRegistry, connection))
                     .AddLast("size-encoder", new SizeEncoder())
-                    .AddLast("packet-encoder", new PacketEncoder(_packetRegistry))
+                    .AddLast("packet-encoder", new PacketEncoder(connection, _packetRegistry))
                     .AddLast("handler", new NettyChannelHandler(connection));
 
                 connection.INTERNAL_SwitchConnectionState(ConnectionState.Handshake);

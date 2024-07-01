@@ -1,125 +1,36 @@
-using System.Collections.Concurrent;
 using Server.Network.Connection;
-using Server.Network.Packet.Type.Configuration.Client;
-using Server.Network.Packet.Type.Configuration.Server;
-using Server.Network.Packet.Type.Handshake.Client;
-using Server.Network.Packet.Type.Login.Client;
-using Server.Network.Packet.Type.Login.Server;
-using Server.Network.Packet.Type.Play.Server;
-using Server.Network.Packet.Type.Status;
-using Server.Network.Packet.Type.Status.Client;
-using Server.Network.Packet.Type.Status.Server;
 using Server.Util;
 
 namespace Server.Network.Packet.Registry;
 
 public class PacketRegistry
 {
-    private ConcurrentDictionary<System.Type, int> _serverPacketTypes = new();
 
-    private ConcurrentDictionary<int, Func<IClientPacket>>[] _clientPackets =
-        new ConcurrentDictionary<int, Func<IClientPacket>>[5];
+    private readonly PacketSupplier[] _suppliers = new PacketSupplier[Enum.GetValues<ConnectionState>().Length];
 
     public PacketRegistry()
     {
         Check.PostInit("Packet Registry constructor");
-        for (var i = 0; i < _clientPackets.Length; i++)
-        {
-            _clientPackets[i] = new ConcurrentDictionary<int, Func<IClientPacket>>();
-        }
-        
-        
-        // Play
-        RegisterServer<ServerPlayBundleDelimiterPacket>(0x00);
-        RegisterServer<ServerPlaySpawnEntityPacket>(0x01);
-        RegisterServer<ServerPlaySpawnExperienceOrbPacket>(0x02);
-        RegisterServer<ServerPlayEntityAnimationPacket>(0x03);
-        RegisterServer<ServerPlayAwardStatisticsPacket>(0x04);
-        RegisterServer<ServerPlayAckgnowledgeBlockChangePacket>(0x05);
-        RegisterServer<ServerPlaySetBlockDestroyStagePacket>(0x06);
-        RegisterServer<ServerPlayBlockEntityDataPacket>(0x07);
-        RegisterServer<ServerPlayBlockActionPacket>(0x08);
-        RegisterServer<ServerPlayBlockUpdatePacket>(0x09);
-        
-        // Handshake
-        RegisterClient(ConnectionState.Handshake, 0x00, () => new ClientHandshakePacket());
-        RegisterClient(ConnectionState.Handshake, 0xFE, () => new ClientHandshakeLegacyServerListPingPacket());
-        
-        // Status
-        RegisterServer<ServerStatusResponsePacket>(0x00);
-        RegisterServer<CommonStatusPingPacket>(0x01);
-        
-        RegisterClient(ConnectionState.Status, 0x00, () => new ClientStatusRequestPacket());
-        RegisterClient(ConnectionState.Status, 0x01,  () => new CommonStatusPingPacket());
-        
-        // Login
-        RegisterServer<ServerLoginDisconnectPacket>(0x00);
-        RegisterServer<ServerLoginEncryptionRequest>(0x01);
-        RegisterServer<ServerLoginSuccessPacket>(0x02);
-        RegisterServer<ServerLoginSetCompressionPacket>(0x03);
-        RegisterServer<ServerLoginPluginRequestPacket>(0x04);
-        RegisterServer<ServerLoginCookieRequestPacket>(0x05);
-        
-        RegisterClient(ConnectionState.Login, 0x00, () => new ClientLoginStartPacket());
-        RegisterClient(ConnectionState.Login, 0x01, () => new ClientLoginEncryptionResponsePacket());
-        RegisterClient(ConnectionState.Login, 0x02, () => new ClientLoginPluginResposePacket());
-        RegisterClient(ConnectionState.Login, 0x03, () => new ClientLoginAcknowledgedPacket());
-        RegisterClient(ConnectionState.Login, 0x04, () => new ClientLoginCookieResponsePacket());
-        
-        // Configuration
-        RegisterClient(ConnectionState.Configuration, 0x00, () => new ClientConfigurationClientInfoPacket());
-        RegisterClient(ConnectionState.Configuration, 0x01, () => new ClientConfigurationCookieResponsePacket());
-        RegisterClient(ConnectionState.Configuration, 0x02, () => new ClientConfigurationPluginMessagePacket());
-        RegisterClient(ConnectionState.Configuration, 0x03, () => new ClientConfigurationAcknowledgeFinishPacket());
-        RegisterClient(ConnectionState.Configuration, 0x04, () => new ClientConfigurationKeepAlivePacket());
-        RegisterClient(ConnectionState.Configuration, 0x05, () => new ClientConfigurationPongPacket());
-        RegisterClient(ConnectionState.Configuration, 0x06, () => new ClientConfigurationResourcePackResponsePacket());
-        RegisterClient(ConnectionState.Configuration, 0x07, () => new ClientConfigurationKnownDataPacksPacket());
-        
-        RegisterServer<ServerConfigurationCookieRequestPacket>(0x00);
-        RegisterServer<ServerConfigurationPluginMessagePacket>(0x01);
-        RegisterServer<ServerConfigurationDisconnectPacket>(0x02);
-        RegisterServer<ServerConfigurationFinishPacket>(0x03);
-        RegisterServer<ServerConfigurationKeepAlivePacket>(0x04);
-        RegisterServer<ServerConfigurationPingPacket>(0x05);
-        RegisterServer<ServerConfigurationResetChatPacket>(0x06);
-        RegisterServer<ServerConfigurationRegistryPacket>(0x07);
-        RegisterServer<ServerConfigurationRemoveResourcePackPacket>(0x08);
-        RegisterServer<ServerConfigurationAddResourcePackPacket>(0x09);
-        RegisterServer<ServerConfigurationStoreCookiePacket>(0x0A);
-        RegisterServer<ServerConfigurationTransferPacket>(0x0B);
-        RegisterServer<ServerConfigurationFeatureFlagsPacket>(0x0C);
-        RegisterServer<ServerConfigurationUpdateTagsPacket>(0x0D);
-        RegisterServer<ServerConfigurationKnownDataPacksPacket>(0x0E);
-        RegisterServer<ServerConfigurationCustomReportDetailsPacket>(0x0F);
-        RegisterServer<ServerConfigurationServerLinksPacket>(0x10);
+        _suppliers[(int)ConnectionState.Handshake] = new HandshakePacketSupplier();
+        _suppliers[(int)ConnectionState.Status] = new StatusPacketSupplier();
+        _suppliers[(int)ConnectionState.Login] = new LoginPacketSupplier();
+        _suppliers[(int)ConnectionState.Configuration] = new ConfigurationPacketSupplier();
+        _suppliers[(int)ConnectionState.Play] = new PlayPacketSupplier();
     }
     
-    private void RegisterClient(ConnectionState state, int packetId, Func<IClientPacket> supplier)
+    public int? GetServerPacketId<T>(ConnectionState connectionState) where T : IPacket
     {
-        var dict = _clientPackets[(int)state]!;
-        dict[packetId] = supplier;
+        return GetServerPacketId(connectionState, typeof(T));
     }
     
-    private void RegisterServer<T>(int id) where T : IPacket
+    public int? GetServerPacketId(ConnectionState state, System.Type type)
     {
-        _serverPacketTypes[typeof(T)] = id;
-    }
-
-    public int GetServerPacketId<T>() where T : IPacket
-    {
-        return _serverPacketTypes[typeof(T)];
-    }
-    
-    public int? GetServerPacketId(System.Type type)
-    {
-        return _serverPacketTypes[type];
+        return _suppliers[(int)state].GetServerPacketId(type);
     }
 
     public IClientPacket? CreateClientPacket(ConnectionState state, int packetId)
     {
-        var dict = _clientPackets[(int)state]!;
-        return !dict.TryGetValue(packetId, out var supplier) ? null : supplier();
+        return _suppliers[(int)state].GetClientPacket(packetId);
     }
 
 }

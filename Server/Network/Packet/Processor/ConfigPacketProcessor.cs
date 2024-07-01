@@ -3,6 +3,7 @@ using Server.Network.Connection;
 using Server.Network.Packet.Registry;
 using Server.Network.Packet.Type.Configuration.Client;
 using Server.Network.Packet.Type.Configuration.Server;
+using Server.Network.Packet.Type.Play.Server;
 
 namespace Server.Network.Packet.Processor;
 
@@ -15,6 +16,7 @@ internal class ConfigPacketProcessor(PacketRegistry packetRegistry, PlayerConnec
             case ClientConfigurationClientInfoPacket s:
                 connection.SendPacketNow(ITrimMaterial.CreatePacket());
                 connection.SendPacketNow(new ServerConfigurationFinishPacket());
+                Tachyon.LOGGER.Info("Configuration step finished");
                 connection.INTERNAL_SwitchConnectionState(ConnectionState.Play);
                 break;
             // case ClientConfigurationKnownDataPacksPacket d:

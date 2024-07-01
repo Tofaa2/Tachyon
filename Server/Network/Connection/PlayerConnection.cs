@@ -22,7 +22,10 @@ public class PlayerConnection
     private Guid _uuid = Guid.Empty;
     public string Username => _username;
     public Guid Uuid => _uuid;
-
+    
+    public int Latency { get; private set; }
+    public long LastKeepAlive { get; private set; }
+    public bool AnsweredKeepAlive { get; private set; }
 
     public bool Online { get; private set; } = true;
     
@@ -39,6 +42,20 @@ public class PlayerConnection
     }
 
 
+
+    public bool ProcessKeepAlive(long id)
+    {
+        if (LastKeepAlive != id)
+        {
+            Disconnect(IComponent.Text("Bad KeepAlive packet!", NamedTextColor.Red));
+            return false;
+        }
+        AnsweredKeepAlive = true;
+        int latency = (int) (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - id);
+        Latency = latency;
+        return true;
+    }
+    
     public void Disconnect(IComponent? reason = null)
     {
         Online = false;

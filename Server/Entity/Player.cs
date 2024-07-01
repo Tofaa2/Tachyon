@@ -22,7 +22,14 @@ public class Player : Entity
         Left = 0,
         Right = 1
     }
-    
+
+    public enum GameMode : int
+    {
+        Survival = 0,
+        Creative = 1,
+        Adventure = 2,
+        Spectator = 3
+    }
     
     public class Settings
     {
