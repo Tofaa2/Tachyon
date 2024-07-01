@@ -1,6 +1,8 @@
 using System.Net;
 using System.Reflection;
 using Server.Attribute;
+using Server.Event;
+using Server.Event.Server;
 using Server.Item.Armor;
 using Server.Item.Material;
 using Server.Network.Connection;
@@ -15,9 +17,21 @@ internal class Server : IServer
     public ConnectionManager Connection { get; private set; }
     public PacketRegistry Packets { get; private set; }
     public NettyServer Netty { get; private set; }
+    public IEventNode<IEvent> EventHandler { get; private set; }
 
     internal void Init()
     {
+        EventHandler = IEventNode<IEvent>.Create<IEvent>("Root");
+        EventHandler.AddListener<ServerStartEvent>(e =>
+        {
+            Tachyon.LOGGER.Info("Server Started WOOOOOOOOOOOOOOO");
+        });
+        EventHandler.AddListener<ServerStopEvent>(e =>
+        {
+            Tachyon.LOGGER.Info("Server Stopped :(");
+        });
+        
+        
         Packets = new PacketRegistry();
         Connection = new ConnectionManager();
         Netty = new NettyServer(Packets);
@@ -28,7 +42,7 @@ internal class Server : IServer
     private static void InitRegistries()
     {
         ITrimMaterial.Init();
-        var array = new Type[]
+        var array = new[]
         {
             typeof(ITrimMaterial),
             typeof(IMaterial),
@@ -43,6 +57,7 @@ internal class Server : IServer
 
     internal void Start(IPAddress address, int port)
     {
+        EventHandler.Call(new ServerStartEvent());
         Netty.Start(address, port);
         while (true)
         {
@@ -54,6 +69,7 @@ internal class Server : IServer
 
     internal void Stop()
     {
+        EventHandler.Call(new ServerStopEvent());
         Netty.Stop();
     }
 }

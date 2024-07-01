@@ -1,4 +1,5 @@
 using System.Net;
+using Server.Event;
 using Server.Network.Connection;
 using slf4net;
 using Tachyon;
@@ -14,6 +15,7 @@ public class Tachyon
     public static IServer? Process => _instance;
 
     public static ConnectionManager ConnectionManager => _instance!.Connection;
+    public static IEventNode<IEvent> EventHandler => _instance!.EventHandler; 
     
     public static void Init()
     {
