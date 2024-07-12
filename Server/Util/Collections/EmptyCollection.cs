@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Server.Util;
+namespace Server.Util.Collections;
 
 public class EmptyCollection<T> : ICollection<T>
 {

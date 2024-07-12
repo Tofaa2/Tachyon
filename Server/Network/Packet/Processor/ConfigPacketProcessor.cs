@@ -1,9 +1,11 @@
+using Server.Entity;
 using Server.Item.Armor;
 using Server.Network.Connection;
 using Server.Network.Packet.Registry;
 using Server.Network.Packet.Type.Configuration.Client;
 using Server.Network.Packet.Type.Configuration.Server;
 using Server.Network.Packet.Type.Play.Server;
+using Server.Util.Collections;
 
 namespace Server.Network.Packet.Processor;
 
@@ -14,10 +16,7 @@ internal class ConfigPacketProcessor(PacketRegistry packetRegistry, PlayerConnec
         switch (packet)
         {
             case ClientConfigurationClientInfoPacket s:
-                connection.SendPacketNow(ITrimMaterial.CreatePacket());
-                connection.SendPacketNow(new ServerConfigurationFinishPacket());
-                Tachyon.LOGGER.Info("Configuration step finished");
-                connection.INTERNAL_SwitchConnectionState(ConnectionState.Play);
+                connection.Player!.PlayerSettings = s.Settings;
                 break;
             // case ClientConfigurationKnownDataPacksPacket d:
             //     string packs = "";
@@ -31,8 +30,23 @@ internal class ConfigPacketProcessor(PacketRegistry packetRegistry, PlayerConnec
             //     break;
             case ClientConfigurationAcknowledgeFinishPacket p:
             {
-                Tachyon.LOGGER.Info("Configuration step finished");
                 connection.INTERNAL_SwitchConnectionState(ConnectionState.Play);
+                connection.SendPacketNow(new ServerPlayJoinGamePacket(
+                    connection.Player!.EntityId,
+                    true,
+                    new EmptyCollection<string>(),
+                    100,
+                    6, 6,
+                    false, true, true,
+                    0, "minecraft:overworld",
+                    123321L,
+                    Player.GameMode.Creative,
+                    null,
+                    true,
+                    false,
+                    null,
+                    1, false
+                    ));
                 break;
             }
         }

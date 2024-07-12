@@ -3,9 +3,15 @@ using System.Collections;
 namespace Server.Nbt;
 
 public class NbtList<TType>(NbtType entryType, ICollection<TType> collection)
-    : Nbt, ICollection<TType> where TType : global::Server.Nbt.Nbt
+    : Nbt, ICollection<TType> where TType : Nbt
 {
 
+    
+    public static NbtList<Nbt> Untyped(NbtType entryType, ICollection<Nbt> collection)
+    {
+        return new NbtList<Nbt>(entryType, collection);
+    }
+    
     public List<TType> Value => new(collection);
     public NbtType EntryType => entryType;
     

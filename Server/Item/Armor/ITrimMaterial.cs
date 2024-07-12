@@ -12,7 +12,7 @@ public interface ITrimMaterial : IRegistriedStaticProtocolObject<Registry.Regist
 
     public static void Init()
     {
-        Tachyon.LOGGER.Info(TrimMaterialImpl.REGISTRY.Namespaces.ToString());
+        Tachyon.Logger.Info(TrimMaterialImpl.REGISTRY.Namespaces.ToString());
     }
     
     public static ServerConfigurationRegistryPacket CreatePacket()

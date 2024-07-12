@@ -21,7 +21,7 @@ public class PacketDecoder(PacketRegistry registry, PlayerConnection connection)
         
         if (packet == null)
         {
-            Tachyon.LOGGER.Warn($"Skipping packet with state {connection.ConnectionState} and ID {id} because a packet object was not found");
+            Tachyon.Logger.Warn($"Skipping packet with state {connection.ConnectionState} and ID {id} because a packet object was not found");
             buf.SkipBytes(buf.ReadableBytes);
             return;
         }
@@ -31,7 +31,7 @@ public class PacketDecoder(PacketRegistry registry, PlayerConnection connection)
 
         if (buf.ReadableBytes != 0)
         {
-            Tachyon.LOGGER.Warn($"More bytes from packet {packet.GetType().Name} ({buf.ReadableBytes})");
+            Tachyon.Logger.Warn($"More bytes from packet {packet.GetType().Name} ({buf.ReadableBytes})");
         }
 
         output.Add(packet);

@@ -3,6 +3,31 @@ import os
 from csharp_file import *
 
 
+def create_json_content():
+    json_data = dict()
+    for json in os.listdir("./data"):
+        with open(f"./data/{json}", "r") as f:
+            data = f.read()
+            json_data[json.split(".")[0]] = data
+    ns = Namespace("Server")
+    csclass = CsClass("MinecraftData")
+    csclass.add_modifier(Modifier.PUBLIC)
+    csclass.add_modifier(Modifier.STATIC)
+    for key, value in json_data.items():
+        field = Field()
+        field.set_field_name(friendly_name(key))
+        field.set_field_type("string")
+        field.add_modifier(Modifier.PUBLIC)
+        field.add_modifier(Modifier.STATIC)
+        field.add_modifier(Modifier.READONLY)
+        field.set_field_value(f'"{value}"')
+        csclass.add_field(field)
+    ns.add_class(csclass)
+    file = CsFile("../Server/MinecraftData.cs")
+    file.add_namespace(ns)
+    file.write_to_file()
+
+
 def fetch_dir_idiotic(file) -> dict:
     attributes_path = "../Server/Resources/" + file + ".json"
 
@@ -12,7 +37,7 @@ def fetch_dir_idiotic(file) -> dict:
 
     with open(attributes_path, 'r') as f:
         file_as_string = f.read()
-        file_as_string = file_as_string[3:]
+    file_as_string = file_as_string[3:]
     if not file_as_string.strip():
         print(f"Error: File {attributes_path} is empty.")
         return {}
@@ -51,8 +76,12 @@ def fetch_dir(file) -> dict:
 
 def friendly_name(name: str) -> str:
     split = name.split(":")
-    if len(split) > 1:
-        return split[1].upper()
+    length = len(split)
+    if length == 1:
+        return split[0].capitalize()
+    remaining = split[1].split("_")
+    remaining = [x.capitalize() for x in remaining]
+    return "".join(remaining)
 
 
 def generate_constants():
@@ -92,7 +121,8 @@ def generate_constants():
     datapackField.set_field_type("int")
     datapackField.set_field_value(constants["datapack"])
 
-    listOfFields = [nameField, versionField, worldField, rpField, datapackField]
+    listOfFields = [nameField, versionField,
+                    worldField, rpField, datapackField]
 
     for field in listOfFields:
         field.add_modifier(Modifier.PUBLIC)
@@ -106,11 +136,6 @@ def generate_constants():
     file.write_to_file()
 
 
-def add_modifiers(d: ModifierBound, modifiers: list):
-    for modifier in modifiers:
-        d.add_modifier(modifier)
-
-
 def generate_class(
         namespace: str,
         class_name: str,
@@ -120,7 +145,8 @@ def generate_class(
         field_value: str,
         idiotic: bool = False
 ):
-    print(f"Generating class {class_name} in namespace {namespace} from {json_file_path} to {class_file_path}.")
+    print(f"Generating class {class_name} in namespace {
+          namespace} from {json_file_path} to {class_file_path}.")
     if idiotic:
         asd = fetch_dir_idiotic(json_file_path)
     else:
@@ -151,6 +177,7 @@ def generate_class(
 
 
 if __name__ == '__main__':
+    create_json_content()
     generate_constants()
     generate_class(
         "Server.Attribute",
@@ -160,6 +187,22 @@ if __name__ == '__main__':
         "IAttribute",
         "AttributeImpl.REGISTRY.Get(\"{key}\")",
         True
+    )
+    generate_class(
+        "Server.Statistics",
+        "StatisticTypes",
+        "statistics",
+        "../Server/Statistics/StatisticTypes.cs",
+        "IStatistic",
+        "StatisticImpl.REGISTRY.Get(\"{key}\")"
+    )
+    generate_class(
+        "Server.Item.Enchantment",
+        "Enchantments",
+        "enchantments",
+        "../Server/Item/Enchantment/Enchantments.cs",
+        "IEnchantment",
+        "EnchantmentImpl.REGISTRY.Get(\"{key}\")"
     )
     generate_class(
         "Server.World.Block",

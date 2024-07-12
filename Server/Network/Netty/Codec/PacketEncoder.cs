@@ -15,7 +15,7 @@ public class PacketEncoder(PlayerConnection conn, PacketRegistry registry) : Mes
         var packetId = registry.GetServerPacketId(conn.ConnectionState, message.GetType());
         if (packetId == null)
         {
-            Tachyon.LOGGER.Error("Encoder received an unknown to the packet registry packet! Cannot encode!");
+            Tachyon.Logger.Error("Encoder received an unknown to the packet registry packet! Cannot encode!");
             return;
         }
         

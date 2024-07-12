@@ -1,5 +1,7 @@
 ﻿using DotNetty.Transport.Channels;
 using Server.Chat.Text;
+using Server.Entity;
+using Server.Event.Player;
 using Server.Network.Packet;
 using Server.Network.Packet.Processor;
 using Server.Network.Packet.Registry;
@@ -16,6 +18,10 @@ public class PlayerConnection
 
     private volatile ConnectionState _state = ConnectionState.Handshake;
     private volatile PacketProcessor? _processor;
+
+    private volatile Player? _player;
+    public Player? Player => _player;
+    
     public ConnectionState ConnectionState => _state;
     
     private string _username = string.Empty;
@@ -77,6 +83,9 @@ public class PlayerConnection
     
     public void SendPacketNow(IServerPacket packet)
     {
+        var e = new PlayerPacketReceiveEvent(this, packet);
+        Tachyon.EventHandler.Call(e);
+        if (e.IsCancelled) return;
         _channel.WriteAndFlushAsync(packet).Wait();
     }
     
@@ -105,7 +114,9 @@ public class PlayerConnection
 
     public void ProcessPacket(IClientPacket packet)
     {
-        Tachyon.LOGGER.Info($"Processing packet {packet.GetType().Name}");
+        var e = new PlayerPacketSendEvent(this, packet);
+        Tachyon.EventHandler.Call(e);
+        if (e.IsCancelled) return;
         _processor?.Process(packet);
     }
     

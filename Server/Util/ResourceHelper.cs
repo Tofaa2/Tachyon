@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 namespace Server.Util;
 
@@ -6,7 +6,7 @@ public static class ResourceHelper
 {
 
 
-    public static string GetResourceAsJson(string path)
+    public static string GetResourceAsString(string path)
     {
         var asm = Assembly.GetExecutingAssembly();
         using var stream = asm.GetManifestResourceStream(path);
@@ -14,6 +14,6 @@ public static class ResourceHelper
         using StreamReader reader = new(stream!);
         return reader.ReadToEnd();
     }
-    
-    
+
+
 }

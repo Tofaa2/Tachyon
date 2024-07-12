@@ -22,16 +22,6 @@ internal class Server : IServer
     internal void Init()
     {
         EventHandler = IEventNode<IEvent>.Create<IEvent>("Root");
-        EventHandler.AddListener<ServerStartEvent>(e =>
-        {
-            Tachyon.LOGGER.Info("Server Started WOOOOOOOOOOOOOOO");
-        });
-        EventHandler.AddListener<ServerStopEvent>(e =>
-        {
-            Tachyon.LOGGER.Info("Server Stopped :(");
-        });
-        
-        
         Packets = new PacketRegistry();
         Connection = new ConnectionManager();
         Netty = new NettyServer(Packets);

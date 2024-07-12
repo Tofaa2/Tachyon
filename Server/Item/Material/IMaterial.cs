@@ -10,17 +10,17 @@ public interface IMaterial : IRegistriedStaticProtocolObject<MaterialEntry>
 
     public static IMaterial FromId(string namespaceId)
     {
-        return MaterialImpl.REGISTRY.GetOrDefault(namespaceId, Materials.AIR);
+        return MaterialImpl.REGISTRY.GetOrDefault(namespaceId, Materials.Air);
     }
     
     public static IMaterial FromId(NamespaceId namespaceId)
     {
-        return MaterialImpl.REGISTRY.GetOrDefault(namespaceId, Materials.AIR);
+        return MaterialImpl.REGISTRY.GetOrDefault(namespaceId, Materials.Air);
     }
     
     public static IMaterial FromId(int id)
     {
-        return MaterialImpl.REGISTRY.GetOrDefault(id, Materials.AIR);
+        return MaterialImpl.REGISTRY.GetOrDefault(id, Materials.Air);
     }
     
     int IProtocolObject.ProtocolId => Registry.ProtocolId;

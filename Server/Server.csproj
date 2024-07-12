@@ -16,11 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Resources\attributes.json" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Include="Resources\attributes.json">
+        <None Remove="Resources/attributes.json"/>
+        <EmbeddedResource Include="Resources\attributes.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="Resources\items.json" />
@@ -41,6 +38,10 @@
       </EmbeddedResource>
       <None Remove="Resources\custom_statistics.json" />
       <EmbeddedResource Include="Resources\custom_statistics.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="Resources\enchantments.json" />
+      <EmbeddedResource Include="Resources\enchantments.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
     </ItemGroup>

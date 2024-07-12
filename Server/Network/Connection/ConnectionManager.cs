@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using DotNetty.Transport.Channels;
 using Server.Entity;
+using Server.Item.Armor;
 using Server.Network.Packet.Type.Login.Server;
 using Server.Util;
 using Server.Util.Collections;
@@ -34,7 +35,7 @@ public class ConnectionManager
         Players.TryAdd(uuid, player);
         PlayersByConnection.TryAdd(connection, player);
 
-        Task task = TransitionLoginToConfig(player);
+        TransitionLoginToConfig(player).Wait();
 
         return player;
     }
@@ -47,6 +48,7 @@ public class ConnectionManager
             
             ServerLoginSuccessPacket p = new(player.Uuid, player.Username, 0, false);
             connection.SendPacketNow(p);
+            connection.INTERNAL_SwitchConnectionState(ConnectionState.Configuration);
         });
     }
 

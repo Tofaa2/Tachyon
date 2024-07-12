@@ -1,4 +1,4 @@
-namespace Server.World;
+namespace Server.World.Content;
 
 public enum Difficulty : byte
 {

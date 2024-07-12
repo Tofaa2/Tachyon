@@ -1,5 +1,59 @@
 namespace Server.Nbt;
 
+public static class NbtTypeExtensions
+{
+
+    public static Type AsNbtClass(this NbtType type)
+    {
+        Type nbtClass;
+        switch (type)
+        {
+            case NbtType.Byte:
+                nbtClass = typeof(NbtByte);
+                break;
+            case NbtType.Compound:
+                nbtClass = typeof(NbtCompound);
+                break;
+            case NbtType.Double:
+                nbtClass = typeof(NbtDouble);
+                break;
+            case NbtType.Float:
+                nbtClass = typeof(NbtFloat);
+                break;
+            case NbtType.Int:
+                nbtClass = typeof(NbtInt);
+                break;
+            case NbtType.List:
+                nbtClass = typeof(NbtList<>);
+                break;
+            case NbtType.Long:
+                nbtClass = typeof(NbtLong);
+                break;
+            case NbtType.Short:
+                nbtClass = typeof(NbtShort);
+                break;
+            case NbtType.String:
+                nbtClass = typeof(NbtString);
+                break;
+            case NbtType.ByteArray:
+                nbtClass = typeof(NbtByteArray);
+                break;
+            case NbtType.IntArray:
+                nbtClass = typeof(NbtIntArray);
+                break;
+            case NbtType.LongArray:
+                nbtClass = typeof(NbtLongArray);
+                break;
+            default:
+                nbtClass = typeof(NbtEnd);
+                break;
+        }
+        return nbtClass;
+    }
+    
+    
+}
+
 public enum NbtType : byte
 {
     

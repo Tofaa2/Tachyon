@@ -10,13 +10,11 @@ public class NettyChannelHandler(PlayerConnection connection) : SimpleChannelInb
 
     public override void HandlerAdded(IChannelHandlerContext context)
     {
-        Tachyon.LOGGER.Info("Handler Added");
         Tachyon.ConnectionManager.Connections[context.Channel] = connection;
     }
 
     public override void HandlerRemoved(IChannelHandlerContext context)
     {
-        Tachyon.LOGGER.Info("Handler Removed");
         Tachyon.ConnectionManager.Connections.Remove(context.Channel, out var _conn);
     }
 

@@ -2,7 +2,7 @@ using Server.Network.Binary;
 
 namespace Server.Network.Packet;
 
-public interface IServerPacket : IPacket, IWritable
+public interface IServerPacket : ISendablePacket, IWritable
 {
     
 }

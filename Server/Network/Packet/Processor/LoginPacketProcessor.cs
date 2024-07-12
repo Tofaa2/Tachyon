@@ -7,6 +7,7 @@ using Server.Network.Packet.Type.Configuration.Server;
 using Server.Network.Packet.Type.Login.Client;
 using Server.Network.Packet.Type.Login.Server;
 using Server.Util;
+using Server.Util.Collections;
 
 namespace Server.Network.Packet.Processor;
 
@@ -18,12 +19,12 @@ internal class LoginPacketProcessor(PacketRegistry packetRegistry, PlayerConnect
         switch (packet)
         {
             case ClientLoginStartPacket p:
-                Tachyon.LOGGER.Info($"{p.Username} with uuid {p.Uuid}");
                 HandleLoginStart(p);
                 break;
             case ClientLoginPluginResposePacket p:
                 break;
             case ClientLoginAcknowledgedPacket p:
+                Tachyon.Logger.Info("Client login success ackgnowledged!!!!!!!!");
                 connection.INTERNAL_SwitchConnectionState(ConnectionState.Configuration);
                 connection.SendPacketNow(new ServerConfigurationKnownDataPacksPacket(new EmptyCollection<KnownDataPack>()));
                 break;
@@ -40,6 +41,7 @@ internal class LoginPacketProcessor(PacketRegistry packetRegistry, PlayerConnect
         {
             try
             {
+                Tachyon.Logger.Info("Login sequence started");
                 var uuid = Tachyon.ConnectionManager.CreatePlayerConnectionUuid(connection, packet.Username);
                 Tachyon.ConnectionManager.CreatePlayer(connection, uuid, packet.Username);
             }

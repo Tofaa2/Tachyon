@@ -1,7 +1,6 @@
 using Server.Nbt;
-using Tachyon.Nbt;
 
-namespace Server.World;
+namespace Server.World.Content;
 
 public record DimensionType(
     bool Ultrawarm = false,

@@ -9,7 +9,7 @@ namespace Server;
 public class Tachyon
 {
 
-    public static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(Tachyon));
+    public static readonly ILogger Logger = LoggerFactory.GetLogger(typeof(Tachyon));
 
     private static volatile Server? _instance;
     public static IServer? Process => _instance;

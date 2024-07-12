@@ -58,7 +58,7 @@ public class NettyServer
         {
             if (t.IsFaulted)
             {
-                Tachyon.LOGGER.Error("Failed to start server: " + t.Exception);
+                Tachyon.Logger.Error("Failed to start server: " + t.Exception);
                 // free the port
                 _bossGroup.ShutdownGracefullyAsync().Wait();
                 _workerGroup.ShutdownGracefullyAsync().Wait();
@@ -66,7 +66,7 @@ public class NettyServer
                 return;
             }
             _channel = t.Result;
-            Tachyon.LOGGER.Info("Server started on " + _channel.LocalAddress);
+            Tachyon.Logger.Info("Server started on " + _channel.LocalAddress);
         });
     }
 

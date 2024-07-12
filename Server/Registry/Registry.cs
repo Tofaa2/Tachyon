@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Nodes;
+using System.Text.Json.Nodes;
+using Server.Chat.Text;
+using System.Reflection;
 using Server.Collision;
 using Server.Item.Armor;
 using Server.Namespace;
@@ -13,6 +15,11 @@ public static class Registry
     public interface IEntry;
 
 
+    public record EnchantmentEntry(
+        NamespaceId Id,
+        IComponent Description,
+        int AnvilCost
+        ) : IEntry;
     public record StatisticTypeEntry(
         int ProtocolId,
         NamespaceId Id) : IEntry;
@@ -29,7 +36,7 @@ public static class Registry
         string TranslationKey,
         IBlock CorrespondingBlock,
         JsonObject DefaultComponents
-        
+
         ) : IEntry;
     public record BlockEntry(
         NamespaceId Id,
@@ -69,12 +76,14 @@ public static class Registry
         bool ClientSync,
         double MinValue,
         double MaxValue) : IEntry;
-    
 
-    public static Container<T> CreateStaticContainer<T, TC>(Resource resource, Func<string, JsonObject, T> loader)where TC : IEntry where T : IRegistriedStaticProtocolObject<TC> 
+
+    public static Container<T> CreateStaticContainer<T, TC>(Resource resource, Func<string, JsonObject, T> loader) where TC : IEntry where T : IRegistriedStaticProtocolObject<TC>
     {
         var namespaces = new Dictionary<string, T>();
-        var entries = JsonNode.Parse(File.ReadAllText("Resources/" + resource.fileName))!.AsObject();
+
+        var location = Assembly.GetExecutingAssembly().Location.Replace("/Server.dll", "") + "/Resources/" + resource.fileName;
+        var entries = JsonNode.Parse(location)!.AsObject();
         var ids = new Dictionary<int, T>(entries.Count);
         foreach (var entry in entries)
         {
@@ -88,9 +97,10 @@ public static class Registry
         return new Container<T>(resource, namespaces, ids);
     }
 
-    
+
     public record Resource(string fileName)
     {
+        public static readonly Resource ENCHANTS = new("enchantments.json");
         public static readonly Resource ATTRIBUTES = new("attributes.json");
         public static readonly Resource BLOCKS = new("blocks.json");
         public static readonly Resource MATERIALS = new("items.json");
@@ -105,22 +115,22 @@ public static class Registry
         {
             return Namespaces.TryGetValue(namespaceId, out var value) ? value : defaultValue;
         }
-        
+
         public T GetOrDefault(NamespaceId namespaceId, T defaultValue)
         {
             return Namespaces.TryGetValue(namespaceId.Full, out var value) ? value : defaultValue;
         }
-        
+
         public T GetOrDefault(int id, T defaultValue)
         {
             return Ids[id] ?? defaultValue;
         }
-        
+
         public T? Get(string namespaceId)
         {
             return Namespaces[namespaceId];
         }
-        
+
         public T? Get(NamespaceId namespaceId)
         {
             return Namespaces[namespaceId.Full];
@@ -130,10 +140,10 @@ public static class Registry
         {
             return Ids[id];
         }
-        
+
         public ICollection<T> ValuesCopy => Namespaces.Values.ToList();
-        
+
     }
-    
+
 
 }

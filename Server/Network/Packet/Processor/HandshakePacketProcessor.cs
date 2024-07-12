@@ -20,21 +20,22 @@ internal class HandshakePacketProcessor(PacketRegistry packetRegistry, PlayerCon
         {
             case ClientHandshakePacket.Intent.Status:
                 connection.INTERNAL_SwitchConnectionState(ConnectionState.Status);
-                global::Server.Tachyon.LOGGER.Info("Switched connection state to status.");
                 break;
             case ClientHandshakePacket.Intent.Login:
             {
-                connection.INTERNAL_SwitchConnectionState(ConnectionState.Login);
                 if (handshake.ProtocolVersion < MinecraftConstants.PROTOCOL_VERSION)
                     connection.Disconnect(OutdatedClientMessage);
                 else if (handshake.ProtocolVersion > MinecraftConstants.PROTOCOL_VERSION)
                     connection.Disconnect(OutdatedServerMessage);
                 else
-                    Tachyon.LOGGER.Info("Switched connection state to login.");
+                {
+                    Tachyon.Logger.Info("Switched connection state to login.");
+                    connection.INTERNAL_SwitchConnectionState(ConnectionState.Login);                    
+                }
                 break;
             }
             case ClientHandshakePacket.Intent.Transfer:
-                global::Server.Tachyon.LOGGER.Error("Transfer packet intents are not supported yet.");
+                Tachyon.Logger.Error("Transfer packet intents are not supported yet.");
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
